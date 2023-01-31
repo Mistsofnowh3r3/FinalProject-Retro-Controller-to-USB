@@ -32,21 +32,25 @@ void loop() {
     startMillis = millis(); //start the clock
     currentMillis = millis(); // get the current time
 
-    for (int i = 18; currentMillis - startMillis < i; i += 0) {
+    for (int i = 0; currentMillis - startMillis < 18; i ++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
 
         //12 high 6 low
         if (i < 12) {
             digitalWrite(latchPin, HIGH);
-        } else {
+        }
+        else {
             digitalWrite(latchPin, LOW);
         }
 
         //check for a button (active low) at any point here    
-        if ((digitalRead(dataPin) == false)) { // if A button is low press the A keyboard key
-            //Keyboard.press(97);
+        if (digitalRead(dataPin) == false) // if A button is low press the A keyboard key
+        { 
+            Keyboard.press(97);
             Serial.print("A button was here");
-        } else { // otherwise release the key ( should this instead be at the start of the loop?)
+        } 
+        else // otherwise release the key ( should this instead be at the start of the loop?)
+        { 
             Keyboard.release(97);
         }
 
