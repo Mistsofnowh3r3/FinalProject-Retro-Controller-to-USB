@@ -33,6 +33,7 @@ void checkButton(int button) {
     { 
         switch(button) {
 
+
         case 1  : //A 
             Keyboard.press(97);
             Serial.print("a");
@@ -125,10 +126,9 @@ void checkButton(int button) {
 void loop() {
     startMillis = millis(); //start or restart the clock
     currentMillis = millis(); // get the current time
-
     for (int i = 1; currentMillis - startMillis < 18; i++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
-        checkButton(1); // check for A here
+        
         //12 high 6 low
         if (i < 13) 
         {
@@ -139,11 +139,11 @@ void loop() {
         {
             digitalWrite(latchPin, LOW);
         }
-
+        checkButton(1); // check for A here
         
 
-    }
-
+  
+     }
     // replace with Millis method and also add checks for all other buttons 
     for (int j = 2; j < 9; j++)
     {
@@ -152,9 +152,9 @@ void loop() {
 
         for (int k = 2; currentMillis - startMillis < 12; k++) { //helps to actually increment i 
             currentMillis = millis(); // get the current time
-            checkButton(j); // check for a button here
+            
             //6 high 6 low
-            if (k < 7) 
+            if (k < 8) 
             {
                digitalWrite(pulsePin, HIGH);
             }
@@ -162,6 +162,7 @@ void loop() {
             {
                digitalWrite(pulsePin, LOW);
             }
+            checkButton(j); // check for a button here
         }
     }
 }
