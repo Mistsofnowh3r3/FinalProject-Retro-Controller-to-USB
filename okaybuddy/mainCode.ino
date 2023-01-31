@@ -1,5 +1,7 @@
 #include <Keyboard.h> // using keyboard for now. will do USB controller eventually 
 
+//need to move to interrupts
+
 //declare globals
 unsigned long startMillis;
 unsigned long currentMillis;
@@ -78,6 +80,10 @@ void checkButton(int button) {
         }
     }
 
+}
+
+void checkButtonRelease(int button){
+    
     if (digitalRead(dataPin) == true) // now check if it was released
     { 
         switch(button) {
@@ -128,18 +134,19 @@ void loop() {
     currentMillis = millis(); // get the current time
     for (int i = 1; currentMillis - startMillis < 18; i++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
-        
+        checkButtonRelease(1);
         //12 high 6 low
         if (i < 13) 
         {
             digitalWrite(latchPin, HIGH);
-            
+            checkButton(1); // check for A here
         }
         else 
         {
             digitalWrite(latchPin, LOW);
+            checkButton(1); // check for A here
         }
-        checkButton(1); // check for A here
+        
         
 
   
@@ -152,17 +159,19 @@ void loop() {
 
         for (int k = 2; currentMillis - startMillis < 12; k++) { //helps to actually increment i 
             currentMillis = millis(); // get the current time
-            
+            checkButtonRelease(j); // check for a button here
             //6 high 6 low
             if (k < 8) 
             {
                digitalWrite(pulsePin, HIGH);
+               checkButton(j); // check for a button here
             }
             else 
             {
                digitalWrite(pulsePin, LOW);
+               checkButton(j); // check for a button here
             }
-            checkButton(j); // check for a button here
+            
         }
     }
 }
