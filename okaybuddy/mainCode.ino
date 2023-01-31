@@ -27,37 +27,151 @@ void pulsePulse() {
     delay(6);
 }
 
+void checkButton(int button) {
+    //1 = A 
+    //2 = B
+    //3 = SELECT
+    //4 = START
+    //5 = UP
+    //6 = DOWN
+    //7 = LEFT
+    //8 = RIGHT
+
+    if (digitalRead(dataPin) == false) // FIRST CHECK IF A KEY IS PRESSED (active low)
+    { 
+        switch(button) {
+
+        case 1  : //A 
+            Keyboard.press(97);
+            Serial.print("a");
+            break; 
+        
+        case 2  : //B 
+            Keyboard.press(98);
+            Serial.print("b");
+            break; 
+        
+        case 3  : //SELECT 
+            Keyboard.press(32);
+            Serial.print("SPACE");
+            break; 
+        
+        case 4  : //START 
+            Keyboard.press(KEY_RETURN);
+            Serial.print("ENTER");
+            break; 
+        
+        case 5  : //UP 
+            Keyboard.press(KEY_UP_ARROW);
+            Serial.print("UP");
+            break; 
+        
+        case 6  : //DOWN 
+            Keyboard.press(KEY_DOWN_ARROW);
+            Serial.print("DOWN");
+            break; 
+        
+        case 7  : //LEFT 
+            Keyboard.press(KEY_LEFT_ARROW);
+            Serial.print("LEFT");
+            break; 
+        
+        case 8  : //RIGHT 
+            Keyboard.press(KEY_RIGHT_ARROW);
+            Serial.print("RIGHT");
+            break; 
+
+        default  :  break;
+        }
+    }
+
+    if (digitalRead(dataPin) == true) // now check if it was released
+    { 
+        switch(button) {
+
+        case 1  : //A 
+            Keyboard.release(97);
+            break; 
+        
+        case 2  : //B 
+            Keyboard.release(98);
+            break; 
+        
+        case 3  : //SELECT 
+            Keyboard.release(32);
+            break; 
+        
+        case 4  : //START 
+            Keyboard.release(KEY_RETURN);
+            break; 
+        
+        case 5  : //UP 
+            Keyboard.release(KEY_UP_ARROW);
+            break; 
+        
+        case 6  : //DOWN 
+            Keyboard.release(KEY_DOWN_ARROW);
+            break; 
+        
+        case 7  : //LEFT 
+            Keyboard.release(KEY_LEFT_ARROW);
+            break; 
+        
+        case 8  : //RIGHT 
+            Keyboard.release(KEY_RIGHT_ARROW);
+            break; 
+
+        default  :  break;
+        }
+    }
+
+}
+
+
+
 // main program
 void loop() {
-    startMillis = millis(); //start the clock
+    startMillis = millis(); //start or restart the clock
     currentMillis = millis(); // get the current time
 
-    for (int i = 0; currentMillis - startMillis < 18; i ++) { //helps to actually increment i 
+    for (int i = 1; currentMillis - startMillis < 19; i++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
 
         //12 high 6 low
-        if (i < 12) {
+        if (i < 13) 
+        {
             digitalWrite(latchPin, HIGH);
         }
-        else {
+        else 
+        {
             digitalWrite(latchPin, LOW);
         }
 
-        //check for a button (active low) at any point here    
-        if (digitalRead(dataPin) == false) // if A button is low press the A keyboard key
-        { 
-            Keyboard.press(97);
-            Serial.print("A button was here");
-        } 
-        else // otherwise release the key ( should this instead be at the start of the loop?)
-        { 
-            Keyboard.release(97);
-        }
+        checkButton(1); // check for a here
 
     }
 
     // replace with Millis method and also add checks for all other buttons 
-    for (int j = 1; j < 9; j++) {
-        pulsePulse();
+    for (int j = 2; j < 11; j++)
+    {
+        startMillis = millis(); //start or restart the clock
+        currentMillis = millis(); // get the current time
+
+        for (int k = 1; currentMillis - startMillis < 13; k++) { //helps to actually increment i 
+            currentMillis = millis(); // get the current time
+
+            //6 high 6 low
+            if (k < 7) 
+            {
+               digitalWrite(pulsePin, HIGH);
+            }
+            else 
+            {
+               digitalWrite(pulsePin, LOW);
+            }
+
+            checkButton(j); // check for a button here
+
+        }
     }
 }
