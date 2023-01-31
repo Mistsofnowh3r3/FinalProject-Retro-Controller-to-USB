@@ -19,14 +19,6 @@ void setup() {
     pinMode(dataPin, INPUT);
 }
 
-// pulse Pulse 
-void pulsePulse() {
-    digitalWrite(pulsePin, HIGH);
-    delay(6);
-    digitalWrite(pulsePin, LOW);
-    delay(6);
-}
-
 void checkButton(int button) {
     //1 = A 
     //2 = B
@@ -88,7 +80,7 @@ void checkButton(int button) {
     if (digitalRead(dataPin) == true) // now check if it was released
     { 
         switch(button) {
-
+        
         case 1  : //A 
             Keyboard.release(97);
             break; 
@@ -136,30 +128,31 @@ void loop() {
 
     for (int i = 1; currentMillis - startMillis < 19; i++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
-
+        checkButton(1); // check for A here
         //12 high 6 low
         if (i < 13) 
         {
             digitalWrite(latchPin, HIGH);
+            
         }
         else 
         {
             digitalWrite(latchPin, LOW);
         }
 
-        checkButton(1); // check for a here
+        
 
     }
 
     // replace with Millis method and also add checks for all other buttons 
-    for (int j = 2; j < 11; j++)
+    for (int j = 2; j < 9; j++)
     {
         startMillis = millis(); //start or restart the clock
         currentMillis = millis(); // get the current time
 
-        for (int k = 1; currentMillis - startMillis < 13; k++) { //helps to actually increment i 
+        for (int k = 2; currentMillis - startMillis < 14; k++) { //helps to actually increment i 
             currentMillis = millis(); // get the current time
-
+            checkButton(j); // check for a button here
             //6 high 6 low
             if (k < 7) 
             {
@@ -169,9 +162,6 @@ void loop() {
             {
                digitalWrite(pulsePin, LOW);
             }
-
-            checkButton(j); // check for a button here
-
         }
     }
 }
