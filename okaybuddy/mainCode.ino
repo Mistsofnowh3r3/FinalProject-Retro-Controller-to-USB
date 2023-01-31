@@ -126,7 +126,7 @@ void loop() {
     startMillis = millis(); //start or restart the clock
     currentMillis = millis(); // get the current time
 
-    for (int i = 1; currentMillis - startMillis < 19; i++) { //helps to actually increment i 
+    for (int i = 1; currentMillis - startMillis < 18; i++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
         checkButton(1); // check for A here
         //12 high 6 low
@@ -150,7 +150,7 @@ void loop() {
         startMillis = millis(); //start or restart the clock
         currentMillis = millis(); // get the current time
 
-        for (int k = 2; currentMillis - startMillis < 14; k++) { //helps to actually increment i 
+        for (int k = 2; currentMillis - startMillis < 12; k++) { //helps to actually increment i 
             currentMillis = millis(); // get the current time
             checkButton(j); // check for a button here
             //6 high 6 low
