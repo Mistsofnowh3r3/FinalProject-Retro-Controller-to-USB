@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "okaybuddy"
+		}
+	],
+	"settings": {
+		"arduino.enableUSBDetection": false
+	}
+}
