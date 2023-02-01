@@ -5,6 +5,10 @@
 unsigned long startMillis;
 unsigned long currentMillis;
 unsigned long TIMESTART;
+unsigned long LATCHSTART;
+unsigned long LATCHHIGHSTART;
+unsigned long ALLPULSESSTART;
+unsigned long PULSEFULLSTART;
 unsigned long TIMEEND;
 
 int lastButtonState = 1;    // previous state of the button
@@ -149,12 +153,10 @@ void checkButtonRelease(int button){
 
 // main program
 void loop() {
-    Serial.print("    !!!!!START!!!!!    ");
+    TIMESTART = millis();
     startMillis = millis(); //start or restart the clock
     currentMillis = millis(); // get the current time
-
-    
-    for (int i = 1; currentMillis - startMillis < 18; i++) { //helps to actually increment i 
+    for (int i = 1; currentMillis - startMillis < 18 || i < 19 ; i++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
         
         //12 high 6 low
@@ -165,28 +167,17 @@ void loop() {
                 checkButton(1); // check for A here
                 checkButtonRelease(1);
             }
-            TIMEEND = millis();
-            Serial.print("Latch pulse high: ");
-            Serial.print(TIMEEND - TIMESTART);
-            Serial.print(" "); 
-
-
         }
         else 
         {
             digitalWrite(latchPin, LOW);
             //checkButton(1); // check for A here
         }
-     }
-    TIMEEND = millis();
-    Serial.print("Full latch pulse: ");
-    Serial.print(TIMEEND - TIMESTART);
-    Serial.print(" ");      
-    for (int j = 2; j < 9; j++)
+     } 
+    for (int j = 2; j < 10; j++)
     {
         startMillis = millis(); //start or restart the clock
         currentMillis = millis(); // get the current time
-        TIMESTART = millis();
         for (int k = 2; currentMillis - startMillis < 12; k++) { //helps to actually increment i 
             currentMillis = millis(); // get the current time
             
@@ -197,21 +188,18 @@ void loop() {
                 if (k == 2) {
                     checkButton(j); // check for a button here
                     checkButtonRelease(j); // check for a button here
-                }
-               
+                } 
             }
             else 
             {
                digitalWrite(pulsePin, LOW);
                //checkButton(j); // check for a button here
-            }
-            
+            }  
         }
-            TIMEEND = millis();
-            Serial.print("Pulse Pulse full: ");
-            Serial.print(TIMEEND - TIMESTART);
-            Serial.print(" "); 
     }
-    Serial.print("    !!!!!END!!!!!    ");
-
+    TIMEEND = millis();
+    Serial.print("everything ");
+    Serial.print(TIMEEND - TIMESTART);
+    Serial.print(" ");  
+    //time to complete seems to have a variancy of 144ms (Perfect) to 116ms (less perfect)
 }
