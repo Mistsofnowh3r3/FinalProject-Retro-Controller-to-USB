@@ -50,6 +50,12 @@ void checkButton(int button) {
     //6 = DOWN
     //7 = LEFT
     //8 = RIGHT
+    
+    //snes
+    //9 = A
+    //10 = X
+    //11 = L
+    //12 = R
 
     if (digitalRead(dataPin) == false) // FIRST CHECK IF A KEY IS PRESSED (active low)
     { 
@@ -95,6 +101,28 @@ void checkButton(int button) {
             Keyboard.press(KEY_RIGHT_ARROW);
             Serial.print("RIGHT");
             break; 
+        
+        //SNES
+        case 9  : //A
+            Keyboard.press(122);
+            Serial.print("z");
+            break; 
+        
+        case 10  : //X 
+            Keyboard.press(120);
+            Serial.print("x");
+            break; 
+        
+        case 11  : //L 
+            Keyboard.press(154);
+            Serial.print("l");
+            break; 
+        
+        case 12  : //R 
+            Keyboard.press(162);
+            Serial.print("r");
+            break; 
+        
 
         default  :  break;
         }
@@ -140,6 +168,26 @@ void checkButtonRelease(int button){
             Keyboard.release(KEY_RIGHT_ARROW);
             break; 
 
+        //SNES
+        case 9  : //A
+            Keyboard.release(122);
+            Serial.print("z");
+            break; 
+        
+        case 10  : //X 
+            Keyboard.release(120);
+            Serial.print("x");
+            break; 
+        
+        case 11  : //L 
+            Keyboard.release(154);
+            Serial.print("l");
+            break; 
+        
+        case 12  : //R 
+            Keyboard.release(162);
+            Serial.print("r");
+            break; 
         default  :  break;
         }
     }
@@ -181,14 +229,50 @@ void nes() {
 
     }
 
-}        
+}   
 
+void snes() {
+    //noInterrupts();
+    //interrupts();
+
+
+
+    digitalWrite(latchPin, HIGH);
+    checkButton(1); // check for A here
+    checkButtonRelease(1);
+
+    delayMicroseconds(12);
+
+    
+    digitalWrite(latchPin, LOW);
+    delayMicroseconds(6);
+    
+
+    for (int j = 2; j < 18; j++)
+    {
+        // pulse the pulse pin
+
+        //6 high
+        digitalWrite(pulsePin, HIGH);
+        // check for the rest of the buttons
+        checkButton(j); 
+        checkButtonRelease(j);
+        delayMicroseconds(6);
+
+        //6 low
+        digitalWrite(pulsePin, LOW);
+        delayMicroseconds(6);
+
+
+    }
+
+}  
 
 void loop() {
 
     TIMESTART = micros();
     for ( int t = 1; t < 61; t++){ // try to only do the thing 60 times a second
-        nes();
+        snes();
         delayMicroseconds(16550); 
     }
 
