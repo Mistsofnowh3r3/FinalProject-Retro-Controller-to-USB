@@ -6,10 +6,8 @@
 unsigned long startMillis;
 unsigned long currentMillis;
 
-int buttonPushCounter = 0;  // counter for the number of button presses
-int buttonState = 0;        // current state of the button
-int lastButtonState = 0;    // previous state of the button
-
+int lastButtonState = 1;    // previous state of the button
+int buttonState = 1;
 // string controller = null; // current controller
 
 //declare constants
@@ -24,29 +22,16 @@ void setup() {
     pinMode(pulsePin, OUTPUT);
     pinMode(latchPin, OUTPUT);
     pinMode(dataPin, INPUT);
+
 }
 
 
-bool detectEdge() { // modification of https://www.arduino.cc/en/Tutorial/BuiltInExamples/StateChangeDetection
-  // read the pushbutton input pin:
-  buttonState = digitalRead(dataPin);
-
-  // compare the buttonState to its previous state
+int detectEdge() { // modification of https://www.arduino.cc/en/Tutorial/BuiltInExamples/StateChangeDetection
+    buttonState = digitalRead(dataPin);
   if (buttonState != lastButtonState) {
-    // if the state has changed, increment the counter
-    if (buttonState == HIGH) 
-    {
-      // if the current state is HIGH then the button went from off to on:
-        buttonPushCounter++;
-        lastButtonState = buttonState;
-        return true;
-    } 
-    else 
-    {
-      // if the current state is LOW then the button went from on to off:
-        lastButtonState = buttonState;
-        return false;
-    }   
+    lastButtonState = buttonState;
+    Serial.print(buttonState == 0) ? 0 : 1;
+    return (buttonState == 0) ? 0 : 1;
   }
 }
 
@@ -174,18 +159,15 @@ void loop() {
         if (i < 13) 
         {
             digitalWrite(latchPin, HIGH);
-            checkButtonRelease(1);
+            
             checkButton(1); // check for A here
+            checkButtonRelease(1);
         }
         else 
         {
             digitalWrite(latchPin, LOW);
             //checkButton(1); // check for A here
         }
-        
-        
-
-  
      }
     // replace with Millis method and also add checks for all other buttons 
     for (int j = 2; j < 9; j++)
@@ -200,8 +182,9 @@ void loop() {
             if (k < 8) 
             {
                digitalWrite(pulsePin, HIGH);
-               checkButtonRelease(j); // check for a button here
                checkButton(j); // check for a button here
+               checkButtonRelease(j); // check for a button here
+               
             }
             else 
             {
