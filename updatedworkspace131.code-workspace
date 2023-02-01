@@ -5,6 +5,9 @@
 		}
 	],
 	"settings": {
-		"arduino.enableUSBDetection": false
+		"arduino.enableUSBDetection": false,
+		"files.associations": {
+			"stdio.h": "c"
+		}
 	}
 }

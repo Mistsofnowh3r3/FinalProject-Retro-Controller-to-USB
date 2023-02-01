@@ -1,10 +1,11 @@
 #include <Keyboard.h> // using keyboard for now. will do USB controller eventually 
-
 //need to move to interrupts
 
 //declare globals
 unsigned long startMillis;
 unsigned long currentMillis;
+unsigned long TIMESTART;
+unsigned long TIMEEND;
 
 int lastButtonState = 1;    // previous state of the button
 int buttonState = 1;
@@ -24,7 +25,6 @@ void setup() {
     pinMode(dataPin, INPUT);
 
 }
-
 
 int detectEdge() { // modification of https://www.arduino.cc/en/Tutorial/BuiltInExamples/StateChangeDetection
     buttonState = digitalRead(dataPin);
@@ -143,15 +143,17 @@ void checkButtonRelease(int button){
         default  :  break;
         }
     }
-
 }
 
 
 
 // main program
 void loop() {
+    Serial.print("    !!!!!START!!!!!    ");
     startMillis = millis(); //start or restart the clock
     currentMillis = millis(); // get the current time
+
+    
     for (int i = 1; currentMillis - startMillis < 18; i++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
         
@@ -159,9 +161,16 @@ void loop() {
         if (i < 13) 
         {
             digitalWrite(latchPin, HIGH);
-            
-            checkButton(1); // check for A here
-            checkButtonRelease(1);
+            if (i == 1) {
+                checkButton(1); // check for A here
+                checkButtonRelease(1);
+            }
+            TIMEEND = millis();
+            Serial.print("Latch pulse high: ");
+            Serial.print(TIMEEND - TIMESTART);
+            Serial.print(" "); 
+
+
         }
         else 
         {
@@ -169,21 +178,26 @@ void loop() {
             //checkButton(1); // check for A here
         }
      }
-    // replace with Millis method and also add checks for all other buttons 
+    TIMEEND = millis();
+    Serial.print("Full latch pulse: ");
+    Serial.print(TIMEEND - TIMESTART);
+    Serial.print(" ");      
     for (int j = 2; j < 9; j++)
     {
         startMillis = millis(); //start or restart the clock
         currentMillis = millis(); // get the current time
-
+        TIMESTART = millis();
         for (int k = 2; currentMillis - startMillis < 12; k++) { //helps to actually increment i 
             currentMillis = millis(); // get the current time
             
             //6 high 6 low
             if (k < 8) 
             {
-               digitalWrite(pulsePin, HIGH);
-               checkButton(j); // check for a button here
-               checkButtonRelease(j); // check for a button here
+                digitalWrite(pulsePin, HIGH);
+                if (k == 2) {
+                    checkButton(j); // check for a button here
+                    checkButtonRelease(j); // check for a button here
+                }
                
             }
             else 
@@ -193,5 +207,11 @@ void loop() {
             }
             
         }
+            TIMEEND = millis();
+            Serial.print("Pulse Pulse full: ");
+            Serial.print(TIMEEND - TIMESTART);
+            Serial.print(" "); 
     }
+    Serial.print("    !!!!!END!!!!!    ");
+
 }
