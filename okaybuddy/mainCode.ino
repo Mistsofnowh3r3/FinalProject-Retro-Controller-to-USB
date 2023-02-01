@@ -2,8 +2,8 @@
 //need to move to interrupts
 
 //declare globals
-unsigned long startMillis;
-unsigned long currentMillis;
+unsigned long startMicros;
+unsigned long currentMicros;
 unsigned long TIMESTART;
 unsigned long LATCHSTART;
 unsigned long LATCHHIGHSTART;
@@ -153,11 +153,11 @@ void checkButtonRelease(int button){
 
 // main program
 void loop() {
-    TIMESTART = millis();
-    startMillis = millis(); //start or restart the clock
-    currentMillis = millis(); // get the current time
-    for (int i = 1; currentMillis - startMillis < 18 || i < 19 ; i++) { //helps to actually increment i 
-        currentMillis = millis(); // get the current time
+    TIMESTART = micros();
+    startMicros = micros(); //start or restart the clock
+    currentMicros = micros(); // get the current time
+    for (int i = 1; currentMicros - startMicros < 18 || i < 19 ; i++) { //helps to actually increment i 
+        currentMicros = micros(); // get the current time
         
         //12 high 6 low
         if (i < 13) 
@@ -176,10 +176,10 @@ void loop() {
      } 
     for (int j = 2; j < 10; j++)
     {
-        startMillis = millis(); //start or restart the clock
-        currentMillis = millis(); // get the current time
-        for (int k = 2; currentMillis - startMillis < 12; k++) { //helps to actually increment i 
-            currentMillis = millis(); // get the current time
+        startMicros = micros(); //start or restart the clock
+        currentMicros = micros(); // get the current time
+        for (int k = 2; currentMicros - startMicros < 12; k++) { //helps to actually increment i 
+            currentMicros = micros(); // get the current time
             
             //6 high 6 low
             if (k < 8) 
@@ -197,9 +197,14 @@ void loop() {
             }  
         }
     }
-    TIMEEND = millis();
+    TIMEEND = micros();
     Serial.print("everything ");
     Serial.print(TIMEEND - TIMESTART);
+    //while ((TIMEEND - TIMESTART) < 8,620) {
+    //    TIMEEND = micros();
+    //}
+
     Serial.print(" ");  
     //time to complete seems to have a variancy of 144ms (Perfect) to 116ms (less perfect)
-}
+}              
+
