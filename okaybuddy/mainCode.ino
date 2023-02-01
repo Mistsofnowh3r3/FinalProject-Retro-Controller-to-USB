@@ -5,10 +5,6 @@
 unsigned long startMicros;
 unsigned long currentMicros;
 unsigned long TIMESTART;
-unsigned long LATCHSTART;
-unsigned long LATCHHIGHSTART;
-unsigned long ALLPULSESSTART;
-unsigned long PULSEFULLSTART;
 unsigned long TIMEEND;
 
 int lastButtonState = 1;    // previous state of the button
@@ -152,8 +148,7 @@ void checkButtonRelease(int button){
 
 
 // main program
-void loop() {
-    TIMESTART = micros();
+void nes() {
     startMicros = micros(); //start or restart the clock
     currentMicros = micros(); // get the current time
     for (int i = 1; currentMicros - startMicros < 18 || i < 19 ; i++) { //helps to actually increment i 
@@ -197,14 +192,24 @@ void loop() {
             }  
         }
     }
+
+}        
+
+
+void loop() {
+
+    TIMESTART = micros();
+    
+    nes();
+   
+    TIMEEND = micros();
+
+    delayMicroseconds(8620 - (TIMEEND - TIMESTART));
+    Serial.print(" ");  
+
     TIMEEND = micros();
     Serial.print("everything ");
     Serial.print(TIMEEND - TIMESTART);
-    //while ((TIMEEND - TIMESTART) < 8,620) {
-    //    TIMEEND = micros();
-    //}
-
-    Serial.print(" ");  
     //time to complete seems to have a variancy of 144ms (Perfect) to 116ms (less perfect)
-}              
 
+}
