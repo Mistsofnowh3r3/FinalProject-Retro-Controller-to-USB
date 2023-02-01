@@ -147,8 +147,6 @@ void checkButtonRelease(int button){
 
 // main program
 void nes() {
-    startMicros = micros(); //start or restart the clock
-    currentMicros = micros(); // get the current time
     //noInterrupts();
     //interrupts();
 
@@ -167,13 +165,16 @@ void nes() {
 
     for (int j = 2; j < 10; j++)
     {
-        digitalWrite(pulsePin, HIGH);
-        checkButton(j); // check for A here
-        checkButtonRelease(j);
+        // pulse the pulse pin
 
+        //6 high
+        digitalWrite(pulsePin, HIGH);
+        // check for the rest of the buttons
+        checkButton(j); 
+        checkButtonRelease(j);
         delayMicroseconds(6);
 
-    
+        //6 low
         digitalWrite(pulsePin, LOW);
         delayMicroseconds(6);
 
@@ -186,15 +187,9 @@ void nes() {
 void loop() {
 
     TIMESTART = micros();
-    for ( int t = 1; t < 61; t++){
+    for ( int t = 1; t < 61; t++){ // try to only do the thing 60 times a second
         nes();
-        delayMicroseconds(16550); // 
+        delayMicroseconds(16550); 
     }
-    //TIMESTART = micros();
-    
-    //TIMEEND = micros();
-    //Serial.print("everything ");
-    //Serial.print(TIMEEND - TIMESTART);
-    //time to complete seems to have a variancy of 144ms (Perfect) to 116ms (less perfect)
 
 }
