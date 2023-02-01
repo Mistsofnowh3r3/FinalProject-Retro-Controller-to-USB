@@ -18,7 +18,7 @@ const int dataPin = 3; // the number of the pushbutton pin
 // const int switch =  ; // state of the selection switch
 
 void setup() {
-
+    
     // set the digital pin STATES
     pinMode(pulsePin, OUTPUT);
     pinMode(latchPin, OUTPUT);
@@ -145,52 +145,39 @@ void checkButtonRelease(int button){
     }
 }
 
-
-
 // main program
 void nes() {
     startMicros = micros(); //start or restart the clock
     currentMicros = micros(); // get the current time
-    for (int i = 1; currentMicros - startMicros < 18 || i < 19 ; i++) { //helps to actually increment i 
-        currentMicros = micros(); // get the current time
-        
-        //12 high 6 low
-        if (i < 13) 
-        {
-            digitalWrite(latchPin, HIGH);
-            if (i == 1) {
-                checkButton(1); // check for A here
-                checkButtonRelease(1);
-            }
-        }
-        else 
-        {
-            digitalWrite(latchPin, LOW);
-            //checkButton(1); // check for A here
-        }
-     } 
+    //noInterrupts();
+    //interrupts();
+
+
+
+    digitalWrite(latchPin, HIGH);
+    checkButton(1); // check for A here
+    checkButtonRelease(1);
+
+    delayMicroseconds(12);
+
+    
+    digitalWrite(latchPin, LOW);
+    delayMicroseconds(6);
+    
+
     for (int j = 2; j < 10; j++)
     {
-        startMicros = micros(); //start or restart the clock
-        currentMicros = micros(); // get the current time
-        for (int k = 2; currentMicros - startMicros < 12; k++) { //helps to actually increment i 
-            currentMicros = micros(); // get the current time
-            
-            //6 high 6 low
-            if (k < 8) 
-            {
-                digitalWrite(pulsePin, HIGH);
-                if (k == 2) {
-                    checkButton(j); // check for a button here
-                    checkButtonRelease(j); // check for a button here
-                } 
-            }
-            else 
-            {
-               digitalWrite(pulsePin, LOW);
-               //checkButton(j); // check for a button here
-            }  
-        }
+        digitalWrite(pulsePin, HIGH);
+        checkButton(j); // check for A here
+        checkButtonRelease(j);
+
+        delayMicroseconds(6);
+
+    
+        digitalWrite(pulsePin, LOW);
+        delayMicroseconds(6);
+
+
     }
 
 }        
@@ -199,17 +186,15 @@ void nes() {
 void loop() {
 
     TIMESTART = micros();
+    for ( int t = 1; t < 61; t++){
+        nes();
+        delayMicroseconds(16550); // 
+    }
+    //TIMESTART = micros();
     
-    nes();
-   
-    TIMEEND = micros();
-
-    delayMicroseconds(8620 - (TIMEEND - TIMESTART));
-    Serial.print(" ");  
-
-    TIMEEND = micros();
-    Serial.print("everything ");
-    Serial.print(TIMEEND - TIMESTART);
+    //TIMEEND = micros();
+    //Serial.print("everything ");
+    //Serial.print(TIMEEND - TIMESTART);
     //time to complete seems to have a variancy of 144ms (Perfect) to 116ms (less perfect)
 
 }
