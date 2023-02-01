@@ -5,6 +5,11 @@
 //declare globals
 unsigned long startMillis;
 unsigned long currentMillis;
+
+int buttonPushCounter = 0;  // counter for the number of button presses
+int buttonState = 0;        // current state of the button
+int lastButtonState = 0;    // previous state of the button
+
 // string controller = null; // current controller
 
 //declare constants
@@ -20,6 +25,36 @@ void setup() {
     pinMode(latchPin, OUTPUT);
     pinMode(dataPin, INPUT);
 }
+
+
+bool detectEdge() { // modification of https://www.arduino.cc/en/Tutorial/BuiltInExamples/StateChangeDetection
+  // read the pushbutton input pin:
+  buttonState = digitalRead(dataPin);
+
+  // compare the buttonState to its previous state
+  if (buttonState != lastButtonState) {
+    // if the state has changed, increment the counter
+    if (buttonState == HIGH) 
+    {
+      // if the current state is HIGH then the button went from off to on:
+        buttonPushCounter++;
+        lastButtonState = buttonState;
+        return true;
+    } 
+    else 
+    {
+      // if the current state is LOW then the button went from on to off:
+        lastButtonState = buttonState;
+        return false;
+    }   
+  }
+}
+
+
+
+
+
+
 
 void checkButton(int button) {
     //1 = A 
@@ -134,17 +169,18 @@ void loop() {
     currentMillis = millis(); // get the current time
     for (int i = 1; currentMillis - startMillis < 18; i++) { //helps to actually increment i 
         currentMillis = millis(); // get the current time
-        checkButtonRelease(1);
+        
         //12 high 6 low
         if (i < 13) 
         {
             digitalWrite(latchPin, HIGH);
+            checkButtonRelease(1);
             checkButton(1); // check for A here
         }
         else 
         {
             digitalWrite(latchPin, LOW);
-            checkButton(1); // check for A here
+            //checkButton(1); // check for A here
         }
         
         
@@ -159,17 +195,18 @@ void loop() {
 
         for (int k = 2; currentMillis - startMillis < 12; k++) { //helps to actually increment i 
             currentMillis = millis(); // get the current time
-            checkButtonRelease(j); // check for a button here
+            
             //6 high 6 low
             if (k < 8) 
             {
                digitalWrite(pulsePin, HIGH);
+               checkButtonRelease(j); // check for a button here
                checkButton(j); // check for a button here
             }
             else 
             {
                digitalWrite(pulsePin, LOW);
-               checkButton(j); // check for a button here
+               //checkButton(j); // check for a button here
             }
             
         }
