@@ -7,6 +7,7 @@ unsigned long currentMicros;
 unsigned long TIMESTART;
 unsigned long TIMEEND;
 
+
 int lastButtonState = 1;    // previous state of the button
 int buttonState = 1;
 // string controller = null; // current controller
@@ -16,6 +17,10 @@ const int pulsePin = 1; // the number of the pushbutton pin
 const int latchPin = 2; // the number of the LED pin
 const int dataPin = 3; // the number of the pushbutton pin
 // const int switch =  ; // state of the selection switch
+
+//various mode related things
+const bool snesMode = false; // cureently ditactes if snes or nes
+const bool edMode = false; // control bindings for ed
 
 void setup() {
     
@@ -104,21 +109,33 @@ void checkButton(int button) {
         
         //SNES
         case 9  : //A
+            if (!snesMode) {
+                break; 
+            }
             Keyboard.press(122);
             Serial.print("z");
             break; 
         
         case 10  : //X 
+            if (!snesMode) {
+                break; 
+            }
             Keyboard.press(120);
             Serial.print("x");
             break; 
         
         case 11  : //L 
+            if (!snesMode) {
+                break; 
+            }
             Keyboard.press(154);
             Serial.print("l");
             break; 
         
         case 12  : //R 
+            if (!snesMode) {
+                break; 
+            }
             Keyboard.press(162);
             Serial.print("r");
             break; 
@@ -170,21 +187,33 @@ void checkButtonRelease(int button){
 
         //SNES
         case 9  : //A
+            if (!snesMode) {
+                break; 
+            }
             Keyboard.release(122);
             Serial.print("z");
             break; 
         
         case 10  : //X 
+            if (!snesMode) {
+                break; 
+            }
             Keyboard.release(120);
             Serial.print("x");
             break; 
         
         case 11  : //L 
+            if (!snesMode) {
+                break; 
+            }
             Keyboard.release(154);
             Serial.print("l");
             break; 
         
         case 12  : //R 
+            if (!snesMode) {
+                break; 
+            }
             Keyboard.release(162);
             Serial.print("r");
             break; 
