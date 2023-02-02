@@ -19,7 +19,8 @@ const int dataPin = 3; // the number of the pushbutton pin
 // const int switch =  ; // state of the selection switch
 
 //various mode related things
-const bool snesMode = false; // cureently ditactes if snes or nes
+const bool snesMode = true; // cureently ditactes if snes or nes
+const bool snesMouseMode = true; // cureently ditactes if snes or nes
 const bool edMode = false; // control bindings for ed
 
 void setup() {
@@ -30,21 +31,6 @@ void setup() {
     pinMode(dataPin, INPUT);
 
 }
-
-int detectEdge() { // modification of https://www.arduino.cc/en/Tutorial/BuiltInExamples/StateChangeDetection
-    buttonState = digitalRead(dataPin);
-  if (buttonState != lastButtonState) {
-    lastButtonState = buttonState;
-    Serial.print(buttonState == 0) ? 0 : 1;
-    return (buttonState == 0) ? 0 : 1;
-  }
-}
-
-
-
-
-
-
 
 void checkButton(int button) {
     //1 = A 
