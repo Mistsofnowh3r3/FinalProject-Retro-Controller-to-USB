@@ -1,8 +1,17 @@
 #include <Keyboard.h> // using keyboard for now. will do USB controller eventually 
+#include "Mouse.h"
 
 //declare globals
 int lastButtonState = 1;    // previous state of the button
 int buttonState = 1;
+int mouseX = 0;
+int mouseLastX = 0;
+int mouseXDirection = 0;
+int mouseY = 0;
+int mouseLastY = 0;
+int mouseYDirection = 0;
+int doesa = 0; // se the sensitivity at least once
+
 // string controller = null; // current controller
 
 //declare constants
@@ -10,7 +19,12 @@ const int button_values[] = {97, 98, 32, KEY_RETURN, KEY_UP_ARROW, KEY_DOWN_ARRO
 const int pulsePin = 1; // the number of the pushbutton pin
 const int latchPin = 2; // the number of the LED pin
 const int dataPin = 3; // the number of the pushbutton pin
+
+const int sanityOut = 5; // the number of the pushbutton pin
+const int sanityIn = 6; // the number of the pushbutton pin
+
 // const int switch =  ; // state of the selection switch
+
 
 //various mode related things
 const bool nesMode = false; // cureently ditactes if snes or nes
@@ -24,7 +38,23 @@ const bool keyboardMode = true; //output as keyboard
 const bool xinputMode = false; //output as xinput controller
 
 
+bool snesMouseCheck(bool mode) {
 
+    //mode
+    //0 is checking for a hit (LOW)
+    //1 is checking for a release (High)
+
+
+    if ((mode == false) && (digitalRead(dataPin) == false)) {
+        //line went false, we got a hit
+        return true;
+    }
+    if ((mode == true) && (digitalRead(dataPin) == true)) {
+        //line went TRUE, it was release, or was never pressed
+        return true;
+    }
+    return false;
+}
 
 void checkButton(int button, bool mode) {
 
@@ -57,7 +87,7 @@ void checkButton(int button, bool mode) {
         
         if ((mode == false) && (digitalRead(dataPin) == false)) {
             Keyboard.press(button_values[button_index]);
-            Serial.print((char) button_values[button_index]);
+            Serial.print(button_values[button_index]);
             return;
         }
         if ((mode == true) && (digitalRead(dataPin) == true)) {
@@ -69,7 +99,7 @@ void checkButton(int button, bool mode) {
     // get here if in snes mode if in SNES mode we do the keys past the 8th one
     if ((mode == false) && (digitalRead(dataPin) == false)) {
         Keyboard.press(button_values[button_index]);
-        Serial.print((char) button_values[button_index]);
+        Serial.print(button_values[button_index]);
         return;
     }
     if ((mode == true) && (digitalRead(dataPin) == true)) {
@@ -150,23 +180,211 @@ void snes() {
 
 
     }
+    if (snesMouseMode == true) {
+
+
+
+    }
 
 }  
 
-void setup() {
+void snesMouse() {
+
+
+
+    //DATA LATCH 1
+    digitalWrite(latchPin, HIGH);
+
     
+    //if (doesa == 0 ) {
+    //    digitalWrite(pulsePin, HIGH);
+    //    doesa = 1;
+    //    digitalWrite(pulsePin, LOW);
+    //}
+    
+    delayMicroseconds(12);
+    digitalWrite(latchPin, LOW);
+    delayMicroseconds(6);
+    
+    // DO 7 PULSES
+    #pragma region // 2 - 8
+    for (int f = 0; f < 7; f++) {
+        //6 high
+        digitalWrite(pulsePin, HIGH);
+        delayMicroseconds(6);
+        //6 low
+        digitalWrite(pulsePin, LOW);
+        delayMicroseconds(6);
+    }
+    #pragma endregion
+
+    #pragma region  //rightmouse 9
+    //6 high
+    digitalWrite(pulsePin, HIGH);
+    delayMicroseconds(6);
+
+    if (snesMouseCheck(0)) {
+        //pressmouse
+    }
+    if (snesMouseCheck(1)) {
+        //releasemouse
+    }
+    //6 low
+    digitalWrite(pulsePin, LOW);
+    delayMicroseconds(6);
+    #pragma endregion
+
+    #pragma region  //leftmouse 10
+    //6 high
+    digitalWrite(pulsePin, HIGH);
+    delayMicroseconds(6);
+
+    if (snesMouseCheck(0)) {
+        //pressmouse
+    }
+    if (snesMouseCheck(1)) {
+        //releasemouse
+    }
+    //6 low
+    digitalWrite(pulsePin, LOW);
+    delayMicroseconds(6);
+    #pragma endregion
+
+    #pragma region  //speedbit? 11
+    //6 high
+    digitalWrite(pulsePin, HIGH);
+    delayMicroseconds(6);
+    //6 low
+    digitalWrite(pulsePin, LOW);
+    delayMicroseconds(6);
+    #pragma endregion
+
+    #pragma region  //speedbit again 12
+    //6 high
+    digitalWrite(pulsePin, HIGH);
+    delayMicroseconds(6);
+    //6 low
+    digitalWrite(pulsePin, LOW);
+    delayMicroseconds(6);
+    #pragma endregion
+
+    #pragma region // 13 - 16
+    for (int h = 0; h < 4; h++) {
+        //6 high
+        digitalWrite(pulsePin, HIGH);
+        delayMicroseconds(6);
+        //6 low
+        digitalWrite(pulsePin, LOW);
+        delayMicroseconds(6);
+    }
+    #pragma endregion
+
+    #pragma region  //leftmouse 17 Y direction (0=up, 1=down)
+    //1 high
+    digitalWrite(pulsePin, HIGH);
+    delayMicroseconds(.5);
+
+    if (!digitalRead(dataPin)) {
+        mouseYDirection = 1;
+        //Down
+    }
+    else {
+        mouseYDirection = 0;
+    }
+    //8 low
+    digitalWrite(pulsePin, LOW);
+    delayMicroseconds(8);
+    #pragma endregion
+
+    #pragma region  //leftmouse 18 - 24 Y motion
+    //1 high
+    for ( int q = 0; q < 7; q++) {
+        digitalWrite(pulsePin, HIGH);
+        mouseY = mouseY << 1;
+        mouseY = mouseY | (!digitalRead(dataPin));
+        delayMicroseconds(.5);
+        //8 low
+        digitalWrite(pulsePin, LOW);
+        delayMicroseconds(8);
+    }
+
+    #pragma endregion
+
+
+
+
+    #pragma region  //leftmouse 25 X direction (0=left, 1=right)
+    //1 high
+    digitalWrite(pulsePin, HIGH);
+    delayMicroseconds(.5);
+
+    if (!digitalRead(dataPin)) {
+        mouseXDirection = 1;
+        //left
+    }
+    else {
+        mouseXDirection = 0;
+    }
+    //8 low
+    digitalWrite(pulsePin, LOW);
+    delayMicroseconds(8);
+    #pragma endregion
+
+    #pragma region  //leftmouse 25 - 32 X motion
+    //1 high
+    for ( int q = 0; q < 7; q++) {
+        digitalWrite(pulsePin, HIGH);
+        mouseX = mouseX << 1;
+        mouseX = mouseX | (!digitalRead(dataPin));
+        delayMicroseconds(.5);
+        //8 low
+        digitalWrite(pulsePin, LOW);
+        delayMicroseconds(8);
+    }
+
+    #pragma endregion
+
+    if (mouseYDirection == 1) {
+        Mouse.move(0, ( -1 * (mouseLastY - mouseY)));
+    }
+    else {
+        Mouse.move(0, mouseLastY - mouseY);
+    }
+
+    if (mouseXDirection == 1) {
+        Mouse.move(( -1 * (mouseLastX - mouseX)), 0);
+    }
+    else {
+        Mouse.move(mouseLastX - mouseX, 0);
+    }
+
+    
+
+    mouseLastX = mouseX;
+    mouseLastY = mouseY;
+    mouseX = 0;
+    mouseY = 0;
+}  
+
+
+void setup() {
+    Serial.begin(9600);
     // set the digital pin STATES
     pinMode(pulsePin, OUTPUT);
     pinMode(latchPin, OUTPUT);
     pinMode(dataPin, INPUT);
+    pinMode(sanityIn, INPUT);
 
 }
 
 void loop() {
 
+    
     for ( int t = 1; t < 61; t++){ // try to only do the thing 60 times a second
-        snes();
-        delayMicroseconds(16550); 
+        if (digitalRead(sanityIn) == true){ //when 6 is grounded, we do not go
+            snes();
+            delayMicroseconds(16550); 
+        }
     }
 
 }
