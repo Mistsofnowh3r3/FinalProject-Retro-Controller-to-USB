@@ -1,6 +1,6 @@
 #include <Keyboard.h> // using keyboard for now. will do USB controller eventually 
-#include "Mouse.h"
-#include <XInput.h>
+#include <Mouse.h>
+//#include <XInput.h>
 //declare globals
 int lastButtonState = 1;    // previous state of the button
 int buttonState = 1;
@@ -16,6 +16,8 @@ int doesa = 0; // se the sensitivity at least once
 
 //declare constants
 const int button_values[] = {97, 98, 32, KEY_RETURN, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, 120, 154, 162};
+
+//const int button_valuesXInput[] = {BUTTON_A, BUTTON_B, BUTTON_BACK, BUTTON_START, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT, BUTTON_X, BUTTON_Y, BUTTON_LB, BUTTON_RB};
 const int pulsePin = 1; // the number of the pushbutton pin
 const int latchPin = 2; // the number of the LED pin
 const int dataPin = 3; // the number of the pushbutton pin
@@ -35,7 +37,6 @@ const bool n64Mode = false; // cureently ditactes if snes or nes
 // modes for what the poutput will be 
 const bool edMode = false; // control bindings set to ED compatible
 const bool keyboardMode = true; //output as keyboard
-const bool xinputMode = false; //output as xinput controller
 
 
 bool snesMouseCheck(bool mode) {
@@ -84,7 +85,7 @@ void checkButton(int button, bool mode) {
     }
 
     if (!snesMode || button_index < 8) {  // if not in SNES mode or below 8
-        
+      
         if ((mode == false) && (digitalRead(dataPin) == false)) {
             Keyboard.press(button_values[button_index]);
             Serial.print(button_values[button_index]);
@@ -108,6 +109,40 @@ void checkButton(int button, bool mode) {
     }
 
 }
+
+void checkButtonXInput(int button, bool mode) {
+    int button_index = button - 1;
+      
+    if (button_index > 12) { // if we have past all the buttons just return and do nothing
+        return;
+    }
+
+    if (!snesMode || button_index < 8) {  // if not in SNES mode or below 8
+        
+        if ((mode == false) && (digitalRead(dataPin) == false)) {
+            //XInput.press(button_valuesXInput[button_index]);
+            //Serial.print(button_valuesXInput[button_index]);
+            return;
+        }
+        if ((mode == true) && (digitalRead(dataPin) == true)) {
+            //XInput.release(button_valuesXInput[button_index]);
+            return;
+        }
+
+    }	
+    // get here if in snes mode if in SNES mode we do the keys past the 8th one
+    if ((mode == false) && (digitalRead(dataPin) == false)) {
+        //XInput.press(button_valuesXInput[button_index]);
+        //Serial.print(button_valuesXInput[button_index]);
+        return;
+    }
+    if ((mode == true) && (digitalRead(dataPin) == true)) {
+        //XInput.release(button_valuesXInput[button_index]);
+        return;
+    }
+
+}
+
 
 void nes() {
     //noInterrupts();
@@ -345,17 +380,17 @@ void snesMouse() {
     #pragma endregion
 
     if (mouseYDirection == 1) {
-        Mouse.move(0, ( -1 * (mouseLastY - mouseY)));
+        //Mouse.move(0, ( -1 * (mouseLastY - mouseY)));
     }
     else {
-        Mouse.move(0, mouseLastY - mouseY);
+       // Mouse.move(0, mouseLastY - mouseY);
     }
 
     if (mouseXDirection == 1) {
-        Mouse.move(( -1 * (mouseLastX - mouseX)), 0);
+      //  Mouse.move(( -1 * (mouseLastX - mouseX)), 0);
     }
     else {
-        Mouse.move(mouseLastX - mouseX, 0);
+        //Mouse.move(mouseLastX - mouseX, 0);
     }
 
     
@@ -382,7 +417,7 @@ void loop() {
     
     for ( int t = 1; t < 61; t++){ // try to only do the thing 60 times a second
         if (digitalRead(sanityIn) == true){ //when 6 is grounded, we do not go
-            snes();
+            nes();
             delayMicroseconds(16550); 
         }
     }
