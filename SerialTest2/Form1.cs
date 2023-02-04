@@ -31,7 +31,7 @@ namespace SerialTest2
         {
             string indata = _serialPort.ReadExisting();
             Console.WriteLine("Data received: " + indata);
-            textBox1.Invoke(new Action(() => textBox1.Text = indata));
+            tb_serialread.Invoke(new Action(() => tb_serialread.Text = indata));
         }
 
 
@@ -55,8 +55,19 @@ namespace SerialTest2
 
         }
 
-        private void label3_Click(object sender, EventArgs e)
+        private void btn_sendremap_Click(object sender, EventArgs e)
         {
+            //check the button boxes
+            //add all the buttons to change in an array
+
+
+            _serialPort.Write("SREQ"); //request serial operation
+
+            for (int i = 0; i < 20; i++) // wait for a acknowledge and if not time out
+            {
+            }
+            //send to serial
+
 
         }
     }
