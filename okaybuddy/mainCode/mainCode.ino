@@ -1,5 +1,5 @@
 //#include <Joystick.h>
-
+#include <string.h>
 #include <Keyboard.h> // using keyboard for now. will do USB controller eventually 
 #include <Mouse.h>
 //#include <XInput.h>
@@ -12,12 +12,10 @@ int mouseLastY = 0;
 int mouseYDirection = 0;
 int doesa = 0; // se the sensitivity at least once
 String serialNow = "";
+int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, KEY_LEFT_CTRL, 154, 162};
 
-// string controller = null; // current controller
 
 //declare constants
-const int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, KEY_LEFT_CTRL, 154, 162};
-
 //const int button_valuesXInput[] = {BUTTON_A, BUTTON_B, BUTTON_BACK, BUTTON_START, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT, BUTTON_X, BUTTON_Y, BUTTON_LB, BUTTON_RB};
 const int pulsePin = 1; // the number of the pushbutton pin
 const int latchPin = 2; // the number of the LED pin
@@ -144,26 +142,36 @@ void serialActions() {
     if (serialNow != "SREQ") { //check for a serial request
         return; // there was no request, return
     }
-    Serial.write("SACK!"); //send acknowledge with the delimiter
+    Serial.write("SACK"); //send acknowledge with the delimiter
     while (true){ //wait for a command
         serialNow = Serial.readStringUntil('!');
 
         if (serialNow == "REMAP") { // the command is remap
 
-            Serial.write("REMAPACK!"); // ackowledge the command
+            Serial.write("REMAPACK"); // ackowledge the command
 
             while (true) {  // wait for a system identifier 
 
                 serialNow = Serial.readStringUntil('!');
 
                 if (serialNow == "NES") { 
-                    Serial.write("NESACK!");
+                    Serial.write("NESACK");
+
+                    while(true){
+                        serialNow = Serial.readStringUntil('!');
+                        Serial.write("Got: ");
+                        Serial.write(serialNow.c_str());
+                    }
+
+
+
+
                 }
                 if (serialNow == "SNES") {
-                    Serial.write("SNESACK!");
+                    Serial.write("SNESACK");
                 }
                 if (serialNow == "N64") {
-                    Serial.write("N64ACK!");
+                    Serial.write("N64ACK");
                 }
             }   
         }

@@ -40,19 +40,12 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
-            this.button7 = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.button6 = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.button8 = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tb_console = new System.Windows.Forms.TextBox();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage4.SuspendLayout();
@@ -63,10 +56,11 @@
             // 
             this.tb_serialread.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tb_serialread.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.tb_serialread.Location = new System.Drawing.Point(255, 42);
+            this.tb_serialread.Location = new System.Drawing.Point(235, 42);
+            this.tb_serialread.Multiline = true;
             this.tb_serialread.Name = "tb_serialread";
             this.tb_serialread.ReadOnly = true;
-            this.tb_serialread.Size = new System.Drawing.Size(100, 16);
+            this.tb_serialread.Size = new System.Drawing.Size(122, 20);
             this.tb_serialread.TabIndex = 0;
             this.tb_serialread.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -90,9 +84,9 @@
             this.cb_portlist.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cb_portlist.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
             this.cb_portlist.FormattingEnabled = true;
-            this.cb_portlist.Location = new System.Drawing.Point(209, 11);
+            this.cb_portlist.Location = new System.Drawing.Point(202, 11);
             this.cb_portlist.Name = "cb_portlist";
-            this.cb_portlist.Size = new System.Drawing.Size(148, 23);
+            this.cb_portlist.Size = new System.Drawing.Size(155, 23);
             this.cb_portlist.TabIndex = 3;
             this.cb_portlist.DropDown += new System.EventHandler(this.cb_portlist_DropDown);
             this.cb_portlist.SelectedIndexChanged += new System.EventHandler(this.cb_portlist_SelectedIndexChanged);
@@ -177,17 +171,8 @@
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPage4.Controls.Add(this.label7);
-            this.tabPage4.Controls.Add(this.button7);
-            this.tabPage4.Controls.Add(this.label6);
-            this.tabPage4.Controls.Add(this.button6);
-            this.tabPage4.Controls.Add(this.label5);
-            this.tabPage4.Controls.Add(this.label4);
             this.tabPage4.Controls.Add(this.label3);
-            this.tabPage4.Controls.Add(this.button5);
-            this.tabPage4.Controls.Add(this.button4);
-            this.tabPage4.Controls.Add(this.button3);
-            this.tabPage4.Controls.Add(this.button2);
+            this.tabPage4.Controls.Add(this.button8);
             this.tabPage4.Controls.Add(this.button1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
@@ -196,117 +181,13 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Other";
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(106, 127);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(68, 13);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "Get N64ACK";
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(6, 122);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(92, 23);
-            this.button7.TabIndex = 4;
-            this.button7.Text = "System N64";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(106, 69);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(68, 13);
-            this.label6.TabIndex = 3;
-            this.label6.Text = "Get NESACK";
-            // 
-            // button6
-            // 
-            this.button6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button6.Location = new System.Drawing.Point(6, 64);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(92, 23);
-            this.button6.TabIndex = 2;
-            this.button6.Text = "System NES";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(106, 98);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(74, 13);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Get SNESACK";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(106, 40);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(84, 13);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "Get REMAPACK";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(106, 11);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Get SACK";
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(351, 49);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(122, 23);
-            this.button5.TabIndex = 0;
-            this.button5.Text = "Send Keyboard \"t\"";
-            this.button5.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(351, 3);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(122, 23);
-            this.button4.TabIndex = 0;
-            this.button4.Text = "Send Button \"Start\"";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(6, 93);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(92, 23);
-            this.button3.TabIndex = 0;
-            this.button3.Text = "System SNES";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(6, 35);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(92, 23);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "Init Remap";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(6, 6);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(92, 23);
+            this.button1.Size = new System.Drawing.Size(174, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "Send Request";
+            this.button1.Text = "Send Request to remap NES";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
@@ -325,6 +206,47 @@
             this.tabControl1.Size = new System.Drawing.Size(776, 369);
             this.tabControl1.TabIndex = 5;
             // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(353, 6);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(122, 52);
+            this.button8.TabIndex = 6;
+            this.button8.Text = "Remap Start to t";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 32);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(77, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "No Words Yet";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(380, 15);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(88, 15);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Debug Console";
+            // 
+            // tb_console
+            // 
+            this.tb_console.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_console.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_console.Location = new System.Drawing.Point(473, 11);
+            this.tb_console.Multiline = true;
+            this.tb_console.Name = "tb_console";
+            this.tb_console.ReadOnly = true;
+            this.tb_console.Size = new System.Drawing.Size(311, 23);
+            this.tb_console.TabIndex = 6;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -332,6 +254,8 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.tb_console);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -367,18 +291,11 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btn_sendremap;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox tb_console;
     }
 }
 
