@@ -161,17 +161,37 @@ void serialActions() {
                         serialNow = Serial.readStringUntil('!');
                         Serial.write("Got: ");
                         Serial.write(serialNow.c_str());
+                        if (serialNow == "DONE"){
+                            Serial.write("Ready for something else.");
+                            return;
+                        }
                     }
-
-
-
-
                 }
                 if (serialNow == "SNES") {
                     Serial.write("SNESACK");
+
+                    while(true){
+                        serialNow = Serial.readStringUntil('!');
+                        Serial.write("Got: ");
+                        Serial.write(serialNow.c_str());
+                        if (serialNow == "DONE"){
+                            Serial.write("Ready for something else.");
+                            return;
+                        }
+                    }
                 }
                 if (serialNow == "N64") {
                     Serial.write("N64ACK");
+
+                    while(true){
+                        serialNow = Serial.readStringUntil('!');
+                        Serial.write("Got: ");
+                        Serial.write(serialNow.c_str());
+                        if (serialNow == "DONE"){
+                            Serial.write("Ready for something else.");
+                            return;
+                        }
+                    }
                 }
             }   
         }

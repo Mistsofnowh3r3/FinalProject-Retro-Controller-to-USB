@@ -70,15 +70,13 @@ namespace SerialTest2
 
 
 
-            for (int i = 0; i < 20; i++) // wait for a acknowledge and if not time out
-            {
-            }
-            //send to serial
+            handShakeNow();
+            remapNow("NES");
 
 
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void handShakeNow()
         {
             _serialPort.Write("SREQ!"); //request serial operation
             while (true)
@@ -87,30 +85,60 @@ namespace SerialTest2
                 if (serialNow == "SACK") ;
                 {
                     tb_console.Text = "SREQ acknowledged.";
-                    _serialPort.Write("REMAP!"); //request remap
-                    while (true)
+                    return;
+                }
+            }
+        }
+        private void remapNow(string console)
+        {
+            _serialPort.Write("REMAP!"); //request remap
+            while (true)
+            {
+                if (serialNow == "REMAPACK") ;
+                {
+                    switch (console)
                     {
-                        if (serialNow == "REMAPACK") ;
-                        {
-                            _serialPort.Write("NES!"); // state NES
+                        case "NES":
+                        _serialPort.Write("NES!"); // state NES
                             while (true)
                             {
                                 if (serialNow == "NESACK") ;
                                 {
-                                    tb_console.Text = "The handshake was a sucess!";
+                                    tb_console.Text = "Remap a button on the NES controller? You got it boss!";
                                     return;
                                 }
                             }
-                        }
-                    }
+                        case "SNES":
+                            _serialPort.Write("SNES!"); // state NES
+                            while (true)
+                            {
+                                if (serialNow == "SNESACK") ;
+                                {
+                                    tb_console.Text = "Remap a button on the SNES controller? You got it boss!";
+                                    return;
+                                }
+                            }
+                        case "N64":
+                            _serialPort.Write("N64!"); // state NES
+                            while (true)
+                            {
+                                if (serialNow == "N64SACK") ;
+                                {
+                                    tb_console.Text = "Remap a button on the N64 controller? You got it boss!";
+                                    return;
+                                }
+                            }
+                    } 
                 }
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+
+        private void button1_Click_1(object sender, EventArgs e)
         {
-            _serialPort.Write("REMAP!"); //request remap
+
         }
+
 
         private void cb_portlist_DropDown(object sender, EventArgs e)
         {
@@ -142,38 +170,20 @@ namespace SerialTest2
             _serialPort.PortName = port;
         }
 
-        private void button6_Click(object sender, EventArgs e)
-        {
-            _serialPort.Write("NES!");
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            _serialPort.Write("SNES!");
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            _serialPort.Write("N64!");
-        }
-
         private void button8_Click(object sender, EventArgs e)
         {
             _serialPort.Write("3, a!");
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
-
-            string serialNow = _serialPort.ReadExisting();
-            tb_console.Text = serialNow;
-
+            handShakeNow();
+            remapNow("SNES");
         }
 
-        private void button3_Click_1(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
-            _serialPort.Write("SREQ!"); //request serial operation
-            tb_console.Text = serialNow;
+            _serialPort.Write("DONE!");
         }
     }
 }
