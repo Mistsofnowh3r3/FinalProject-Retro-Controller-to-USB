@@ -22,7 +22,7 @@ const int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY
 const int pulsePin = 1; // the number of the pushbutton pin
 const int latchPin = 2; // the number of the LED pin
 const int dataPin = 3; // the number of the pushbutton pin
-const int sanityIn = 6; // the number of the pushbutton pin
+const int sanityIn = 5; // the number of the pushbutton pin
 
 // const int switch =  ; // state of the selection switch
 
@@ -138,30 +138,32 @@ void checkButtonXInput(int button, bool mode) {
 
 
 void serialActions() {
+
+    // forthe intial test, I can do this one button at a atime in the winform app.
     serialNow = Serial.readStringUntil('!');
-    for(int p = 0; p < 20 || serialNow != "SREQ"; p++) {
-        //wait for ack or timeout
-        if (p == 20)  {
-            return;
-        }
+    if (serialNow != "SREQ") { //check for a serial request
+        return; // there was no request, return
     }
-    Serial.write("SACK!"); //send acknoledge with the delimiter
+    Serial.write("SACK!"); //send acknowledge with the delimiter
     while (true){ //wait for a command
         serialNow = Serial.readStringUntil('!');
 
-        if (serialNow == "REMAP") {
-            Serial.write("REMAPACK!");
+        if (serialNow == "REMAP") { // the command is remap
 
-            // need to wait for a system
+            Serial.write("REMAPACK!"); // ackowledge the command
 
-            while(true) {
-                //somehow collect all remaps AND PUT INTO AN ARRAY
+            while (true) {  // wait for a system identifier 
 
-                serialNow = Serial.readStringUntil('!'); 
-                if (serialNow == "REMAPEND") {//gather and apply remaps
-                    //APPLY REMAPS
-                    Serial.write("DONE!");
-                    return; // and leave
+                serialNow = Serial.readStringUntil('!');
+
+                if (serialNow == "NES") { 
+                    Serial.write("NESACK!");
+                }
+                if (serialNow == "SNES") {
+                    Serial.write("SNESACK!");
+                }
+                if (serialNow == "N64") {
+                    Serial.write("N64ACK!");
                 }
             }   
         }
@@ -411,12 +413,13 @@ void setup() {
     pinMode(latchPin, OUTPUT);
     pinMode(dataPin, INPUT);
     pinMode(sanityIn, INPUT);
-
+    pinMode(6, OUTPUT);
+    digitalWrite(6, HIGH);
 }
 
 void loop() {  
     for ( int t = 1; t < 61; t++){ // try to only do the thing 60 times a second
-        if (digitalRead(sanityIn) == true){ //when 6 is grounded, we do not go
+        if (digitalRead(sanityIn) == true){ //connect 5 to 6 to go
             if (nesMode == true) {
                 nes();
             }
@@ -426,8 +429,10 @@ void loop() {
             if (n64Mode == true) {
                 //n64();
             }
-            
             delayMicroseconds(16550); 
+        }
+        if (digitalRead(sanityIn) == false){ //connect 5 to ground to perform serial actions
+            serialActions();
         }
     }
 }
