@@ -1,9 +1,9 @@
+//#include <Joystick.h>
+
 #include <Keyboard.h> // using keyboard for now. will do USB controller eventually 
 #include <Mouse.h>
 //#include <XInput.h>
 //declare globals
-int lastButtonState = 1;    // previous state of the button
-int buttonState = 1;
 int mouseX = 0;
 int mouseLastX = 0;
 int mouseXDirection = 0;
@@ -11,18 +11,17 @@ int mouseY = 0;
 int mouseLastY = 0;
 int mouseYDirection = 0;
 int doesa = 0; // se the sensitivity at least once
+String serialNow = "";
 
 // string controller = null; // current controller
 
 //declare constants
-const int button_values[] = {97, 98, 32, KEY_RETURN, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, 120, 154, 162};
+const int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, KEY_LEFT_CTRL, 154, 162};
 
 //const int button_valuesXInput[] = {BUTTON_A, BUTTON_B, BUTTON_BACK, BUTTON_START, DPAD_UP, DPAD_DOWN, DPAD_LEFT, DPAD_RIGHT, BUTTON_X, BUTTON_Y, BUTTON_LB, BUTTON_RB};
 const int pulsePin = 1; // the number of the pushbutton pin
 const int latchPin = 2; // the number of the LED pin
 const int dataPin = 3; // the number of the pushbutton pin
-
-const int sanityOut = 5; // the number of the pushbutton pin
 const int sanityIn = 6; // the number of the pushbutton pin
 
 // const int switch =  ; // state of the selection switch
@@ -31,21 +30,18 @@ const int sanityIn = 6; // the number of the pushbutton pin
 //various mode related things
 const bool nesMode = false; // cureently ditactes if snes or nes
 const bool snesMode = true; // cureently ditactes if snes or nes
-const bool snesMouseMode = true; // cureently ditactes if snes or nes
+const bool snesMouseMode = false; // cureently ditactes if snes or nes
 const bool n64Mode = false; // cureently ditactes if snes or nes
 
 // modes for what the poutput will be 
-const bool edMode = false; // control bindings set to ED compatible
 const bool keyboardMode = true; //output as keyboard
-
+const bool controllerMode = false; //output as controller
 
 bool snesMouseCheck(bool mode) {
 
     //mode
     //0 is checking for a hit (LOW)
     //1 is checking for a release (High)
-
-
     if ((mode == false) && (digitalRead(dataPin) == false)) {
         //line went false, we got a hit
         return true;
@@ -68,7 +64,6 @@ void checkButton(int button, bool mode) {
     //6 = DOWN
     //7 = LEFT
     //8 = RIGHT
-    
     //snes
     //9 = A
     //10 = X
@@ -76,15 +71,13 @@ void checkButton(int button, bool mode) {
     //12 = R
     // partial chatgpt helped code that makes my original more managable
     
-
-
     int button_index = button - 1;
       
-    if (button_index > 12) { // if we have past all the buttons just return and do nothing
+    if (button_index > 12) { // if we have passed all the buttons just return and do nothing
         return;
     }
 
-    if (!snesMode || button_index < 8) {  // if not in SNES mode or below 8
+    if (!snesMode || button_index < 7) {  // if not in SNES mode or below 8
       
         if ((mode == false) && (digitalRead(dataPin) == false)) {
             Keyboard.press(button_values[button_index]);
@@ -144,11 +137,40 @@ void checkButtonXInput(int button, bool mode) {
 }
 
 
+void serialActions() {
+    serialNow = Serial.readStringUntil('!');
+    for(int p = 0; p < 20 || serialNow != "SREQ"; p++) {
+        //wait for ack or timeout
+        if (p == 20)  {
+            return;
+        }
+    }
+    Serial.write("SACK!"); //send acknoledge with the delimiter
+    while (true){ //wait for a command
+        serialNow = Serial.readStringUntil('!');
+
+        if (serialNow == "REMAP") {
+            Serial.write("REMAPACK!");
+
+            // need to wait for a system
+
+            while(true) {
+                //somehow collect all remaps AND PUT INTO AN ARRAY
+
+                serialNow = Serial.readStringUntil('!'); 
+                if (serialNow == "REMAPEND") {//gather and apply remaps
+                    //APPLY REMAPS
+                    Serial.write("DONE!");
+                    return; // and leave
+                }
+            }   
+        }
+    }
+}
+
 void nes() {
     //noInterrupts();
     //interrupts();
-
-
 
     digitalWrite(latchPin, HIGH);
     checkButton(1, 0); // check for A here
@@ -156,7 +178,6 @@ void nes() {
 
     delayMicroseconds(12);
 
-    
     digitalWrite(latchPin, LOW);
     delayMicroseconds(6);
     
@@ -175,25 +196,17 @@ void nes() {
         //6 low
         digitalWrite(pulsePin, LOW);
         delayMicroseconds(6);
-
-
     }
 
 }   
 
 void snes() {
-    //noInterrupts();
-    //interrupts();
-
-
-
     digitalWrite(latchPin, HIGH);
-    checkButton(1, false); // check for A here
+    checkButton(1, false); 
     checkButton(1, true);
 
     delayMicroseconds(12);
 
-    
     digitalWrite(latchPin, LOW);
     delayMicroseconds(6);
     
@@ -212,21 +225,10 @@ void snes() {
         //6 low
         digitalWrite(pulsePin, LOW);
         delayMicroseconds(6);
-
-
     }
-    if (snesMouseMode == true) {
-
-
-
-    }
-
 }  
 
 void snesMouse() {
-
-
-
     //DATA LATCH 1
     digitalWrite(latchPin, HIGH);
 
@@ -412,14 +414,20 @@ void setup() {
 
 }
 
-void loop() {
-
-    
+void loop() {  
     for ( int t = 1; t < 61; t++){ // try to only do the thing 60 times a second
         if (digitalRead(sanityIn) == true){ //when 6 is grounded, we do not go
-            nes();
+            if (nesMode == true) {
+                nes();
+            }
+            if (snesMode == true) {
+                snes();
+            }
+            if (n64Mode == true) {
+                //n64();
+            }
+            
             delayMicroseconds(16550); 
         }
     }
-
 }
