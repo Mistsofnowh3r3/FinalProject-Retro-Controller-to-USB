@@ -35,6 +35,24 @@ const bool n64Mode = false; // cureently ditactes if snes or nes
 const bool keyboardMode = true; //output as keyboard
 const bool controllerMode = false; //output as controller
 
+
+void checkSerialForEnd() {
+    serialNow = Serial.readStringUntil('!');
+    if (serialNow != "STOP") { //check for a serial request
+        return; // else just continue
+    }
+    Serial.write("9999999999999999999999999999999999999999999999999999999999999999");
+    Serial.write("9999999999999999999999999999999999999999999999999999999999999999");
+    Serial.write("9999999999999999999999999999999999999999999999999999999999999999");
+    Serial.write("9999999999999999999999999999999999999999999999999999999999999999");
+    delay(120);
+    Serial.flush();
+    Serial.write("All done, ready to move on to the next.");
+    loop(); //if there is a stop message, exit to the main loop
+    
+}
+
+
 bool snesMouseCheck(bool mode) {
 
     //mode
@@ -161,10 +179,7 @@ void serialActions() {
                         serialNow = Serial.readStringUntil('!');
                         Serial.write("Got: ");
                         Serial.write(serialNow.c_str());
-                        if (serialNow == "DONE"){
-                            Serial.write("Ready for something else.");
-                            return;
-                        }
+                        checkSerialForEnd();
                     }
                 }
                 if (serialNow == "SNES") {
@@ -178,6 +193,7 @@ void serialActions() {
                             Serial.write("Ready for something else.");
                             return;
                         }
+                        checkSerialForEnd();
                     }
                 }
                 if (serialNow == "N64") {
@@ -191,10 +207,13 @@ void serialActions() {
                             Serial.write("Ready for something else.");
                             return;
                         }
+                        checkSerialForEnd();
                     }
                 }
+                checkSerialForEnd();
             }   
         }
+        checkSerialForEnd();
     }
 }
 

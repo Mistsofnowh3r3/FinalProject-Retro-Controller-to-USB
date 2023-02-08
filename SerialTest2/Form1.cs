@@ -17,7 +17,17 @@ namespace SerialTest2
     public partial class Form1 : Form
     {
 
+        int NES_A = 65;
+        int NES_B = 66;
+        int NES_SELECT = 32;
+        int NES_START = 13;
+        int NES_UP = 38;
+        int NES_DOWN = 40;
+        int NES_LEFT = 37;
+        int NES_RIGHT = 39;
         SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
+
+        
         private string serialNow;
         private readonly object _sync = new object();
         public Form1()
@@ -49,16 +59,6 @@ namespace SerialTest2
                 btn_stopstart.Text = "Close";
             }
 
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
 
         }
 
@@ -133,11 +133,61 @@ namespace SerialTest2
             }
         }
 
-
-        private void button1_Click_1(object sender, EventArgs e)
+        private void ColorControls(Control parent)
         {
+            if (parent is Form && parent.Tag != null && parent.Tag.ToString().Contains("background1"))
+            {
+                parent.BackColor = Color.FromArgb(244, 146, 165);
+            }
 
+            foreach (Control control in parent.Controls)
+            {
+                if (control is TabControl)
+                {
+                    foreach (TabPage tabPage in ((TabControl)control).TabPages)
+                    {
+                        if (tabPage.Tag != null)
+                        {
+                            if (tabPage.Tag.ToString().Contains("background1"))
+                            {
+                                tabPage.BackColor = Color.FromArgb(244, 146, 165);
+                            }
+                            if (tabPage.Tag.ToString().Contains("background2"))
+                            {
+                                tabPage.BackColor = Color.FromArgb(249, 203, 208);
+                            }
+                        }
+
+                        ColorControls(tabPage);
+                    }
+                }
+                else if (control.Tag != null)
+                {
+                    if (control.Tag.ToString().Contains("background1"))
+                    {
+                        control.BackColor = Color.FromArgb(244, 146, 165);
+                    }
+                    if (control.Tag.ToString().Contains("background2"))
+                    {
+                        control.BackColor = Color.FromArgb(249, 203, 208);
+                    }
+                    if (control.Tag.ToString().Contains("button2"))
+                    {
+                        control.BackColor = Color.FromArgb(110, 130, 183);
+                    }
+                    if (control.Tag.ToString().Contains("button1"))
+                    {
+                        control.BackColor = Color.FromArgb(149, 218, 248);
+                    }
+                }
+
+                if (control.HasChildren)
+                {
+                    ColorControls(control);
+                }
+            }
         }
+
 
 
         private void cb_portlist_DropDown(object sender, EventArgs e)
@@ -183,7 +233,28 @@ namespace SerialTest2
 
         private void button3_Click(object sender, EventArgs e)
         {
-            _serialPort.Write("DONE!");
+            _serialPort.Write("STOP!");
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ColorControls(this);
+        }
+        private void btn_NES_A_Pressed(object sender, KeyEventArgs e)
+        {
+            btn_NES_A.Clear();
+            btn_NES_A.Text = ((char)e.KeyValue).ToString();
+            NES_A = e.KeyValue;
+        }
+
+        private void btn_saveSettings_Click(object sender, EventArgs e)
+        {
+            //save all settings to a PARAM folder 
+            //NESBUTTONS
+            //SNESBUTTONS
+            //N64BUTTONS
+            //COLORS
+            //AKA "STEAL" CODE FROM RTC
         }
     }
 }
