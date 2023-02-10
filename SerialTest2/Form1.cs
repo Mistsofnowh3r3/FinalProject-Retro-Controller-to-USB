@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 
 namespace SerialTest2
@@ -17,17 +12,45 @@ namespace SerialTest2
     public partial class Form1 : Form
     {
 
-        int NES_A = 65;
-        int NES_B = 66;
-        int NES_SELECT = 32;
-        int NES_START = 13;
-        int NES_UP = 38;
-        int NES_DOWN = 40;
-        int NES_LEFT = 37;
-        int NES_RIGHT = 39;
+
+        string background1Color = "#F492A5";
+
+        string background2Color = "#F9CBD0";
+
+        string button2Color = "#6E82B7";
+
+        string button1Color = "#95DAF8";
+
+
+        int[] init_SNES_btns = new int[] { 
+            66,     //B
+            89,      //Y
+            32,      //SELECT
+            13,      //START
+            38,      //UP   arrow keys will be wrong
+            0,      //DOWN
+            0,      //LEFT
+            0,      //RIGHT
+            0,      //A
+            0,      //X
+            0,      //L
+            0,      //R
+        };
+
+        int[] init_NES_btns = new int[] {
+            0,     //A
+            0,      //B
+            0,      //SELECT
+            0,      //START
+            0,      //UP
+            0,      //DOWN
+            0,      //LEFT
+            0,      //RIGHT
+        };
+
         SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
 
-        
+
         private string serialNow;
         private readonly object _sync = new object();
         public Form1()
@@ -36,7 +59,7 @@ namespace SerialTest2
             _serialPort.DtrEnable = true;
             _serialPort.ReadTimeout = 2000;
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-            
+
             InitializeComponent();
         }
         private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
@@ -99,7 +122,7 @@ namespace SerialTest2
                     switch (console)
                     {
                         case "NES":
-                        _serialPort.Write("NES!"); // state NES
+                            _serialPort.Write("NES!"); // state NES
                             while (true)
                             {
                                 if (serialNow == "NESACK") ;
@@ -128,7 +151,7 @@ namespace SerialTest2
                                     return;
                                 }
                             }
-                    } 
+                    }
                 }
             }
         }
@@ -150,11 +173,11 @@ namespace SerialTest2
                         {
                             if (tabPage.Tag.ToString().Contains("background1"))
                             {
-                                tabPage.BackColor = Color.FromArgb(244, 146, 165);
+                                tabPage.BackColor = ColorTranslator.FromHtml(background1Color);
                             }
                             if (tabPage.Tag.ToString().Contains("background2"))
                             {
-                                tabPage.BackColor = Color.FromArgb(249, 203, 208);
+                                tabPage.BackColor = ColorTranslator.FromHtml(background2Color);
                             }
                         }
 
@@ -165,19 +188,19 @@ namespace SerialTest2
                 {
                     if (control.Tag.ToString().Contains("background1"))
                     {
-                        control.BackColor = Color.FromArgb(244, 146, 165);
+                        control.BackColor = ColorTranslator.FromHtml(background1Color);
                     }
                     if (control.Tag.ToString().Contains("background2"))
                     {
-                        control.BackColor = Color.FromArgb(249, 203, 208);
+                        control.BackColor = ColorTranslator.FromHtml(background2Color);
                     }
                     if (control.Tag.ToString().Contains("button2"))
                     {
-                        control.BackColor = Color.FromArgb(110, 130, 183);
+                        control.BackColor = ColorTranslator.FromHtml(button2Color);
                     }
                     if (control.Tag.ToString().Contains("button1"))
                     {
-                        control.BackColor = Color.FromArgb(149, 218, 248);
+                        control.BackColor = ColorTranslator.FromHtml(button1Color);
                     }
                 }
 
@@ -187,8 +210,6 @@ namespace SerialTest2
                 }
             }
         }
-
-
 
         private void cb_portlist_DropDown(object sender, EventArgs e)
         {
@@ -220,18 +241,7 @@ namespace SerialTest2
             _serialPort.PortName = port;
         }
 
-        private void button8_Click(object sender, EventArgs e)
-        {
-            _serialPort.Write("3, a!");
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            handShakeNow();
-            remapNow("SNES");
-        }
-
-        private void button3_Click(object sender, EventArgs e)
+        private void btn_stop_Click(object sender, EventArgs e)
         {
             _serialPort.Write("STOP!");
         }
@@ -240,21 +250,128 @@ namespace SerialTest2
         {
             ColorControls(this);
         }
-        private void btn_NES_A_Pressed(object sender, KeyEventArgs e)
-        {
-            btn_NES_A.Clear();
-            btn_NES_A.Text = ((char)e.KeyValue).ToString();
-            NES_A = e.KeyValue;
-        }
 
+        private void button5_Click(object sender, EventArgs e)
+        {
+            tb_console.Text = "It's: " + init_NES_btns[0];
+        }
         private void btn_saveSettings_Click(object sender, EventArgs e)
         {
+            //SerialTest2.Params.IsParamSet("NESBUTTONS");
             //save all settings to a PARAM folder 
-            //NESBUTTONS
-            //SNESBUTTONS
+            SerialTest2.Params.SetParam("NESBUTTONS", String.Join(",", init_NES_btns));
+            SerialTest2.Params.SetParam("SNESBUTTONS", String.Join(",", init_SNES_btns));
             //N64BUTTONS
             //COLORS
             //AKA "STEAL" CODE FROM RTC
+        }
+
+        private void TextBox_Enter(object sender, EventArgs e)
+        {
+
+            //somehow, hide curosr
+           // TextBox textbox = sender as TextBox;
+           
+            //textbox.Enabled = false;
+            //textbox.Enabled = true;
+        }
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+            String a = SerialTest2.Params.ReadParam("NESBUTTONS");
+            String b = SerialTest2.Params.ReadParam("SNESBUTTONS");
+
+            if (SerialTest2.Params.IsParamSet("NESBUTTONS"))    //if there is a param for the nes buttons already
+            {
+                this.init_NES_btns = Array.ConvertAll(a.Split(','), int.Parse); // load it in
+            }
+            if (SerialTest2.Params.IsParamSet("SNESBUTTONS"))    //if there is a param for the nes buttons already
+            {
+                this.init_SNES_btns = Array.ConvertAll(b.Split(','), int.Parse); // load it in
+            }
+
+
+            //load the button states as text into the thing
+            btn_NES_A.Text = ((char)init_NES_btns[0]).ToString();
+            btn_NES_B.Text = ((char)init_NES_btns[1]).ToString();
+            btn_NES_SELECT.Text = ((char)init_NES_btns[2]).ToString();
+            btn_NES_START.Text = ((char)init_NES_btns[3]).ToString();
+            btn_NES_UP.Text = ((char)init_NES_btns[4]).ToString();
+            btn_NES_DOWN.Text = ((char)init_NES_btns[5]).ToString();
+            btn_NES_LEFT.Text = ((char)init_NES_btns[6]).ToString();
+            btn_NES_RIGHT.Text = ((char)init_NES_btns[7]).ToString();
+        }
+        private void btn_NES_A_Pressed(object sender, KeyEventArgs e)
+        {
+            
+            btn_NES_A.Text = ((char)e.KeyValue).ToString();
+            init_NES_btns[0] = e.KeyValue;
+            tb_console.Text =   "Key: " + e.KeyValue.ToString();
+        }
+        private void btn_NES_B_Pressed(object sender, KeyEventArgs e)
+        {
+            
+            btn_NES_B.Text = ((char)e.KeyValue).ToString();
+            init_NES_btns[1] = e.KeyValue;
+            tb_console.Text = "Key: " + e.KeyValue.ToString();
+        }
+        private void btn_NES_SELECT_Pressed(object sender, KeyEventArgs e)
+        {
+            
+            btn_NES_SELECT.Text = ((char)e.KeyValue).ToString();
+            init_NES_btns[2] = e.KeyValue;
+            tb_console.Text = "Key: " + e.KeyValue.ToString();
+        }
+        private void btn_NES_START_Pressed(object sender, KeyEventArgs e)
+        {
+            
+            btn_NES_START.Text = ((char)e.KeyValue).ToString();
+            init_NES_btns[3] = e.KeyValue;
+            tb_console.Text = "Key: " + e.KeyValue.ToString();
+        }
+        private void btn_NES_UP_Pressed(object sender, KeyEventArgs e)
+        {
+            
+            btn_NES_UP.Text = ((char)e.KeyValue).ToString();
+            init_NES_btns[4] = e.KeyValue;
+            tb_console.Text = "Key: " + e.KeyValue.ToString();
+        }
+        private void btn_NES_DOWN_Pressed(object sender, KeyEventArgs e)
+        {
+            
+            btn_NES_DOWN.Text = ((char)e.KeyValue).ToString();
+            init_NES_btns[5] = e.KeyValue;
+            tb_console.Text = "Key: " + e.KeyValue.ToString();
+        }
+        private void btn_NES_LEFT_Pressed(object sender, KeyEventArgs e)
+        {
+            
+            btn_NES_LEFT.Text = ((char)e.KeyValue).ToString();
+            init_NES_btns[6] = e.KeyValue;
+            tb_console.Text = "Key: " + e.KeyValue.ToString();
+        }
+        private void btn_NES_RIGHT_Pressed(object sender, KeyEventArgs e)
+        {
+            
+            btn_NES_RIGHT.Text = ((char)e.KeyValue).ToString();
+            init_NES_btns[7] = e.KeyValue;
+            tb_console.Text = "Key: " + e.KeyValue.ToString();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ColorDialog MyDialog = new ColorDialog();
+            // Keeps the user from selecting a custom color.
+            MyDialog.AllowFullOpen = false;
+            // Allows the user to get help. (The default is false.)
+            MyDialog.ShowHelp = true;
+            // Sets the initial color select to the current text color.
+
+            // Update the text box color if the user clicks OK 
+            if (MyDialog.ShowDialog() == DialogResult.OK)
+                btn_stop.ForeColor = MyDialog.Color;
         }
     }
 }

@@ -35,14 +35,21 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.btn_NES_RIGHT = new System.Windows.Forms.TextBox();
+            this.btn_NES_LEFT = new System.Windows.Forms.TextBox();
+            this.btn_NES_DOWN = new System.Windows.Forms.TextBox();
+            this.btn_NES_UP = new System.Windows.Forms.TextBox();
+            this.btn_NES_START = new System.Windows.Forms.TextBox();
+            this.btn_NES_SELECT = new System.Windows.Forms.TextBox();
+            this.btn_NES_B = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -51,57 +58,25 @@
             this.label26 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox21 = new System.Windows.Forms.TextBox();
-            this.textBox22 = new System.Windows.Forms.TextBox();
-            this.textBox23 = new System.Windows.Forms.TextBox();
             this.btn_NES_A = new System.Windows.Forms.TextBox();
             this.btn_sendremap = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.textBox17 = new System.Windows.Forms.TextBox();
-            this.textBox18 = new System.Windows.Forms.TextBox();
-            this.textBox19 = new System.Windows.Forms.TextBox();
-            this.textBox20 = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.textBox14 = new System.Windows.Forms.TextBox();
-            this.textBox15 = new System.Windows.Forms.TextBox();
-            this.textBox16 = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.button4 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button8 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.label4 = new System.Windows.Forms.Label();
             this.tb_console = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btn_stop = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.btn_saveSettings = new System.Windows.Forms.Button();
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.button3 = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.tabPage2.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.SuspendLayout();
@@ -170,14 +145,21 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.tabPage1.Controls.Add(this.textBox11);
+            this.tabPage1.Controls.Add(this.textBox10);
+            this.tabPage1.Controls.Add(this.textBox9);
+            this.tabPage1.Controls.Add(this.textBox8);
+            this.tabPage1.Controls.Add(this.btn_NES_RIGHT);
+            this.tabPage1.Controls.Add(this.btn_NES_LEFT);
+            this.tabPage1.Controls.Add(this.btn_NES_DOWN);
+            this.tabPage1.Controls.Add(this.btn_NES_UP);
+            this.tabPage1.Controls.Add(this.btn_NES_START);
+            this.tabPage1.Controls.Add(this.btn_NES_SELECT);
+            this.tabPage1.Controls.Add(this.btn_NES_B);
             this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.label8);
-            this.tabPage1.Controls.Add(this.textBox1);
-            this.tabPage1.Controls.Add(this.textBox2);
-            this.tabPage1.Controls.Add(this.textBox3);
-            this.tabPage1.Controls.Add(this.textBox4);
             this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.label10);
             this.tabPage1.Controls.Add(this.label11);
@@ -186,13 +168,6 @@
             this.tabPage1.Controls.Add(this.label26);
             this.tabPage1.Controls.Add(this.label27);
             this.tabPage1.Controls.Add(this.label28);
-            this.tabPage1.Controls.Add(this.textBox5);
-            this.tabPage1.Controls.Add(this.textBox6);
-            this.tabPage1.Controls.Add(this.textBox7);
-            this.tabPage1.Controls.Add(this.textBox8);
-            this.tabPage1.Controls.Add(this.textBox21);
-            this.tabPage1.Controls.Add(this.textBox22);
-            this.tabPage1.Controls.Add(this.textBox23);
             this.tabPage1.Controls.Add(this.btn_NES_A);
             this.tabPage1.Controls.Add(this.btn_sendremap);
             this.tabPage1.Controls.Add(this.pictureBox1);
@@ -204,11 +179,183 @@
             this.tabPage1.Tag = "background2";
             this.tabPage1.Text = "NES";
             // 
+            // textBox11
+            // 
+            this.textBox11.AcceptsReturn = true;
+            this.textBox11.AcceptsTab = true;
+            this.textBox11.BackColor = System.Drawing.Color.White;
+            this.textBox11.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox11.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.textBox11.Location = new System.Drawing.Point(656, 92);
+            this.textBox11.Name = "textBox11";
+            this.textBox11.ReadOnly = true;
+            this.textBox11.ShortcutsEnabled = false;
+            this.textBox11.Size = new System.Drawing.Size(103, 23);
+            this.textBox11.TabIndex = 81;
+            this.textBox11.TabStop = false;
+            // 
+            // textBox10
+            // 
+            this.textBox10.AcceptsReturn = true;
+            this.textBox10.AcceptsTab = true;
+            this.textBox10.BackColor = System.Drawing.Color.White;
+            this.textBox10.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox10.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.textBox10.Location = new System.Drawing.Point(656, 63);
+            this.textBox10.Name = "textBox10";
+            this.textBox10.ReadOnly = true;
+            this.textBox10.ShortcutsEnabled = false;
+            this.textBox10.Size = new System.Drawing.Size(103, 23);
+            this.textBox10.TabIndex = 80;
+            this.textBox10.TabStop = false;
+            // 
+            // textBox9
+            // 
+            this.textBox9.AcceptsReturn = true;
+            this.textBox9.AcceptsTab = true;
+            this.textBox9.BackColor = System.Drawing.Color.White;
+            this.textBox9.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox9.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.textBox9.Location = new System.Drawing.Point(657, 34);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.ReadOnly = true;
+            this.textBox9.ShortcutsEnabled = false;
+            this.textBox9.Size = new System.Drawing.Size(103, 23);
+            this.textBox9.TabIndex = 79;
+            this.textBox9.TabStop = false;
+            // 
+            // textBox8
+            // 
+            this.textBox8.AcceptsReturn = true;
+            this.textBox8.AcceptsTab = true;
+            this.textBox8.BackColor = System.Drawing.Color.White;
+            this.textBox8.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.textBox8.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.textBox8.Location = new System.Drawing.Point(657, 6);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.ReadOnly = true;
+            this.textBox8.ShortcutsEnabled = false;
+            this.textBox8.Size = new System.Drawing.Size(103, 23);
+            this.textBox8.TabIndex = 78;
+            this.textBox8.TabStop = false;
+            // 
+            // btn_NES_RIGHT
+            // 
+            this.btn_NES_RIGHT.AcceptsReturn = true;
+            this.btn_NES_RIGHT.AcceptsTab = true;
+            this.btn_NES_RIGHT.BackColor = System.Drawing.Color.White;
+            this.btn_NES_RIGHT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btn_NES_RIGHT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.btn_NES_RIGHT.Location = new System.Drawing.Point(527, 208);
+            this.btn_NES_RIGHT.Name = "btn_NES_RIGHT";
+            this.btn_NES_RIGHT.ReadOnly = true;
+            this.btn_NES_RIGHT.ShortcutsEnabled = false;
+            this.btn_NES_RIGHT.Size = new System.Drawing.Size(103, 23);
+            this.btn_NES_RIGHT.TabIndex = 77;
+            this.btn_NES_RIGHT.TabStop = false;
+            this.btn_NES_RIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btn_NES_RIGHT_Pressed);
+            // 
+            // btn_NES_LEFT
+            // 
+            this.btn_NES_LEFT.AcceptsReturn = true;
+            this.btn_NES_LEFT.AcceptsTab = true;
+            this.btn_NES_LEFT.BackColor = System.Drawing.Color.White;
+            this.btn_NES_LEFT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btn_NES_LEFT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.btn_NES_LEFT.Location = new System.Drawing.Point(527, 179);
+            this.btn_NES_LEFT.Name = "btn_NES_LEFT";
+            this.btn_NES_LEFT.ReadOnly = true;
+            this.btn_NES_LEFT.ShortcutsEnabled = false;
+            this.btn_NES_LEFT.Size = new System.Drawing.Size(103, 23);
+            this.btn_NES_LEFT.TabIndex = 76;
+            this.btn_NES_LEFT.TabStop = false;
+            this.btn_NES_LEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btn_NES_LEFT_Pressed);
+            // 
+            // btn_NES_DOWN
+            // 
+            this.btn_NES_DOWN.AcceptsReturn = true;
+            this.btn_NES_DOWN.AcceptsTab = true;
+            this.btn_NES_DOWN.BackColor = System.Drawing.Color.White;
+            this.btn_NES_DOWN.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btn_NES_DOWN.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.btn_NES_DOWN.Location = new System.Drawing.Point(527, 150);
+            this.btn_NES_DOWN.Name = "btn_NES_DOWN";
+            this.btn_NES_DOWN.ReadOnly = true;
+            this.btn_NES_DOWN.ShortcutsEnabled = false;
+            this.btn_NES_DOWN.Size = new System.Drawing.Size(103, 23);
+            this.btn_NES_DOWN.TabIndex = 75;
+            this.btn_NES_DOWN.TabStop = false;
+            this.btn_NES_DOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btn_NES_DOWN_Pressed);
+            // 
+            // btn_NES_UP
+            // 
+            this.btn_NES_UP.AcceptsReturn = true;
+            this.btn_NES_UP.AcceptsTab = true;
+            this.btn_NES_UP.BackColor = System.Drawing.Color.White;
+            this.btn_NES_UP.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btn_NES_UP.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.btn_NES_UP.Location = new System.Drawing.Point(527, 121);
+            this.btn_NES_UP.Name = "btn_NES_UP";
+            this.btn_NES_UP.ReadOnly = true;
+            this.btn_NES_UP.ShortcutsEnabled = false;
+            this.btn_NES_UP.Size = new System.Drawing.Size(103, 23);
+            this.btn_NES_UP.TabIndex = 74;
+            this.btn_NES_UP.TabStop = false;
+            this.btn_NES_UP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btn_NES_UP_Pressed);
+            // 
+            // btn_NES_START
+            // 
+            this.btn_NES_START.AcceptsReturn = true;
+            this.btn_NES_START.AcceptsTab = true;
+            this.btn_NES_START.BackColor = System.Drawing.Color.White;
+            this.btn_NES_START.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btn_NES_START.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.btn_NES_START.Location = new System.Drawing.Point(527, 92);
+            this.btn_NES_START.Name = "btn_NES_START";
+            this.btn_NES_START.ReadOnly = true;
+            this.btn_NES_START.ShortcutsEnabled = false;
+            this.btn_NES_START.Size = new System.Drawing.Size(103, 23);
+            this.btn_NES_START.TabIndex = 73;
+            this.btn_NES_START.TabStop = false;
+            this.btn_NES_START.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btn_NES_START_Pressed);
+            // 
+            // btn_NES_SELECT
+            // 
+            this.btn_NES_SELECT.AcceptsReturn = true;
+            this.btn_NES_SELECT.AcceptsTab = true;
+            this.btn_NES_SELECT.BackColor = System.Drawing.Color.White;
+            this.btn_NES_SELECT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btn_NES_SELECT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.btn_NES_SELECT.Location = new System.Drawing.Point(527, 63);
+            this.btn_NES_SELECT.Name = "btn_NES_SELECT";
+            this.btn_NES_SELECT.ReadOnly = true;
+            this.btn_NES_SELECT.ShortcutsEnabled = false;
+            this.btn_NES_SELECT.Size = new System.Drawing.Size(103, 23);
+            this.btn_NES_SELECT.TabIndex = 72;
+            this.btn_NES_SELECT.TabStop = false;
+            this.btn_NES_SELECT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btn_NES_SELECT_Pressed);
+            // 
+            // btn_NES_B
+            // 
+            this.btn_NES_B.AcceptsReturn = true;
+            this.btn_NES_B.AcceptsTab = true;
+            this.btn_NES_B.BackColor = System.Drawing.Color.White;
+            this.btn_NES_B.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.btn_NES_B.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.btn_NES_B.Location = new System.Drawing.Point(527, 34);
+            this.btn_NES_B.Name = "btn_NES_B";
+            this.btn_NES_B.ReadOnly = true;
+            this.btn_NES_B.ShortcutsEnabled = false;
+            this.btn_NES_B.Size = new System.Drawing.Size(103, 23);
+            this.btn_NES_B.TabIndex = 71;
+            this.btn_NES_B.TabStop = false;
+            this.btn_NES_B.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btn_NES_B_Pressed);
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.ForeColor = System.Drawing.Color.Black;
             this.label5.Location = new System.Drawing.Point(636, 95);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(14, 15);
@@ -219,7 +366,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label6.ForeColor = System.Drawing.Color.White;
+            this.label6.ForeColor = System.Drawing.Color.Black;
             this.label6.Location = new System.Drawing.Point(637, 66);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(13, 15);
@@ -230,7 +377,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label7.ForeColor = System.Drawing.Color.White;
+            this.label7.ForeColor = System.Drawing.Color.Black;
             this.label7.Location = new System.Drawing.Point(636, 37);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(14, 15);
@@ -241,62 +388,18 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label8.ForeColor = System.Drawing.Color.White;
+            this.label8.ForeColor = System.Drawing.Color.Black;
             this.label8.Location = new System.Drawing.Point(636, 8);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(15, 15);
             this.label8.TabIndex = 67;
             this.label8.Text = "A";
             // 
-            // textBox1
-            // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox1.Location = new System.Drawing.Point(659, 93);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(103, 23);
-            this.textBox1.TabIndex = 66;
-            // 
-            // textBox2
-            // 
-            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox2.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox2.Location = new System.Drawing.Point(659, 64);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(103, 23);
-            this.textBox2.TabIndex = 65;
-            // 
-            // textBox3
-            // 
-            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox3.Location = new System.Drawing.Point(659, 35);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(103, 23);
-            this.textBox3.TabIndex = 64;
-            // 
-            // textBox4
-            // 
-            this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox4.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox4.Location = new System.Drawing.Point(659, 6);
-            this.textBox4.Multiline = true;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(103, 23);
-            this.textBox4.TabIndex = 63;
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label9.ForeColor = System.Drawing.Color.White;
+            this.label9.ForeColor = System.Drawing.Color.Black;
             this.label9.Location = new System.Drawing.Point(477, 211);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(41, 15);
@@ -307,7 +410,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label10.ForeColor = System.Drawing.Color.White;
+            this.label10.ForeColor = System.Drawing.Color.Black;
             this.label10.Location = new System.Drawing.Point(486, 182);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(32, 15);
@@ -318,7 +421,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label11.ForeColor = System.Drawing.Color.White;
+            this.label11.ForeColor = System.Drawing.Color.Black;
             this.label11.Location = new System.Drawing.Point(474, 153);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(44, 15);
@@ -329,7 +432,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.ForeColor = System.Drawing.Color.Black;
             this.label12.Location = new System.Drawing.Point(496, 124);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(22, 15);
@@ -340,7 +443,7 @@
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label25.ForeColor = System.Drawing.Color.White;
+            this.label25.ForeColor = System.Drawing.Color.Black;
             this.label25.Location = new System.Drawing.Point(476, 95);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(42, 15);
@@ -351,7 +454,7 @@
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label26.ForeColor = System.Drawing.Color.White;
+            this.label26.ForeColor = System.Drawing.Color.Black;
             this.label26.Location = new System.Drawing.Point(472, 66);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(46, 15);
@@ -362,7 +465,7 @@
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label27.ForeColor = System.Drawing.Color.White;
+            this.label27.ForeColor = System.Drawing.Color.Black;
             this.label27.Location = new System.Drawing.Point(504, 37);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(14, 15);
@@ -373,103 +476,28 @@
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label28.ForeColor = System.Drawing.Color.White;
+            this.label28.ForeColor = System.Drawing.Color.Black;
             this.label28.Location = new System.Drawing.Point(503, 8);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(15, 15);
             this.label28.TabIndex = 47;
             this.label28.Text = "A";
             // 
-            // textBox5
-            // 
-            this.textBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox5.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox5.Location = new System.Drawing.Point(527, 209);
-            this.textBox5.Multiline = true;
-            this.textBox5.Name = "textBox5";
-            this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(84, 23);
-            this.textBox5.TabIndex = 55;
-            // 
-            // textBox6
-            // 
-            this.textBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox6.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox6.Location = new System.Drawing.Point(527, 180);
-            this.textBox6.Multiline = true;
-            this.textBox6.Name = "textBox6";
-            this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(84, 23);
-            this.textBox6.TabIndex = 54;
-            // 
-            // textBox7
-            // 
-            this.textBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox7.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox7.Location = new System.Drawing.Point(527, 151);
-            this.textBox7.Multiline = true;
-            this.textBox7.Name = "textBox7";
-            this.textBox7.ReadOnly = true;
-            this.textBox7.Size = new System.Drawing.Size(84, 23);
-            this.textBox7.TabIndex = 53;
-            // 
-            // textBox8
-            // 
-            this.textBox8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox8.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox8.Location = new System.Drawing.Point(527, 122);
-            this.textBox8.Multiline = true;
-            this.textBox8.Name = "textBox8";
-            this.textBox8.ReadOnly = true;
-            this.textBox8.Size = new System.Drawing.Size(84, 23);
-            this.textBox8.TabIndex = 52;
-            // 
-            // textBox21
-            // 
-            this.textBox21.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox21.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox21.Location = new System.Drawing.Point(527, 93);
-            this.textBox21.Multiline = true;
-            this.textBox21.Name = "textBox21";
-            this.textBox21.ReadOnly = true;
-            this.textBox21.Size = new System.Drawing.Size(84, 23);
-            this.textBox21.TabIndex = 51;
-            // 
-            // textBox22
-            // 
-            this.textBox22.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox22.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox22.Location = new System.Drawing.Point(527, 64);
-            this.textBox22.Multiline = true;
-            this.textBox22.Name = "textBox22";
-            this.textBox22.ReadOnly = true;
-            this.textBox22.Size = new System.Drawing.Size(84, 23);
-            this.textBox22.TabIndex = 50;
-            // 
-            // textBox23
-            // 
-            this.textBox23.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox23.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox23.Location = new System.Drawing.Point(527, 35);
-            this.textBox23.Multiline = true;
-            this.textBox23.Name = "textBox23";
-            this.textBox23.ReadOnly = true;
-            this.textBox23.Size = new System.Drawing.Size(84, 23);
-            this.textBox23.TabIndex = 49;
-            // 
             // btn_NES_A
             // 
             this.btn_NES_A.AcceptsReturn = true;
             this.btn_NES_A.AcceptsTab = true;
+            this.btn_NES_A.BackColor = System.Drawing.Color.White;
             this.btn_NES_A.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.btn_NES_A.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
             this.btn_NES_A.Location = new System.Drawing.Point(527, 6);
             this.btn_NES_A.Name = "btn_NES_A";
             this.btn_NES_A.ReadOnly = true;
             this.btn_NES_A.ShortcutsEnabled = false;
-            this.btn_NES_A.Size = new System.Drawing.Size(84, 23);
+            this.btn_NES_A.Size = new System.Drawing.Size(103, 23);
             this.btn_NES_A.TabIndex = 48;
             this.btn_NES_A.TabStop = false;
+            this.btn_NES_A.Enter += new System.EventHandler(this.TextBox_Enter);
             this.btn_NES_A.KeyDown += new System.Windows.Forms.KeyEventHandler(this.btn_NES_A_Pressed);
             // 
             // btn_sendremap
@@ -499,31 +527,6 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPage2.Controls.Add(this.button2);
-            this.tabPage2.Controls.Add(this.label21);
-            this.tabPage2.Controls.Add(this.label22);
-            this.tabPage2.Controls.Add(this.label23);
-            this.tabPage2.Controls.Add(this.label24);
-            this.tabPage2.Controls.Add(this.textBox17);
-            this.tabPage2.Controls.Add(this.textBox18);
-            this.tabPage2.Controls.Add(this.textBox19);
-            this.tabPage2.Controls.Add(this.textBox20);
-            this.tabPage2.Controls.Add(this.label13);
-            this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Controls.Add(this.label15);
-            this.tabPage2.Controls.Add(this.label16);
-            this.tabPage2.Controls.Add(this.label17);
-            this.tabPage2.Controls.Add(this.label18);
-            this.tabPage2.Controls.Add(this.label19);
-            this.tabPage2.Controls.Add(this.label20);
-            this.tabPage2.Controls.Add(this.textBox9);
-            this.tabPage2.Controls.Add(this.textBox10);
-            this.tabPage2.Controls.Add(this.textBox11);
-            this.tabPage2.Controls.Add(this.textBox12);
-            this.tabPage2.Controls.Add(this.textBox13);
-            this.tabPage2.Controls.Add(this.textBox14);
-            this.tabPage2.Controls.Add(this.textBox15);
-            this.tabPage2.Controls.Add(this.textBox16);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -531,282 +534,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Tag = "background2";
             this.tabPage2.Text = "SNES";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(367, 310);
-            this.button2.Margin = new System.Windows.Forms.Padding(2);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(395, 28);
-            this.button2.TabIndex = 47;
-            this.button2.Tag = "button1";
-            this.button2.Text = "Remap All";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label21.ForeColor = System.Drawing.Color.White;
-            this.label21.Location = new System.Drawing.Point(636, 95);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(14, 15);
-            this.label21.TabIndex = 46;
-            this.label21.Text = "R";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label22.ForeColor = System.Drawing.Color.White;
-            this.label22.Location = new System.Drawing.Point(637, 66);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(13, 15);
-            this.label22.TabIndex = 45;
-            this.label22.Text = "L";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label23.ForeColor = System.Drawing.Color.White;
-            this.label23.Location = new System.Drawing.Point(636, 37);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(14, 15);
-            this.label23.TabIndex = 44;
-            this.label23.Text = "X";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label24.ForeColor = System.Drawing.Color.White;
-            this.label24.Location = new System.Drawing.Point(636, 8);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(15, 15);
-            this.label24.TabIndex = 43;
-            this.label24.Text = "A";
-            // 
-            // textBox17
-            // 
-            this.textBox17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox17.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox17.Location = new System.Drawing.Point(659, 93);
-            this.textBox17.Multiline = true;
-            this.textBox17.Name = "textBox17";
-            this.textBox17.ReadOnly = true;
-            this.textBox17.Size = new System.Drawing.Size(103, 23);
-            this.textBox17.TabIndex = 42;
-            // 
-            // textBox18
-            // 
-            this.textBox18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox18.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox18.Location = new System.Drawing.Point(659, 64);
-            this.textBox18.Multiline = true;
-            this.textBox18.Name = "textBox18";
-            this.textBox18.ReadOnly = true;
-            this.textBox18.Size = new System.Drawing.Size(103, 23);
-            this.textBox18.TabIndex = 41;
-            // 
-            // textBox19
-            // 
-            this.textBox19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox19.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox19.Location = new System.Drawing.Point(659, 35);
-            this.textBox19.Multiline = true;
-            this.textBox19.Name = "textBox19";
-            this.textBox19.ReadOnly = true;
-            this.textBox19.Size = new System.Drawing.Size(103, 23);
-            this.textBox19.TabIndex = 40;
-            // 
-            // textBox20
-            // 
-            this.textBox20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox20.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox20.Location = new System.Drawing.Point(659, 6);
-            this.textBox20.Multiline = true;
-            this.textBox20.Name = "textBox20";
-            this.textBox20.ReadOnly = true;
-            this.textBox20.Size = new System.Drawing.Size(103, 23);
-            this.textBox20.TabIndex = 39;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label13.ForeColor = System.Drawing.Color.White;
-            this.label13.Location = new System.Drawing.Point(477, 211);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(41, 15);
-            this.label13.TabIndex = 38;
-            this.label13.Text = "RIGHT";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label14.ForeColor = System.Drawing.Color.White;
-            this.label14.Location = new System.Drawing.Point(486, 182);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(32, 15);
-            this.label14.TabIndex = 37;
-            this.label14.Text = "LEFT";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label15.ForeColor = System.Drawing.Color.White;
-            this.label15.Location = new System.Drawing.Point(474, 153);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(44, 15);
-            this.label15.TabIndex = 36;
-            this.label15.Text = "DOWN";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label16.ForeColor = System.Drawing.Color.White;
-            this.label16.Location = new System.Drawing.Point(496, 124);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(22, 15);
-            this.label16.TabIndex = 35;
-            this.label16.Text = "UP";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label17.ForeColor = System.Drawing.Color.White;
-            this.label17.Location = new System.Drawing.Point(476, 95);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(42, 15);
-            this.label17.TabIndex = 34;
-            this.label17.Text = "START";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label18.ForeColor = System.Drawing.Color.White;
-            this.label18.Location = new System.Drawing.Point(472, 66);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(46, 15);
-            this.label18.TabIndex = 33;
-            this.label18.Text = "SELECT";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label19.ForeColor = System.Drawing.Color.White;
-            this.label19.Location = new System.Drawing.Point(504, 37);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(14, 15);
-            this.label19.TabIndex = 32;
-            this.label19.Text = "B";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label20.ForeColor = System.Drawing.Color.White;
-            this.label20.Location = new System.Drawing.Point(503, 8);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(15, 15);
-            this.label20.TabIndex = 23;
-            this.label20.Text = "A";
-            // 
-            // textBox9
-            // 
-            this.textBox9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox9.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox9.Location = new System.Drawing.Point(527, 209);
-            this.textBox9.Multiline = true;
-            this.textBox9.Name = "textBox9";
-            this.textBox9.ReadOnly = true;
-            this.textBox9.Size = new System.Drawing.Size(103, 23);
-            this.textBox9.TabIndex = 31;
-            // 
-            // textBox10
-            // 
-            this.textBox10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox10.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox10.Location = new System.Drawing.Point(527, 180);
-            this.textBox10.Multiline = true;
-            this.textBox10.Name = "textBox10";
-            this.textBox10.ReadOnly = true;
-            this.textBox10.Size = new System.Drawing.Size(103, 23);
-            this.textBox10.TabIndex = 30;
-            // 
-            // textBox11
-            // 
-            this.textBox11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox11.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox11.Location = new System.Drawing.Point(527, 151);
-            this.textBox11.Multiline = true;
-            this.textBox11.Name = "textBox11";
-            this.textBox11.ReadOnly = true;
-            this.textBox11.Size = new System.Drawing.Size(103, 23);
-            this.textBox11.TabIndex = 29;
-            // 
-            // textBox12
-            // 
-            this.textBox12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox12.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox12.Location = new System.Drawing.Point(527, 122);
-            this.textBox12.Multiline = true;
-            this.textBox12.Name = "textBox12";
-            this.textBox12.ReadOnly = true;
-            this.textBox12.Size = new System.Drawing.Size(103, 23);
-            this.textBox12.TabIndex = 28;
-            // 
-            // textBox13
-            // 
-            this.textBox13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox13.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox13.Location = new System.Drawing.Point(527, 93);
-            this.textBox13.Multiline = true;
-            this.textBox13.Name = "textBox13";
-            this.textBox13.ReadOnly = true;
-            this.textBox13.Size = new System.Drawing.Size(103, 23);
-            this.textBox13.TabIndex = 27;
-            // 
-            // textBox14
-            // 
-            this.textBox14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox14.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox14.Location = new System.Drawing.Point(527, 64);
-            this.textBox14.Multiline = true;
-            this.textBox14.Name = "textBox14";
-            this.textBox14.ReadOnly = true;
-            this.textBox14.Size = new System.Drawing.Size(103, 23);
-            this.textBox14.TabIndex = 26;
-            // 
-            // textBox15
-            // 
-            this.textBox15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox15.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox15.Location = new System.Drawing.Point(527, 35);
-            this.textBox15.Multiline = true;
-            this.textBox15.Name = "textBox15";
-            this.textBox15.ReadOnly = true;
-            this.textBox15.Size = new System.Drawing.Size(103, 23);
-            this.textBox15.TabIndex = 25;
-            // 
-            // textBox16
-            // 
-            this.textBox16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox16.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.textBox16.Location = new System.Drawing.Point(527, 6);
-            this.textBox16.Multiline = true;
-            this.textBox16.Name = "textBox16";
-            this.textBox16.ReadOnly = true;
-            this.textBox16.Size = new System.Drawing.Size(103, 23);
-            this.textBox16.TabIndex = 24;
             // 
             // tabPage3
             // 
@@ -822,10 +549,10 @@
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPage4.Controls.Add(this.button4);
-            this.tabPage4.Controls.Add(this.label3);
-            this.tabPage4.Controls.Add(this.button8);
+            this.tabPage4.Controls.Add(this.button3);
+            this.tabPage4.Controls.Add(this.button2);
             this.tabPage4.Controls.Add(this.button1);
+            this.tabPage4.Controls.Add(this.button4);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -834,9 +561,30 @@
             this.tabPage4.Tag = "background2";
             this.tabPage4.Text = "Other";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(640, 64);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(122, 52);
+            this.button2.TabIndex = 9;
+            this.button2.Tag = "button1";
+            this.button2.Text = "Make NES A be 66 in the array";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(640, 122);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(122, 52);
+            this.button1.TabIndex = 8;
+            this.button1.Tag = "button1";
+            this.button1.Text = "What value is the first of the NES array?";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button5_Click);
+            // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(642, 6);
+            this.button4.Location = new System.Drawing.Point(640, 6);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(122, 52);
             this.button4.TabIndex = 8;
@@ -844,36 +592,6 @@
             this.button4.Text = "Make it pretty";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 32);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(77, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "No Words Yet";
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(353, 6);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(122, 52);
-            this.button8.TabIndex = 6;
-            this.button8.Tag = "button1";
-            this.button8.Text = "Remap Start to t";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(6, 6);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(174, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Tag = "button1";
-            this.button1.Text = "Send Request to remap NES";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // tabControl1
             // 
@@ -912,17 +630,17 @@
             this.tb_console.Size = new System.Drawing.Size(311, 51);
             this.tb_console.TabIndex = 6;
             // 
-            // button3
+            // btn_stop
             // 
-            this.button3.Location = new System.Drawing.Point(473, 67);
-            this.button3.Margin = new System.Windows.Forms.Padding(2);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(311, 28);
-            this.button3.TabIndex = 48;
-            this.button3.Tag = "button1";
-            this.button3.Text = "Emergency Stop";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btn_stop.Location = new System.Drawing.Point(473, 67);
+            this.btn_stop.Margin = new System.Windows.Forms.Padding(2);
+            this.btn_stop.Name = "btn_stop";
+            this.btn_stop.Size = new System.Drawing.Size(311, 28);
+            this.btn_stop.TabIndex = 48;
+            this.btn_stop.Tag = "button1";
+            this.btn_stop.Text = "Emergency Stop";
+            this.btn_stop.UseVisualStyleBackColor = true;
+            this.btn_stop.Click += new System.EventHandler(this.btn_stop_Click);
             // 
             // checkBox1
             // 
@@ -938,7 +656,6 @@
             // btn_saveSettings
             // 
             this.btn_saveSettings.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.btn_saveSettings.Enabled = false;
             this.btn_saveSettings.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btn_saveSettings.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
             this.btn_saveSettings.ForeColor = System.Drawing.Color.White;
@@ -951,6 +668,16 @@
             this.btn_saveSettings.UseVisualStyleBackColor = false;
             this.btn_saveSettings.Click += new System.EventHandler(this.btn_saveSettings_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(512, 6);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(122, 52);
+            this.button3.TabIndex = 10;
+            this.button3.Text = "Summon Color Picker";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -960,7 +687,7 @@
             this.ClientSize = new System.Drawing.Size(800, 486);
             this.Controls.Add(this.btn_saveSettings);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btn_stop);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tb_console);
             this.Controls.Add(this.tabControl1);
@@ -974,13 +701,11 @@
             this.Name = "Form1";
             this.Tag = "background1";
             this.Text = "Serial Tester";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1001,9 +726,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btn_sendremap;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox tb_console;
         private System.Windows.Forms.Label label5;
@@ -1018,47 +740,26 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.TextBox textBox17;
-        private System.Windows.Forms.TextBox textBox18;
-        private System.Windows.Forms.TextBox textBox19;
-        private System.Windows.Forms.TextBox textBox20;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox10;
-        private System.Windows.Forms.TextBox textBox11;
-        private System.Windows.Forms.TextBox textBox12;
-        private System.Windows.Forms.TextBox textBox13;
-        private System.Windows.Forms.TextBox textBox14;
-        private System.Windows.Forms.TextBox textBox15;
-        private System.Windows.Forms.TextBox textBox16;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btn_stop;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox21;
-        private System.Windows.Forms.TextBox textBox22;
-        private System.Windows.Forms.TextBox textBox23;
-        private System.Windows.Forms.TextBox btn_NES_A;
         private System.Windows.Forms.Button btn_saveSettings;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox textBox11;
+        private System.Windows.Forms.TextBox textBox10;
+        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.TextBox btn_NES_RIGHT;
+        private System.Windows.Forms.TextBox btn_NES_LEFT;
+        private System.Windows.Forms.TextBox btn_NES_DOWN;
+        private System.Windows.Forms.TextBox btn_NES_UP;
+        private System.Windows.Forms.TextBox btn_NES_START;
+        private System.Windows.Forms.TextBox btn_NES_SELECT;
+        private System.Windows.Forms.TextBox btn_NES_B;
+        private System.Windows.Forms.TextBox btn_NES_A;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.ColorDialog colorDialog1;
     }
 }
 

@@ -12,8 +12,8 @@ C:\Users\Legob\source\repos\SerialTest2\obj\Debug\SerialTest2.csproj.CoreCompile
 C:\Users\Legob\source\repos\SerialTest2\obj\Debug\SerialTest2.csproj.CopyComplete
 C:\Users\Legob\source\repos\SerialTest2\obj\Debug\SerialTest2.exe
 C:\Users\Legob\source\repos\SerialTest2\obj\Debug\SerialTest2.pdb
-D:\GitHub\FinalProject\SerialTest2\bin\Debug\SerialTest2.exe.config
 D:\GitHub\FinalProject\SerialTest2\bin\Debug\SerialTest2.exe
+D:\GitHub\FinalProject\SerialTest2\bin\Debug\SerialTest2.exe.config
 D:\GitHub\FinalProject\SerialTest2\bin\Debug\SerialTest2.pdb
 D:\GitHub\FinalProject\SerialTest2\bin\Debug\System.IO.Ports.dll
 D:\GitHub\FinalProject\SerialTest2\bin\Debug\System.IO.Ports.xml
