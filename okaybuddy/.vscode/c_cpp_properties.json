@@ -34,7 +34,7 @@
             "includePath": [
                 "C:\\Users\\Legob\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino",
                 "C:\\Users\\Legob\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\leonardo",
-                "C:\\Users\\Legob\\Documents\\Arduino\\libraries\\N64PadForArduino-0.2.0\\src",
+                "C:\\Users\\Legob\\Documents\\Arduino\\libraries\\N64Pad\\src",
                 "C:\\Users\\Legob\\Documents\\Arduino\\libraries\\ArduinoJoystickLibrary-master\\src",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\Keyboard\\src",
                 "C:\\Users\\Legob\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\libraries\\HID\\src",
