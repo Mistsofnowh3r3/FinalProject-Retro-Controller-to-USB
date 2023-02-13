@@ -2,20 +2,25 @@
 #include <Joystick.h>
 #include <string.h>
 #include <Keyboard.h> 
-#include <Mouse.h>
 
 
-//declare globals
-int mouseX = 0;
-int mouseLastX = 0;
-int mouseXDirection = 0;
-int mouseY = 0;
-int mouseLastY = 0;
-int mouseYDirection = 0;
-int doesa = 0; // se the sensitivity at least once
+
+// Globals //
+
 String serialNow = "";
 int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, KEY_LEFT_CTRL, 154, 162};
 
+//various mode related things
+bool nesMode = false; 
+bool snesMode = false; 
+bool n64Mode = false; 
+bool serialMode = true;
+
+// modes for what the poutput will be 
+bool keyboardMode = true; //output as keyboard
+bool controllerMode = false; //output as controller
+
+// Constants //
 
 //n64stuff
 const byte ANALOG_DEAD_ZONE = 20U;
@@ -47,7 +52,7 @@ bool mapAnalogToDPad = false;
 
 #define deadify(var, thres) (abs (var) > thres ? (var) : 0)
 
-//  declare constants
+
 
 // Controller I/O Pins
 const int pulsePinNes = 0; 
@@ -64,7 +69,7 @@ const int snesIndicateLed = 8;
 const int n64IndicateLed = 9;
 
 //Switch ins
-// SERIAL | NES | SNESS | N64
+// SERIAL | NES | SNES | N64
 
 const int serialSwitch = 10; 
 const int nesSwitch = 11; 
@@ -72,16 +77,10 @@ const int snesSwitch = 12;
 const int n64Switch = 13; 
 
 
-//various mode related things
-bool nesMode = false; // cureently ditactes if snes or nes
-bool snesMode = false; // cureently ditactes if snes or nes
-bool snesMouseMode = false; // cureently ditactes if snes or nes
-bool n64Mode = true; // cureently ditactes if snes or nes
-bool serialMode = false; // cureently ditactes if snes or nes
 
-// modes for what the poutput will be 
-bool keyboardMode = true; //output as keyboard
-bool controllerMode = false; //output as controller
+
+
+
 
 
 void flashLed (byte n) {
@@ -107,22 +106,6 @@ void checkSerialForEnd() {
     Serial.write("All done, ready to move on to the next.");
     loop(); //if there is a stop message, exit to the main loop
     
-}
-
-bool snesMouseCheck(bool mode) {
-
-    //mode
-    //0 is checking for a hit (LOW)
-    //1 is checking for a release (High)
-    if ((mode == false) && (digitalRead(dataPinNes) == false)) {
-        //line went false, we got a hit
-        return true;
-    }
-    if ((mode == true) && (digitalRead(dataPinNes) == true)) {
-        //line went TRUE, it was release, or was never pressed
-        return true;
-    }
-    return false;
 }
 
 void checkButton(int button, bool mode) {
@@ -174,7 +157,6 @@ void checkButton(int button, bool mode) {
 
 void serialActions() {
 
-    // forthe intial test, I can do this one button at a atime in the winform app.
     serialNow = Serial.readStringUntil('!');
     if (serialNow != "SREQ") { //check for a serial request
         return; // there was no request, return
@@ -237,9 +219,6 @@ void serialActions() {
 }
 
 void nes() {
-    //noInterrupts();
-    //interrupts();
-
     digitalWrite(latchPinNes, HIGH);
     checkButton(1, 0); // check for A here
     checkButton(1, 1);
@@ -296,271 +275,117 @@ void snes() {
     }
 }  
 
-void snesMouse() {
-    //DATA LATCH 1
-    digitalWrite(latchPinSnes, HIGH);
-
-    
-    //if (doesa == 0 ) {
-    //    digitalWrite(pulsePinNes, HIGH);
-    //    doesa = 1;
-    //    digitalWrite(pulsePinNes, LOW);
-    //}
-    
-    delayMicroseconds(12);
-    digitalWrite(latchPinSnes, LOW);
-    delayMicroseconds(6);
-    
-    // DO 7 PULSES
-    #pragma region // 2 - 8
-    for (int f = 0; f < 7; f++) {
-        //6 high
-        digitalWrite(pulsePinSnes, HIGH);
-        delayMicroseconds(6);
-        //6 low
-        digitalWrite(pulsePinSnes, LOW);
-        delayMicroseconds(6);
-    }
-    #pragma endregion
-
-    #pragma region  //rightmouse 9
-    //6 high
-    digitalWrite(pulsePinSnes, HIGH);
-    delayMicroseconds(6);
-
-    if (snesMouseCheck(0)) {
-        //pressmouse
-    }
-    if (snesMouseCheck(1)) {
-        //releasemouse
-    }
-    //6 low
-    digitalWrite(pulsePinSnes, LOW);
-    delayMicroseconds(6);
-    #pragma endregion
-
-    #pragma region  //leftmouse 10
-    //6 high
-    digitalWrite(pulsePinSnes, HIGH);
-    delayMicroseconds(6);
-
-    if (snesMouseCheck(0)) {
-        //pressmouse
-    }
-    if (snesMouseCheck(1)) {
-        //releasemouse
-    }
-    //6 low
-    digitalWrite(pulsePinSnes, LOW);
-    delayMicroseconds(6);
-    #pragma endregion
-
-    #pragma region  //speedbit? 11
-    //6 high
-    digitalWrite(pulsePinSnes, HIGH);
-    delayMicroseconds(6);
-    //6 low
-    digitalWrite(pulsePinSnes, LOW);
-    delayMicroseconds(6);
-    #pragma endregion
-
-    #pragma region  //speedbit again 12
-    //6 high
-    digitalWrite(pulsePinSnes, HIGH);
-    delayMicroseconds(6);
-    //6 low
-    digitalWrite(pulsePinSnes, LOW);
-    delayMicroseconds(6);
-    #pragma endregion
-
-    #pragma region // 13 - 16
-    for (int h = 0; h < 4; h++) {
-        //6 high
-        digitalWrite(pulsePinSnes, HIGH);
-        delayMicroseconds(6);
-        //6 low
-        digitalWrite(pulsePinSnes, LOW);
-        delayMicroseconds(6);
-    }
-    #pragma endregion
-
-    #pragma region  //leftmouse 17 Y direction (0=up, 1=down)
-    //1 high
-    digitalWrite(pulsePinSnes, HIGH);
-    delayMicroseconds(.5);
-
-    if (!digitalRead(dataPinSnes)) {
-        mouseYDirection = 1;
-        //Down
-    }
-    else {
-        mouseYDirection = 0;
-    }
-    //8 low
-    digitalWrite(pulsePinSnes, LOW);
-    delayMicroseconds(8);
-    #pragma endregion
-
-    #pragma region  //leftmouse 18 - 24 Y motion
-    //1 high
-    for ( int q = 0; q < 7; q++) {
-        digitalWrite(pulsePinSnes, HIGH);
-        mouseY = mouseY << 1;
-        mouseY = mouseY | (!digitalRead(dataPinSnes));
-        delayMicroseconds(.5);
-        //8 low
-        digitalWrite(pulsePinSnes, LOW);
-        delayMicroseconds(8);
-    }
-
-    #pragma endregion
-
-
-
-
-    #pragma region  //leftmouse 25 X direction (0=left, 1=right)
-    //1 high
-    digitalWrite(pulsePinSnes, HIGH);
-    delayMicroseconds(.5);
-
-    if (!digitalRead(dataPinSnes)) {
-        mouseXDirection = 1;
-        //left
-    }
-    else {
-        mouseXDirection = 0;
-    }
-    //8 low
-    digitalWrite(pulsePinSnes, LOW);
-    delayMicroseconds(8);
-    #pragma endregion
-
-    #pragma region  //leftmouse 25 - 32 X motion
-    //1 high
-    for ( int q = 0; q < 7; q++) {
-        digitalWrite(pulsePinSnes, HIGH);
-        mouseX = mouseX << 1;
-        mouseX = mouseX | (!digitalRead(dataPinSnes));
-        delayMicroseconds(.5);
-        //8 low
-        digitalWrite(pulsePinSnes, LOW);
-        delayMicroseconds(8);
-    }
-
-    #pragma endregion
-
-    if (mouseYDirection == 1) {
-        //Mouse.move(0, ( -1 * (mouseLastY - mouseY)));
-    }
-    else {
-       // Mouse.move(0, mouseLastY - mouseY);
-    }
-
-    if (mouseXDirection == 1) {
-      //  Mouse.move(( -1 * (mouseLastX - mouseX)), 0);
-    }
-    else {
-        //Mouse.move(mouseLastX - mouseX, 0);
-    }
-
-    
-
-    mouseLastX = mouseX;
-    mouseLastY = mouseY;
-    mouseX = 0;
-    mouseY = 0;
-}  
-
 void n64() {
    static boolean haveController = false;
 
 	if (!haveController) {
-		if (pad.begin ()) {
-			// Controller detected!
-				//digitalWrite (LED_BUILTIN, HIGH);
-				haveController = true;
-			} else {
-				delay (333);
+		if (pad.begin()) {
+		    // Controller detected!
+			digitalWrite(n64IndicateLed, HIGH);
+            Serial.write("N64 Controller Connected.");
+			haveController = true;
+		} 
+        else {
+            digitalWrite(n64IndicateLed, LOW);
+			delay(333);
 		}
+
 	} else {
-		if (!pad.read ()) {
+		if (!pad.read()) {
 			// Controller lost :(
 			//digitalWrite (LED_BUILTIN, LOW);
 			haveController = false;
-		} else {
+		} 
+        else {
 			// Controller was read fine
-			if ((pad.buttons & N64Pad::BTN_LRSTART) != 0) {
-				// This combo toggles mapAnalogToDPad
-				mapAnalogToDPad = !mapAnalogToDPad;
-				//flashLed (2 + (byte) mapAnalogToDPad);
-			} else {
-				// Map buttons!
-				usbStick.setButton (0, (pad.buttons & N64Pad::BTN_B) != 0);
-				usbStick.setButton (1, (pad.buttons & N64Pad::BTN_A) != 0);
-				usbStick.setButton (2, (pad.buttons & N64Pad::BTN_C_LEFT) != 0);
-				usbStick.setButton (3, (pad.buttons & N64Pad::BTN_C_DOWN) != 0);
-				usbStick.setButton (4, (pad.buttons & N64Pad::BTN_C_UP) != 0);
-				usbStick.setButton (5, (pad.buttons & N64Pad::BTN_C_RIGHT) != 0);
-				usbStick.setButton (6, (pad.buttons & N64Pad::BTN_L) != 0);
-				usbStick.setButton (7, (pad.buttons & N64Pad::BTN_R) != 0);
-				usbStick.setButton (8, (pad.buttons & N64Pad::BTN_Z) != 0);
-				usbStick.setButton (9, (pad.buttons & N64Pad::BTN_START) != 0);
-
-				if (!mapAnalogToDPad) {
-					// D-Pad makes up the X/Y axes
-					if ((pad.buttons & N64Pad::BTN_UP) != 0) {
-						usbStick.setYAxis (ANALOG_MIN_VALUE);
-					} else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
-						usbStick.setYAxis (ANALOG_MAX_VALUE);
-					} else {
-						usbStick.setYAxis (ANALOG_IDLE_VALUE);
-					}
-
-					if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
-						usbStick.setXAxis (ANALOG_MIN_VALUE);
-					} else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
-						usbStick.setXAxis (ANALOG_MAX_VALUE);
-					} else {
-						usbStick.setXAxis (ANALOG_IDLE_VALUE);
-					}
-
-					// The analog stick gets mapped to the X/Y rotation axes
-					usbStick.setRxAxis (pad.x);
-					usbStick.setRyAxis (pad.y);
-				} else {
-					// Both the D-Pad and analog stick control the X/Y axes
-					if ((pad.buttons & N64Pad::BTN_UP || pad.y > ANALOG_DEAD_ZONE) != 0) {
-						usbStick.setYAxis (ANALOG_MIN_VALUE);
-					} else if ((pad.buttons & N64Pad::BTN_DOWN || pad.y < -ANALOG_DEAD_ZONE) != 0) {
-						usbStick.setYAxis (ANALOG_MAX_VALUE);
-					} else {
-						usbStick.setYAxis (ANALOG_IDLE_VALUE);
-					}
-
-					if ((pad.buttons & N64Pad::BTN_LEFT || pad.x < -ANALOG_DEAD_ZONE) != 0) {
-						usbStick.setXAxis (ANALOG_MIN_VALUE);
-					} else if ((pad.buttons & N64Pad::BTN_RIGHT || pad.x > ANALOG_DEAD_ZONE) != 0) {
-						usbStick.setXAxis (ANALOG_MAX_VALUE);
-					} else {
-						usbStick.setXAxis (ANALOG_IDLE_VALUE);
-					}
-				}
-
-				// All done, send data for real!
-				usbStick.sendState ();
+        
+			// Map buttons!
+            //if ((pad.buttons & N64Pad::BTN_B) != 0) {
+            //   usbStick.setButton (0, 1);
+            //}
+            //if ((pad.buttons & N64Pad::BTN_B) == 0) {
+            //    usbStick.setButton (0, 0);
+            //}
+			usbStick.setButton(0, (pad.buttons & N64Pad::BTN_B) != 0);
+			usbStick.setButton(1, (pad.buttons & N64Pad::BTN_A) != 0);
+			usbStick.setButton(2, (pad.buttons & N64Pad::BTN_C_LEFT) != 0);
+			usbStick.setButton(3, (pad.buttons & N64Pad::BTN_C_DOWN) != 0);
+			usbStick.setButton(4, (pad.buttons & N64Pad::BTN_C_UP) != 0);
+			usbStick.setButton(5, (pad.buttons & N64Pad::BTN_C_RIGHT) != 0);
+			usbStick.setButton(6, (pad.buttons & N64Pad::BTN_L) != 0);
+			usbStick.setButton(7, (pad.buttons & N64Pad::BTN_R) != 0);
+			usbStick.setButton(8, (pad.buttons & N64Pad::BTN_Z) != 0);
+			usbStick.setButton(9, (pad.buttons & N64Pad::BTN_START) != 0);
+			// D-Pad makes up the X/Y axes
+			if ((pad.buttons & N64Pad::BTN_UP) != 0) {
+				usbStick.setYAxis(ANALOG_MIN_VALUE);
+			} 
+            else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
+				usbStick.setYAxis(ANALOG_MAX_VALUE);
+			} 
+            else {
+				usbStick.setYAxis(ANALOG_IDLE_VALUE);
 			}
+			if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
+				usbStick.setXAxis(ANALOG_MIN_VALUE);
+			} 
+            else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
+				usbStick.setXAxis(ANALOG_MAX_VALUE);
+			} 
+            else {
+				usbStick.setXAxis(ANALOG_IDLE_VALUE);
+			}
+			// The analog stick gets mapped to the X/Y rotation axes
+			usbStick.setRxAxis (pad.x);
+			usbStick.setRyAxis (pad.y);
+			
+			// All done, send data for real!
+			usbStick.sendState ();
+			
 		}
     } 
 }
 
-
 void checkSwitches() {
-    if (digitalRead(nesSwitch)) nesMode = true;
-    if (digitalRead(snesSwitch)) snesMode = true;
-    if (digitalRead(n64Switch)) n64Mode = true;
-    else serialMode = true; // fallback
-
+    if ( (!digitalRead(nesSwitch) + !digitalRead(snesSwitch) + !digitalRead(n64Switch)) > 1  ) { // if more then one is high somehow go to serial.
+    Serial.write("Error: Too many selected.");
+        serialMode = false;  //
+        nesMode = false;
+        snesMode = false;
+        n64Mode = false;
+    }
+    else if (!digitalRead(nesSwitch)) {
+        serialMode = false;
+        nesMode = true;     //
+        snesMode = false;
+        n64Mode = false;
+    }
+    else if (!digitalRead(snesSwitch)) {
+        serialMode = false;
+        nesMode = false;
+        snesMode = true;    //
+        n64Mode = false;
+    }
+    else if (!digitalRead(n64Switch)) {
+        serialMode = false;
+        nesMode = false;
+        snesMode = false;
+        n64Mode = true;     //
+    }
+    else if (!digitalRead(serialSwitch)) {
+        serialMode = true; // 
+        nesMode = false;
+        snesMode = false;
+        n64Mode = false;
+    }
+    else {//fallback to serial
+        serialMode = true; 
+        nesMode = false;
+        snesMode = false;
+        n64Mode = false;
+    }
 }
+
 void setup() {
     Serial.begin(9600);
     // set the digital pin STATES
@@ -572,11 +397,14 @@ void setup() {
     pinMode(latchPinSnes, OUTPUT);
     pinMode(dataPinSnes, INPUT);
 
-    pinMode(serialSwitch, INPUT);
+    pinMode(serialSwitch, INPUT_PULLUP);
+    pinMode(nesSwitch, INPUT_PULLUP); 
+    pinMode(snesSwitch, INPUT_PULLUP);
+    pinMode(n64Switch, INPUT_PULLUP);
 
-    pinMode(nesSwitch, INPUT); 
-    pinMode(snesSwitch, INPUT);
-    pinMode(n64Switch, INPUT);
+    pinMode(nesIndicateLed, OUTPUT);
+    pinMode(snesIndicateLed, OUTPUT);
+    pinMode(n64IndicateLed, OUTPUT);
 
     usbStick.begin (false);		// We'll call sendState() manually to minimize lag
 	usbStick.setXAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
@@ -586,20 +414,13 @@ void setup() {
 }
 
 void loop() {  
-    for ( int t = 1; t < 61; t++){ // try to only do the thing 60 times a second
-
-        if (serialMode == true) {
-            serialActions();
-        }
-        if (nesMode == true) {
-            nes();
-        }
-        if (snesMode == true) {
-             snes();
-        }
-        if (n64Mode == true) {
-            n64();
-        }
-        //delayMicroseconds(16550);  
-    }
+    checkSwitches();
+    if (serialMode == true) serialActions();
+    
+    if (nesMode == true) nes();
+    
+    if (snesMode == true) snes();
+    
+    if (n64Mode == true) n64();
+    
 }
