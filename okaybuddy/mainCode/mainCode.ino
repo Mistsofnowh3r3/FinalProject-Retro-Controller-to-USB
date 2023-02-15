@@ -9,6 +9,7 @@
 
 String serialNow = "";
 int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, KEY_LEFT_CTRL, 154, 162};
+int controllerbutton_values[] = {1, 0, 10, 9, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 2, 3, 6, 7};
 
 //various mode related things
 bool nesMode = false; 
@@ -47,8 +48,6 @@ Joystick_ usbStick (
 	false,		// includeBrake
 	false		// includeSteering
 );
-
-bool mapAnalogToDPad = false;
 
 #define deadify(var, thres) (abs (var) > thres ? (var) : 0)
 
@@ -127,11 +126,11 @@ void checkButton(int button, bool mode) {
     
     int button_index = button - 1;
       
-    if (button_index > 12) { // if we have passed all the buttons just return and do nothing
+    if (button_index > 11) { // if we have passed all the buttons just return and do nothing
         return;
     }
 
-    if(nesMode) {
+    if(nesMode && button_index < 8) {
         if ((mode == false) && (digitalRead(dataPinNes) == false)) {
             Keyboard.press(button_values[button_index]);
             Serial.print(button_values[button_index]);
@@ -150,6 +149,102 @@ void checkButton(int button, bool mode) {
         }
         if ((mode == true) && (digitalRead(dataPinSnes) == true)) {
             Keyboard.release(button_values[button_index]);
+            return;
+        }
+    }
+}
+
+void checkButtonControllerMode(int button) {
+    
+    int button_index = button - 1;
+      
+    if (button_index > 11) { // if we have passed all the buttons just return and do nothing
+        return;
+    }
+
+    if (nesMode && button_index < 8) {
+    	if (button_index == 4 && !digitalRead(dataPinNes)) { //if 4th and read data from dataPin
+            usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
+            return; 
+        }
+        else if (button_index == 5 && !digitalRead(dataPinNes)) { //if 5th and read data from dataPin
+            usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
+            return;
+        }
+        else { //none of that nonsense. But should we actually stop pressing a Y axis dpad button? We might just be here from the other buttons.
+            if (button_index == 4 || button_index == 5 ) usbStick.setYAxis(ANALOG_IDLE_VALUE); //Well, I guess we should.
+        }
+
+	    if (button_index == 6 && !digitalRead(dataPinNes)) { //if 6th and read data from dataPin
+            usbStick.setXAxis(ANALOG_MIN_VALUE); //press left
+            return;
+        }
+        else if (button_index == 7 && !digitalRead(dataPinNes)) { //if 7th and read data from dataPin
+            usbStick.setXAxis(ANALOG_MAX_VALUE); //press right
+            return;
+        }
+        else { //none of that nonsense. But should we actually stop pressing a X axis dpad button? We might just be here from the other buttons.
+            if (button_index == 6 || button_index == 7 ) usbStick.setXAxis(ANALOG_IDLE_VALUE); // ...no, you're are correct.
+        }
+        
+        //onto the buttons
+
+        usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinNes)); // do the button at the index according to datapin read
+        return;
+    }
+
+    if (snesMode) {
+    	if (button_index == 4 && !digitalRead(dataPinSnes)) { //if 4th and read data from dataPin
+            usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
+            return; 
+        }
+        else if (button_index == 5 && !digitalRead(dataPinSnes)) { //if 5th and read data from dataPin
+            usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
+            return;
+        }
+        else { //none of that nonsense. But should we actually stop pressing a Y axis dpad button? We might just be here from the other buttons.
+            if (button_index == 4 || button_index == 5 ) usbStick.setYAxis(ANALOG_IDLE_VALUE); //Well, I guess we should.
+        }
+
+	    if (button_index == 6 && !digitalRead(dataPinSnes)) { //if 6th and read data from dataPin
+            usbStick.setXAxis(ANALOG_MIN_VALUE); //press left
+            return;
+        }
+        else if (button_index == 7 && !digitalRead(dataPinSnes)) { //if 7th and read data from dataPin
+            usbStick.setXAxis(ANALOG_MAX_VALUE); //press right
+            return;
+        }
+        else { //none of that nonsense. But should we actually stop pressing a X axis dpad button? We might just be here from the other buttons.
+            if (button_index == 6 || button_index == 7 ) usbStick.setXAxis(ANALOG_IDLE_VALUE); // ...no, you're are correct.
+        }
+        
+        //onto the buttons
+
+        usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinSnes)); // do the button at the index according to datapin read
+        return;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if (snesMode) {
+        if ((digitalRead(dataPinSnes) == false)) {
+            usbStick.setButton(controllerbutton_values[button_index], 1);
+            Serial.print(controllerbutton_values[button_index]);
+            return;
+        }
+        if ((digitalRead(dataPinSnes) == true)) {
+            usbStick.setButton(controllerbutton_values[button_index], 0);
             return;
         }
     }

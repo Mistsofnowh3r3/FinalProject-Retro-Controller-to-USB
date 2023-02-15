@@ -1,6 +1,6 @@
 {
     "board": "arduino:avr:leonardo",
     "programmer": "arduino:avrisp",
-    "port": "COM15",
+    "port": "COM4",
     "sketch": "mainCode\\mainCode.ino"
 }
