@@ -33,13 +33,15 @@ bool holdingLeft = 0;
 bool holdingRight = 0;
 
 //various mode related things
-bool nesMode = true; 
-bool snesMode = false; 
+bool nesMode = false; 
+bool snesMode = true; 
 bool n64Mode = false; 
 bool serialMode = false;
 
-bool nesControllerConnected = false; 
+bool nesControllerConnected = false;
+bool nesControllerConnectedLast = false; 
 bool snesControllerConnected = false; 
+bool snesControllerConnectedLast = false; 
 bool n64ControllerConnected = false;
 
 // modes for what the poutput will be 
@@ -267,6 +269,15 @@ void checkButton(int button) {
     return; // safety return. THIS WILL NOT HAPPEN.
 }
 
+void clearAllButtons() {
+    usbStick.setYAxis(ANALOG_IDLE_VALUE);
+    usbStick.setXAxis(ANALOG_IDLE_VALUE);
+    for(int u = 0; u < 12; u++){
+        usbStick.setButton(controllerbutton_values[u-1], 0);
+    }
+    usbStick.sendState();
+    Keyboard.releaseAll();
+}
 
 void serialActions() {
 
@@ -332,6 +343,7 @@ void serialActions() {
 }
 
 void nes() {
+    nesControllerConnectedLast = nesControllerConnected; // Store the last known state of of the controllers connection
 
     digitalWrite(latchPinNes, HIGH);
     if (nesControllerConnected) checkButton(1); // check for A here
@@ -357,9 +369,6 @@ void nes() {
         delayMicroseconds(6);
     }
 
-
-
-
     // Pulse genreation and check for controller
     for (int e = 10; e < 17; e++) {
         // pulse the pulse pin
@@ -371,10 +380,14 @@ void nes() {
         digitalWrite(pulsePinNes, LOW);
         delayMicroseconds(6);
     }
+
+    if(!nesControllerConnected && (nesControllerConnected != nesControllerConnectedLast)) { // if a NES controller is not connected, and the connection has changed 
+        clearAllButtons(); // need to only do this when the controller actually becomes disconnected
+    }
 }   
 
 void snes() {
-
+    snesControllerConnectedLast = snesControllerConnected; // Store the last known state of of the controllers connection
     // SNES latch signal generation
     digitalWrite(latchPinSnes, HIGH);
     if (snesControllerConnected) checkButton(1); // first button, only read a button input if a controller is connected
@@ -409,6 +422,10 @@ void snes() {
         //6 low
         digitalWrite(pulsePinSnes, LOW);
         delayMicroseconds(6);
+    }
+
+    if(!snesControllerConnected && (snesControllerConnected != snesControllerConnectedLast)) { // if a SNES controller is not connected, and the connection has changed 
+        clearAllButtons(); // need to only do this when the controller actually becomes disconnected
     }
 }  
 
@@ -537,7 +554,8 @@ void setup() {
 
 void loop() {  
 
-    //checkContollerConnections();
+    snesControllerConnected ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
+
     //checkSwitches();
     if (serialMode == true) serialActions();
     
@@ -546,5 +564,4 @@ void loop() {
     if (snesMode == true) snes();
     
     if (n64Mode == true) n64();
-    
 }
