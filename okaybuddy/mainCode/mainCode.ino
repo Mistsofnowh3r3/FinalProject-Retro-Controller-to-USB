@@ -33,9 +33,9 @@ bool holdingLeft = 0;
 bool holdingRight = 0;
 
 //various mode related things
-bool nesMode = false; 
+bool nesMode = true; 
 bool snesMode = false; 
-bool n64Mode = true; 
+bool n64Mode = false; 
 bool serialMode = false;
 
 bool nesControllerConnected = false; 
@@ -267,38 +267,6 @@ void checkButton(int button) {
     return; // safety return. THIS WILL NOT HAPPEN.
 }
 
-void checkContollerConnections() {
-    // Outside of the latch and pulse cycles, if the datapins are high that means a controller is connected.
-    // these actually do not work because when disconnected they go into a floating state
-    if(!digitalRead(dataPinNes)) {
-        nesControllerConnected = true;
-        digitalWrite(nesIndicateLed, HIGH);
-    }
-    else {
-        nesControllerConnected = false;
-        digitalWrite(nesIndicateLed, LOW);    
-    }
-
-    if(!digitalRead(dataPinSnes)) {
-        snesControllerConnected = true;
-        digitalWrite(snesIndicateLed, HIGH);
-    }
-    else {
-        snesControllerConnected = false;
-        digitalWrite(snesIndicateLed, LOW);    
-    }
-
-    if(pad.begin()) {
-        n64ControllerConnected = true;
-        digitalWrite(n64IndicateLed, HIGH);
-    }
-    else {
-        n64ControllerConnected = false;
-        digitalWrite(n64IndicateLed, LOW);    
-    }
-}
-
-
 
 void serialActions() {
 
@@ -364,10 +332,9 @@ void serialActions() {
 }
 
 void nes() {
-    //if (!nesControllerConnected) return;
 
     digitalWrite(latchPinNes, HIGH);
-    checkButton(1); // check for A here
+    if (nesControllerConnected) checkButton(1); // check for A here
 
     delayMicroseconds(12);
 
@@ -375,14 +342,14 @@ void nes() {
     delayMicroseconds(6);
     
 
-    for (int j = 2; j < 10; j++)
+    for (int j = 2; j < 9; j++)
     {
         // pulse the pulse pin
 
         //6 high
         digitalWrite(pulsePinNes, HIGH);
         // check for the rest of the buttons
-        checkButton(j); 
+        if (nesControllerConnected) checkButton(j); 
         delayMicroseconds(6);
 
         //6 low
@@ -390,30 +357,55 @@ void nes() {
         delayMicroseconds(6);
     }
 
+
+
+
+    // Pulse genreation and check for controller
+    for (int e = 10; e < 17; e++) {
+        // pulse the pulse pin
+        //6 high
+        digitalWrite(pulsePinSnes, HIGH);
+        digitalRead(dataPinNes) ? nesControllerConnected = true : nesControllerConnected = false; // If data pin is high here, a controller is connected.
+        delayMicroseconds(6);
+        //6 low
+        digitalWrite(pulsePinNes, LOW);
+        delayMicroseconds(6);
+    }
 }   
 
 void snes() {
-    //if (!snesControllerConnected) return;
 
+    // SNES latch signal generation
     digitalWrite(latchPinSnes, HIGH);
-    checkButton(1); 
+    if (snesControllerConnected) checkButton(1); // first button, only read a button input if a controller is connected
 
     delayMicroseconds(12);
 
     digitalWrite(latchPinSnes, LOW);
     delayMicroseconds(6);
     
-
-    for (int j = 2; j < 18; j++)
+    // Pulse genreation and read for rest of buttons
+    for (int j = 2; j < 13; j++)
     {
         // pulse the pulse pin
 
         //6 high
-        digitalWrite(pulsePinSnes, HIGH);
-        // check for the rest of the buttons
-        checkButton(j); 
+        digitalWrite(pulsePinSnes, HIGH);   
+        if (snesControllerConnected) checkButton(j); // check for the rest of the buttons, only read a button input if a controller is connected
         delayMicroseconds(6);
 
+        //6 low
+        digitalWrite(pulsePinSnes, LOW);
+        delayMicroseconds(6);
+    }
+
+    // Pulse genreation and check for controller
+    for (int t = 13; t < 17; t++) {
+        // pulse the pulse pin
+        //6 high
+        digitalWrite(pulsePinSnes, HIGH);
+        digitalRead(dataPinSnes) ? snesControllerConnected = true : snesControllerConnected = false; // If data pin is high here, a controller is connected.
+        delayMicroseconds(6);
         //6 low
         digitalWrite(pulsePinSnes, LOW);
         delayMicroseconds(6);
