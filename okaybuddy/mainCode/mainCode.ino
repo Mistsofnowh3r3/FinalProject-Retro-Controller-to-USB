@@ -8,18 +8,43 @@
 // Globals //
 
 String serialNow = "";
-int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, KEY_LEFT_CTRL, 154, 162};
-int controllerbutton_values[] = {1, 0, 10, 9, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 2, 3, 6, 7};
+//1 = A    
+//2 = B
+//3 = SELECT
+//4 = START
+//5 = UP
+//6 = DOWN
+//7 = LEFT
+//8 = RIGHT
+//snes
+//9 = A
+//10 = X
+//11 = L
+//12 = R
+//need to read these from eeprom
+int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, 119, 154, 162};
+int controllerbutton_values[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+
+
+// Used for making sure that the DPAD functions correctly.
+bool holdingUp = 0;
+bool holdingDown = 0;
+bool holdingLeft = 0;
+bool holdingRight = 0;
 
 //various mode related things
-bool nesMode = false; 
+bool nesMode = true; 
 bool snesMode = false; 
 bool n64Mode = false; 
-bool serialMode = true;
+bool serialMode = false;
+
+bool nesControllerConnected = false; 
+bool snesControllerConnected = false; 
+bool n64ControllerConnected = false;
 
 // modes for what the poutput will be 
-bool keyboardMode = true; //output as keyboard
-bool controllerMode = false; //output as controller
+bool keyboardMode = false; //output as keyboard
+bool controllerMode = true; //output as controller
 
 // Constants //
 
@@ -107,148 +132,151 @@ void checkSerialForEnd() {
     
 }
 
-void checkButton(int button, bool mode) {
+void checkButton(int button) {
 
-    // if mode = 0 check for press if 1 check for release
-    //1 = A    
-    //2 = B
-    //3 = SELECT
-    //4 = START
-    //5 = UP
-    //6 = DOWN
-    //7 = LEFT
-    //8 = RIGHT
-    //snes
-    //9 = A
-    //10 = X
-    //11 = L
-    //12 = R
-    
     int button_index = button - 1;
       
-    if (button_index > 11) { // if we have passed all the buttons just return and do nothing
+    if (button_index > 11) return; // if we have passed all the buttons just return
+
+    if (keyboardMode == true) {
+        // if in nesMode and button index < 8 then according to the inversion of the state of dataPinNes press or release a button
+        if (nesMode && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(button_values[button_index]) : Keyboard.release(button_values[button_index]);
+
+        // if in snesMode then according to the inversion of the state of dataPinSnes press or release a button
+        if (snesMode) !digitalRead(dataPinSnes) ? Keyboard.press(button_values[button_index]) : Keyboard.release(button_values[button_index]);
+
         return;
     }
+    
+    if (controllerMode == true) {
+        if (nesMode && button_index < 8) {
+            if (button_index > 3) {
+                if ((button_index == 4) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding up
+                    if (holdingDown == 0 && holdingUp == 1) { // check if we are holding up
+                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // release up
+                        holdingUp = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((button_index == 5) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding down
+                    if (holdingDown == 1 && holdingUp == 0) { // check if we are holding down
+                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // release down
+                        holdingDown = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((button_index == 4) && (digitalRead(dataPinNes) == LOW)) { //if 4th and read data from dataPin
+                    usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
+                    holdingUp = 1; // let us know it is being held
+                    holdingDown = 0; // cannot hold up and down at the same time
+                }
+                if ((button_index == 5) && (digitalRead(dataPinNes) == LOW)) { //if 5th and read data from dataPin
+                    usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
+                    holdingDown = 1; // let us know it is being held
+                    holdingUp = 0; // cannot hold up and down at the same time
+                }
 
-    if(nesMode && button_index < 8) {
-        if ((mode == false) && (digitalRead(dataPinNes) == false)) {
-            Keyboard.press(button_values[button_index]);
-            Serial.print(button_values[button_index]);
+
+                if ((button_index == 6) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding left
+                    if (holdingRight == 0 && holdingLeft == 1) { // check if we are holding down
+                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // release left
+                        holdingLeft = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((button_index == 7) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding right
+                    if (holdingRight == 1 && holdingLeft == 0) { // check if we are holding down right
+                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // release
+                        holdingRight = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((button_index == 6) && (digitalRead(dataPinNes) == LOW)) { //if 6th and read data from dataPin
+                    usbStick.setXAxis(ANALOG_MIN_VALUE); // press up
+                    holdingLeft = 1; // let us know it is being held
+                    holdingRight = 0; // cannot hold right and left at the same time
+                }
+                if ((button_index == 7) && (digitalRead(dataPinNes) == LOW)) { //if 7th and read data from dataPin
+                    usbStick.setXAxis(ANALOG_MAX_VALUE); // press down
+                    holdingRight = 1; // let us know it is being held
+                    holdingLeft = 0; // cannot hold right and left at the same time
+                }
+                usbStick.sendState();
+                return;
+            }
+
+            usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinNes)); // do the button at the index according to datapin read
+            usbStick.sendState();
             return;
         }
-        if ((mode == true) && (digitalRead(dataPinNes) == true)) {
-            Keyboard.release(button_values[button_index]);
+
+        if (snesMode) {
+        	if (button_index == 4 && !digitalRead(dataPinSnes)) { //if 4th and read data from dataPin
+                usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
+                usbStick.sendState ();
+                return; 
+            }
+            else if (button_index == 5 && !digitalRead(dataPinSnes)) { //if 5th and read data from dataPin
+                usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
+                return;
+            }
+            else { //none of that nonsense. But should we actually stop pressing a Y axis dpad button? We might just be here from the other buttons.
+                if (button_index == 4 || button_index == 5 ) usbStick.setYAxis(ANALOG_IDLE_VALUE); //Well, I guess we should.
+            }
+
+            if (button_index == 6 && !digitalRead(dataPinSnes)) { //if 6th and read data from dataPin
+                usbStick.setXAxis(ANALOG_MIN_VALUE); //press left
+                usbStick.sendState ();
+                return;
+            }
+            else if (button_index == 7 && !digitalRead(dataPinSnes)) { //if 7th and read data from dataPin
+                usbStick.setXAxis(ANALOG_MAX_VALUE); //press right
+                
+                return;
+            }
+            else { //none of that nonsense. But should we actually stop pressing a X axis dpad button? We might just be here from the other buttons.
+                if (button_index == 6 || button_index == 7 ) usbStick.setXAxis(ANALOG_IDLE_VALUE); // ...no, you're are correct.
+            }
+            
+            //onto the buttons
+
+            usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinSnes)); // do the button at the index according to datapin read
+            usbStick.sendState ();
             return;
         }
+        return;
     }
-    if (snesMode) {
-        if ((mode == false) && (digitalRead(dataPinSnes) == false)) {
-            Keyboard.press(button_values[button_index]);
-            Serial.print(button_values[button_index]);
-            return;
-        }
-        if ((mode == true) && (digitalRead(dataPinSnes) == true)) {
-            Keyboard.release(button_values[button_index]);
-            return;
-        }
+    return; // safety return. THIS WILL NOT HAPPEN.
+}
+
+void checkContollerConnections() {
+    // Outside of the latch and pulse cycles, if the datapins are high that means a controller is connected.
+    // these actually do not work because when disconnected they go into a floating state
+    if(!digitalRead(dataPinNes)) {
+        nesControllerConnected = true;
+        digitalWrite(nesIndicateLed, HIGH);
+    }
+    else {
+        nesControllerConnected = false;
+        digitalWrite(nesIndicateLed, LOW);    
+    }
+
+    if(!digitalRead(dataPinSnes)) {
+        snesControllerConnected = true;
+        digitalWrite(snesIndicateLed, HIGH);
+    }
+    else {
+        snesControllerConnected = false;
+        digitalWrite(snesIndicateLed, LOW);    
+    }
+
+    if(pad.begin()) {
+        n64ControllerConnected = true;
+        digitalWrite(n64IndicateLed, HIGH);
+    }
+    else {
+        n64ControllerConnected = false;
+        digitalWrite(n64IndicateLed, LOW);    
     }
 }
 
-void checkButtonControllerMode(int button) {
-    
-    int button_index = button - 1;
-      
-    if (button_index > 11) { // if we have passed all the buttons just return and do nothing
-        return;
-    }
 
-    if (nesMode && button_index < 8) {
-    	if (button_index == 4 && !digitalRead(dataPinNes)) { //if 4th and read data from dataPin
-            usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
-            return; 
-        }
-        else if (button_index == 5 && !digitalRead(dataPinNes)) { //if 5th and read data from dataPin
-            usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
-            return;
-        }
-        else { //none of that nonsense. But should we actually stop pressing a Y axis dpad button? We might just be here from the other buttons.
-            if (button_index == 4 || button_index == 5 ) usbStick.setYAxis(ANALOG_IDLE_VALUE); //Well, I guess we should.
-        }
-
-	    if (button_index == 6 && !digitalRead(dataPinNes)) { //if 6th and read data from dataPin
-            usbStick.setXAxis(ANALOG_MIN_VALUE); //press left
-            return;
-        }
-        else if (button_index == 7 && !digitalRead(dataPinNes)) { //if 7th and read data from dataPin
-            usbStick.setXAxis(ANALOG_MAX_VALUE); //press right
-            return;
-        }
-        else { //none of that nonsense. But should we actually stop pressing a X axis dpad button? We might just be here from the other buttons.
-            if (button_index == 6 || button_index == 7 ) usbStick.setXAxis(ANALOG_IDLE_VALUE); // ...no, you're are correct.
-        }
-        
-        //onto the buttons
-
-        usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinNes)); // do the button at the index according to datapin read
-        return;
-    }
-
-    if (snesMode) {
-    	if (button_index == 4 && !digitalRead(dataPinSnes)) { //if 4th and read data from dataPin
-            usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
-            return; 
-        }
-        else if (button_index == 5 && !digitalRead(dataPinSnes)) { //if 5th and read data from dataPin
-            usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
-            return;
-        }
-        else { //none of that nonsense. But should we actually stop pressing a Y axis dpad button? We might just be here from the other buttons.
-            if (button_index == 4 || button_index == 5 ) usbStick.setYAxis(ANALOG_IDLE_VALUE); //Well, I guess we should.
-        }
-
-	    if (button_index == 6 && !digitalRead(dataPinSnes)) { //if 6th and read data from dataPin
-            usbStick.setXAxis(ANALOG_MIN_VALUE); //press left
-            return;
-        }
-        else if (button_index == 7 && !digitalRead(dataPinSnes)) { //if 7th and read data from dataPin
-            usbStick.setXAxis(ANALOG_MAX_VALUE); //press right
-            return;
-        }
-        else { //none of that nonsense. But should we actually stop pressing a X axis dpad button? We might just be here from the other buttons.
-            if (button_index == 6 || button_index == 7 ) usbStick.setXAxis(ANALOG_IDLE_VALUE); // ...no, you're are correct.
-        }
-        
-        //onto the buttons
-
-        usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinSnes)); // do the button at the index according to datapin read
-        return;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if (snesMode) {
-        if ((digitalRead(dataPinSnes) == false)) {
-            usbStick.setButton(controllerbutton_values[button_index], 1);
-            Serial.print(controllerbutton_values[button_index]);
-            return;
-        }
-        if ((digitalRead(dataPinSnes) == true)) {
-            usbStick.setButton(controllerbutton_values[button_index], 0);
-            return;
-        }
-    }
-}
 
 void serialActions() {
 
@@ -314,9 +342,10 @@ void serialActions() {
 }
 
 void nes() {
+    //if (!nesControllerConnected) return;
+
     digitalWrite(latchPinNes, HIGH);
-    checkButton(1, 0); // check for A here
-    checkButton(1, 1);
+    checkButton(1); // check for A here
 
     delayMicroseconds(12);
 
@@ -331,8 +360,7 @@ void nes() {
         //6 high
         digitalWrite(pulsePinNes, HIGH);
         // check for the rest of the buttons
-        checkButton(j, 0); 
-        checkButton(j, 1);
+        checkButton(j); 
         delayMicroseconds(6);
 
         //6 low
@@ -343,9 +371,10 @@ void nes() {
 }   
 
 void snes() {
+    if (!snesControllerConnected) return;
+
     digitalWrite(latchPinSnes, HIGH);
-    checkButton(1, false); 
-    checkButton(1, true);
+    checkButton(1); 
 
     delayMicroseconds(12);
 
@@ -360,8 +389,7 @@ void snes() {
         //6 high
         digitalWrite(pulsePinSnes, HIGH);
         // check for the rest of the buttons
-        checkButton(j, false); 
-        checkButton(j, true);
+        checkButton(j); 
         delayMicroseconds(6);
 
         //6 low
@@ -371,80 +399,65 @@ void snes() {
 }  
 
 void n64() {
-   static boolean haveController = false;
+    if (!n64ControllerConnected) return;
 
-	if (!haveController) {
-		if (pad.begin()) {
-		    // Controller detected!
-			digitalWrite(n64IndicateLed, HIGH);
-            Serial.write("N64 Controller Connected.");
-			haveController = true;
+	if (!pad.read()) {
+		// Controller lost :(;
+		n64ControllerConnected = false;
+	} 
+    else {
+		// Controller was read fine
+    
+		// Map buttons!
+        //if ((pad.buttons & N64Pad::BTN_B) != 0) {
+        //   usbStick.setButton (0, 1);
+        //}
+        //if ((pad.buttons & N64Pad::BTN_B) == 0) {
+        //    usbStick.setButton (0, 0);
+        //}
+		usbStick.setButton(0, (pad.buttons & N64Pad::BTN_B) != 0);
+		usbStick.setButton(1, (pad.buttons & N64Pad::BTN_A) != 0);
+		usbStick.setButton(2, (pad.buttons & N64Pad::BTN_C_LEFT) != 0);
+		usbStick.setButton(3, (pad.buttons & N64Pad::BTN_C_DOWN) != 0);
+		usbStick.setButton(4, (pad.buttons & N64Pad::BTN_C_UP) != 0);
+		usbStick.setButton(5, (pad.buttons & N64Pad::BTN_C_RIGHT) != 0);
+		usbStick.setButton(6, (pad.buttons & N64Pad::BTN_L) != 0);
+		usbStick.setButton(7, (pad.buttons & N64Pad::BTN_R) != 0);
+		usbStick.setButton(8, (pad.buttons & N64Pad::BTN_Z) != 0);
+		usbStick.setButton(9, (pad.buttons & N64Pad::BTN_START) != 0);
+		// D-Pad makes up the X/Y axes
+		if ((pad.buttons & N64Pad::BTN_UP) != 0) {
+			usbStick.setYAxis(ANALOG_MIN_VALUE);
+		} 
+        else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
+			usbStick.setYAxis(ANALOG_MAX_VALUE);
 		} 
         else {
-            digitalWrite(n64IndicateLed, LOW);
-			delay(333);
+			usbStick.setYAxis(ANALOG_IDLE_VALUE);
 		}
-
-	} else {
-		if (!pad.read()) {
-			// Controller lost :(
-			//digitalWrite (LED_BUILTIN, LOW);
-			haveController = false;
+		if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
+			usbStick.setXAxis(ANALOG_MIN_VALUE);
+		} 
+        else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
+			usbStick.setXAxis(ANALOG_MAX_VALUE);
 		} 
         else {
-			// Controller was read fine
-        
-			// Map buttons!
-            //if ((pad.buttons & N64Pad::BTN_B) != 0) {
-            //   usbStick.setButton (0, 1);
-            //}
-            //if ((pad.buttons & N64Pad::BTN_B) == 0) {
-            //    usbStick.setButton (0, 0);
-            //}
-			usbStick.setButton(0, (pad.buttons & N64Pad::BTN_B) != 0);
-			usbStick.setButton(1, (pad.buttons & N64Pad::BTN_A) != 0);
-			usbStick.setButton(2, (pad.buttons & N64Pad::BTN_C_LEFT) != 0);
-			usbStick.setButton(3, (pad.buttons & N64Pad::BTN_C_DOWN) != 0);
-			usbStick.setButton(4, (pad.buttons & N64Pad::BTN_C_UP) != 0);
-			usbStick.setButton(5, (pad.buttons & N64Pad::BTN_C_RIGHT) != 0);
-			usbStick.setButton(6, (pad.buttons & N64Pad::BTN_L) != 0);
-			usbStick.setButton(7, (pad.buttons & N64Pad::BTN_R) != 0);
-			usbStick.setButton(8, (pad.buttons & N64Pad::BTN_Z) != 0);
-			usbStick.setButton(9, (pad.buttons & N64Pad::BTN_START) != 0);
-			// D-Pad makes up the X/Y axes
-			if ((pad.buttons & N64Pad::BTN_UP) != 0) {
-				usbStick.setYAxis(ANALOG_MIN_VALUE);
-			} 
-            else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
-				usbStick.setYAxis(ANALOG_MAX_VALUE);
-			} 
-            else {
-				usbStick.setYAxis(ANALOG_IDLE_VALUE);
-			}
-			if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
-				usbStick.setXAxis(ANALOG_MIN_VALUE);
-			} 
-            else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
-				usbStick.setXAxis(ANALOG_MAX_VALUE);
-			} 
-            else {
-				usbStick.setXAxis(ANALOG_IDLE_VALUE);
-			}
-			// The analog stick gets mapped to the X/Y rotation axes
-			usbStick.setRxAxis (pad.x);
-			usbStick.setRyAxis (pad.y);
-			
-			// All done, send data for real!
-			usbStick.sendState ();
-			
+			usbStick.setXAxis(ANALOG_IDLE_VALUE);
 		}
-    } 
+		// The analog stick gets mapped to the X/Y rotation axes
+		usbStick.setRxAxis (pad.x);
+		usbStick.setRyAxis (pad.y);
+		
+		// All done, send data for real!
+		usbStick.sendState ();
+		
+	} 
 }
 
 void checkSwitches() {
-    if ( (!digitalRead(nesSwitch) + !digitalRead(snesSwitch) + !digitalRead(n64Switch)) > 1  ) { // if more then one is high somehow go to serial.
+    if ( (!digitalRead(nesSwitch) + !digitalRead(snesSwitch) + !digitalRead(n64Switch)) > 1  ) { // WHat do you mean, more then one is activated at a time?!
     Serial.write("Error: Too many selected.");
-        serialMode = false;  //
+        serialMode = false;  
         nesMode = false;
         snesMode = false;
         n64Mode = false;
@@ -483,7 +496,7 @@ void checkSwitches() {
 
 void setup() {
     Serial.begin(9600);
-    // set the digital pin STATES
+
     pinMode(pulsePinNes, OUTPUT);
     pinMode(latchPinNes, OUTPUT);
     pinMode(dataPinNes, INPUT);
@@ -501,7 +514,7 @@ void setup() {
     pinMode(snesIndicateLed, OUTPUT);
     pinMode(n64IndicateLed, OUTPUT);
 
-    usbStick.begin (false);		// We'll call sendState() manually to minimize lag
+    usbStick.begin (false);		// We'll call sendState() manually to minimize lag. I didn't say this, who else is here?
 	usbStick.setXAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setYAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRxAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
@@ -509,7 +522,9 @@ void setup() {
 }
 
 void loop() {  
-    checkSwitches();
+
+    //checkContollerConnections();
+    //checkSwitches();
     if (serialMode == true) serialActions();
     
     if (nesMode == true) nes();
