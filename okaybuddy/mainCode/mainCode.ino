@@ -23,7 +23,7 @@ String serialNow = "";
 //12 = R
 //need to read these from eeprom
 int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, 119, 154, 162};
-int controllerbutton_values[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
 
 // Used for making sure that the DPAD functions correctly.
@@ -33,9 +33,9 @@ bool holdingLeft = 0;
 bool holdingRight = 0;
 
 //various mode related things
-bool nesMode = true; 
+bool nesMode = false; 
 bool snesMode = false; 
-bool n64Mode = false; 
+bool n64Mode = true; 
 bool serialMode = false;
 
 bool nesControllerConnected = false; 
@@ -59,7 +59,7 @@ N64Pad pad;
 Joystick_ usbStick (
 	JOYSTICK_DEFAULT_REPORT_ID,
 	JOYSTICK_TYPE_JOYSTICK,
-	10,			// buttonCount
+	12,			// buttonCount
 	0,			// hatSwitchCount (0-2)
 	true,		// includeXAxis
 	true,		// includeYAxis
@@ -207,37 +207,59 @@ void checkButton(int button) {
         }
 
         if (snesMode) {
-        	if (button_index == 4 && !digitalRead(dataPinSnes)) { //if 4th and read data from dataPin
-                usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
-                usbStick.sendState ();
-                return; 
-            }
-            else if (button_index == 5 && !digitalRead(dataPinSnes)) { //if 5th and read data from dataPin
-                usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
-                return;
-            }
-            else { //none of that nonsense. But should we actually stop pressing a Y axis dpad button? We might just be here from the other buttons.
-                if (button_index == 4 || button_index == 5 ) usbStick.setYAxis(ANALOG_IDLE_VALUE); //Well, I guess we should.
-            }
+            if (button_index > 3 && button_index < 8) {
+                if ((button_index == 4) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding up
+                    if (holdingDown == 0 && holdingUp == 1) { // check if we are holding up
+                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // release up
+                        holdingUp = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((button_index == 5) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding down
+                    if (holdingDown == 1 && holdingUp == 0) { // check if we are holding down
+                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // release down
+                        holdingDown = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((button_index == 4) && (digitalRead(dataPinSnes) == LOW)) { //if 4th and read data from dataPin
+                    usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
+                    holdingUp = 1; // let us know it is being held
+                    holdingDown = 0; // cannot hold up and down at the same time
+                }
+                if ((button_index == 5) && (digitalRead(dataPinSnes) == LOW)) { //if 5th and read data from dataPin
+                    usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
+                    holdingDown = 1; // let us know it is being held
+                    holdingUp = 0; // cannot hold up and down at the same time
+                }
 
-            if (button_index == 6 && !digitalRead(dataPinSnes)) { //if 6th and read data from dataPin
-                usbStick.setXAxis(ANALOG_MIN_VALUE); //press left
-                usbStick.sendState ();
+
+                if ((button_index == 6) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding left
+                    if (holdingRight == 0 && holdingLeft == 1) { // check if we are holding down
+                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // release left
+                        holdingLeft = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((button_index == 7) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding right
+                    if (holdingRight == 1 && holdingLeft == 0) { // check if we are holding down right
+                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // release
+                        holdingRight = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((button_index == 6) && (digitalRead(dataPinSnes) == LOW)) { //if 6th and read data from dataPin
+                    usbStick.setXAxis(ANALOG_MIN_VALUE); // press up
+                    holdingLeft = 1; // let us know it is being held
+                    holdingRight = 0; // cannot hold right and left at the same time
+                }
+                if ((button_index == 7) && (digitalRead(dataPinSnes) == LOW)) { //if 7th and read data from dataPin
+                    usbStick.setXAxis(ANALOG_MAX_VALUE); // press down
+                    holdingRight = 1; // let us know it is being held
+                    holdingLeft = 0; // cannot hold right and left at the same time
+                }
+                usbStick.sendState();
                 return;
             }
-            else if (button_index == 7 && !digitalRead(dataPinSnes)) { //if 7th and read data from dataPin
-                usbStick.setXAxis(ANALOG_MAX_VALUE); //press right
-                
-                return;
-            }
-            else { //none of that nonsense. But should we actually stop pressing a X axis dpad button? We might just be here from the other buttons.
-                if (button_index == 6 || button_index == 7 ) usbStick.setXAxis(ANALOG_IDLE_VALUE); // ...no, you're are correct.
-            }
-            
-            //onto the buttons
 
             usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinSnes)); // do the button at the index according to datapin read
-            usbStick.sendState ();
+            usbStick.sendState();
             return;
         }
         return;
@@ -371,7 +393,7 @@ void nes() {
 }   
 
 void snes() {
-    if (!snesControllerConnected) return;
+    //if (!snesControllerConnected) return;
 
     digitalWrite(latchPinSnes, HIGH);
     checkButton(1); 
@@ -399,7 +421,7 @@ void snes() {
 }  
 
 void n64() {
-    if (!n64ControllerConnected) return;
+    //if (!n64ControllerConnected) return;
 
 	if (!pad.read()) {
 		// Controller lost :(;
