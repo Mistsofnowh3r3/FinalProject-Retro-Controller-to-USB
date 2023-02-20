@@ -346,7 +346,7 @@ void nes() {
     nesControllerConnectedLast = nesControllerConnected; // Store the last known state of of the controllers connection
 
     digitalWrite(latchPinNes, HIGH);
-    if (nesControllerConnected) checkButton(1); // check for A here
+    if (nesControllerConnected && nesMode) checkButton(1); // check for A here
 
     delayMicroseconds(12);
 
@@ -361,7 +361,7 @@ void nes() {
         //6 high
         digitalWrite(pulsePinNes, HIGH);
         // check for the rest of the buttons
-        if (nesControllerConnected) checkButton(j); 
+        if (nesControllerConnected && nesMode) checkButton(j); 
         delayMicroseconds(6);
 
         //6 low
@@ -390,7 +390,7 @@ void snes() {
     snesControllerConnectedLast = snesControllerConnected; // Store the last known state of of the controllers connection
     // SNES latch signal generation
     digitalWrite(latchPinSnes, HIGH);
-    if (snesControllerConnected) checkButton(1); // first button, only read a button input if a controller is connected
+    if (snesControllerConnected && snesMode) checkButton(1); // first button, only read a button input if a controller is connected
 
     delayMicroseconds(12);
 
@@ -404,7 +404,7 @@ void snes() {
 
         //6 high
         digitalWrite(pulsePinSnes, HIGH);   
-        if (snesControllerConnected) checkButton(j); // check for the rest of the buttons, only read a button input if a controller is connected
+        if (snesControllerConnected && snesMode) checkButton(j); // check for the rest of the buttons, only read a button input if a controller is connected
         delayMicroseconds(6);
 
         //6 low
@@ -554,14 +554,14 @@ void setup() {
 
 void loop() {  
 
-    snesControllerConnected ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
+    (snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
 
     //checkSwitches();
     if (serialMode == true) serialActions();
     
-    if (nesMode == true) nes();
+    nes();
     
-    if (snesMode == true) snes();
+    snes();
     
     if (n64Mode == true) n64();
 }
