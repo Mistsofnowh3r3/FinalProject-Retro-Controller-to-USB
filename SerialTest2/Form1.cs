@@ -2,8 +2,10 @@
 using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 
 
 namespace SerialTest2
@@ -11,7 +13,6 @@ namespace SerialTest2
 
     public partial class Form1 : Form
     {
-
 
         string background1Color = "#F492A5";
 
@@ -21,23 +22,26 @@ namespace SerialTest2
 
         string button1Color = "#95DAF8";
 
+        // string variable to store the key name
+        private string key;
 
-        int[] init_SNES_btns = new int[] { 
-            66,     //B
-            89,      //Y
-            32,      //SELECT
-            13,      //START
-            38,      //UP   arrow keys will be wrong
-            0,      //DOWN
-            0,      //LEFT
-            0,      //RIGHT
-            0,      //A
-            0,      //X
-            0,      //L
-            0,      //R
-        };
 
-        int[] init_NES_btns = new int[] {
+        int[] init_SNES_btns = new int[] {
+    'z',     //B
+    'x',      //Y
+    0xb0,      //SELECT
+    32,      //START
+    0xDA,      //UP   arrow keys will be wrong
+    0xD9,      //DOWN
+    0xD8,      //LEFT
+    0xD7,      //RIGHT
+    'a',      //A
+    's',      //X
+    'q',      //L
+    'w',      //R
+};
+
+    int[] init_NES_btns = new int[] {
             0,     //A
             0,      //B
             0,      //SELECT
@@ -87,73 +91,16 @@ namespace SerialTest2
 
         private void btn_sendremap_Click(object sender, EventArgs e)
         {
-            //check the button boxes
-            //add all the buttons to change in an array
-
-
-
-
-            handShakeNow();
-            remapNow("NES");
-
-
+            remapNow();
         }
-
-        private void handShakeNow()
+        private void remapNow()
         {
-            _serialPort.Write("SREQ!"); //request serial operation
-            while (true)
+            for (int i = 0; i < 8; i++) 
             {
-                tb_console.Text = serialNow;
-                if (serialNow == "SACK") ;
-                {
-                    tb_console.Text = "SREQ acknowledged.";
-                    return;
-                }
+                _serialPort.Write("PO" + "," + i + "," + init_NES_btns[i] + "!");
+                Thread.Sleep(30);
             }
-        }
-        private void remapNow(string console)
-        {
-            _serialPort.Write("REMAP!"); //request remap
-            while (true)
-            {
-                if (serialNow == "REMAPACK") ;
-                {
-                    switch (console)
-                    {
-                        case "NES":
-                            _serialPort.Write("NES!"); // state NES
-                            while (true)
-                            {
-                                if (serialNow == "NESACK") ;
-                                {
-                                    tb_console.Text = "Remap a button on the NES controller? You got it boss!";
-                                    return;
-                                }
-                            }
-                        case "SNES":
-                            _serialPort.Write("SNES!"); // state NES
-                            while (true)
-                            {
-                                if (serialNow == "SNESACK") ;
-                                {
-                                    tb_console.Text = "Remap a button on the SNES controller? You got it boss!";
-                                    return;
-                                }
-                            }
-                        case "N64":
-                            _serialPort.Write("N64!"); // state NES
-                            while (true)
-                            {
-                                if (serialNow == "N64SACK") ;
-                                {
-                                    tb_console.Text = "Remap a button on the N64 controller? You got it boss!";
-                                    return;
-                                }
-                            }
-                    }
-                }
-            }
+                                                       
         }
 
         private void ColorControls(Control parent)
@@ -294,71 +241,213 @@ namespace SerialTest2
 
 
             //load the button states as text into the thing
-            btn_NES_A.Text = ((char)init_NES_btns[0]).ToString();
-            btn_NES_B.Text = ((char)init_NES_btns[1]).ToString();
-            btn_NES_SELECT.Text = ((char)init_NES_btns[2]).ToString();
-            btn_NES_START.Text = ((char)init_NES_btns[3]).ToString();
-            btn_NES_UP.Text = ((char)init_NES_btns[4]).ToString();
-            btn_NES_DOWN.Text = ((char)init_NES_btns[5]).ToString();
-            btn_NES_LEFT.Text = ((char)init_NES_btns[6]).ToString();
-            btn_NES_RIGHT.Text = ((char)init_NES_btns[7]).ToString();
+
         }
-        private void btn_NES_A_Pressed(object sender, KeyEventArgs e)
+
+
+        int keyToKey(String key)
         {
-            
-            btn_NES_A.Text = ((char)e.KeyValue).ToString();
-            init_NES_btns[0] = e.KeyValue;
-            tb_console.Text =   "Key: " + e.KeyValue.ToString();
+            switch (key)
+            {
+                //why yes, this was painful to do manually
+                case "Escape": return 177;
+                case "Oemtilde": return 96;
+                case "1": return 49;
+                case "2": return 50;
+                case "3": return 51;
+                case "4": return 52;
+                case "5": return 53;
+                case "6": return 54;
+                case "7": return 55;
+                case "8": return 56;
+                case "9": return 57;
+                case "0": return 48;
+                case "OemMinus": return 45;
+                case "Oemplus": return 61;
+                case "Back": return 178;
+                case "Q": return 81;
+                case "W": return 87;
+                case "E": return 69;
+                case "R": return 82;
+                case "T": return 84;
+                case "Y": return 89;
+                case "U": return 85;
+                case "I": return 73;
+                case "O": return 79;
+                case "P": return 80;
+                case "OemOpenBrackets": return 91;
+                case "Oem6": return 93;
+                case "Enter": return 176;
+                //case "Capital": return
+                case "A": return 65;
+                case "S": return 83;
+                case "D": return 68;
+                case "F": return 70;
+                case "G": return 71;
+                case "H": return 72;
+                case "J": return 74;
+                case "K": return 75;
+                case "L": return 76;
+                case "Oem1": return 59;
+                case "Oem7": return 39;
+                case "Oem5": return 92;
+                case "ShiftKey": return 129;
+                case "Z": return 90;
+                case "X": return 88;
+                case "C": return 67;
+                case "V": return 86;
+                case "B": return 66;
+                case "N": return 78;
+                case "M": return 77;
+                case "Oemcomma": return 44;
+                case "OemPeriod": return 46;
+                case "OemQuestion": return 47;
+                case "ControlKey": return 128;
+                //case "LWin": return
+                case "Menu": return 130;
+                case "Space": return 32;
+                //case "Apps": return
+                //case "Ins": return
+                //case "Del": return
+                //case "Home": return
+                //case "End": return
+                //case "PgUp": return
+                //case "PgDn": return
+                case "Up": return 218;
+                case "Left": return 216;
+                case "Down": return 217;
+                case "Right": return 215;
+                default: return 0;
+            }
+
         }
-        private void btn_NES_B_Pressed(object sender, KeyEventArgs e)
+
+
+        // textbox KeyDown event handler
+        private void tb_NES_A_KeyDown(object sender, KeyEventArgs e)
         {
-            
-            btn_NES_B.Text = ((char)e.KeyValue).ToString();
-            init_NES_btns[1] = e.KeyValue;
-            tb_console.Text = "Key: " + e.KeyValue.ToString();
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            tb_NES_A.Text = key;
+            tb_console.Text =   "Key: " + keyToKey(key);
+
+            if (keyToKey(key) != 0)
+            {
+                init_NES_btns[0] = keyToKey(key);
+            }
+            // prevent the key from being processed by the control
+            e.Handled = true;
         }
-        private void btn_NES_SELECT_Pressed(object sender, KeyEventArgs e)
+
+        private void tb_NES_B_KeyDown(object sender, KeyEventArgs e)
         {
-            
-            btn_NES_SELECT.Text = ((char)e.KeyValue).ToString();
-            init_NES_btns[2] = e.KeyValue;
-            tb_console.Text = "Key: " + e.KeyValue.ToString();
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            tb_NES_B.Text = key;
+            tb_console.Text =   "Key: " + keyToKey(key);
+
+            if (keyToKey(key) != 0)
+            {
+                init_NES_btns[1] = keyToKey(key);
+            }
+            // prevent the key from being processed by the control
+            e.Handled = true;
         }
-        private void btn_NES_START_Pressed(object sender, KeyEventArgs e)
+
+        private void tb_NES_SELECT_KeyDown(object sender, KeyEventArgs e)
         {
-            
-            btn_NES_START.Text = ((char)e.KeyValue).ToString();
-            init_NES_btns[3] = e.KeyValue;
-            tb_console.Text = "Key: " + e.KeyValue.ToString();
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            tb_NES_SELECT.Text = key;
+            tb_console.Text =   "Key: " + keyToKey(key);
+
+            if (keyToKey(key) != 0)
+            {
+                init_NES_btns[2] = keyToKey(key);
+            }
+            // prevent the key from being processed by the control
+            e.Handled = true;
         }
-        private void btn_NES_UP_Pressed(object sender, KeyEventArgs e)
+
+        private void tb_NES_START_KeyDown(object sender, KeyEventArgs e)
         {
-            
-            btn_NES_UP.Text = ((char)e.KeyValue).ToString();
-            init_NES_btns[4] = e.KeyValue;
-            tb_console.Text = "Key: " + e.KeyValue.ToString();
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            tb_NES_START.Text = key;
+            tb_console.Text =   "Key: " + keyToKey(key);
+
+            if (keyToKey(key) != 0)
+            {
+                init_NES_btns[3] = keyToKey(key);
+            }
+            // prevent the key from being processed by the control
+            e.Handled = true;
         }
-        private void btn_NES_DOWN_Pressed(object sender, KeyEventArgs e)
+
+        private void tb_NES_UP_KeyDown(object sender, KeyEventArgs e)
         {
-            
-            btn_NES_DOWN.Text = ((char)e.KeyValue).ToString();
-            init_NES_btns[5] = e.KeyValue;
-            tb_console.Text = "Key: " + e.KeyValue.ToString();
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            tb_NES_UP.Text = key;
+            tb_console.Text =   "Key: " + keyToKey(key);
+
+            if (keyToKey(key) != 0)
+            {
+                init_NES_btns[4] = keyToKey(key);
+            }
+            // prevent the key from being processed by the control
+            e.Handled = true;
         }
-        private void btn_NES_LEFT_Pressed(object sender, KeyEventArgs e)
+
+        private void tb_NES_DOWN_KeyDown(object sender, KeyEventArgs e)
         {
-            
-            btn_NES_LEFT.Text = ((char)e.KeyValue).ToString();
-            init_NES_btns[6] = e.KeyValue;
-            tb_console.Text = "Key: " + e.KeyValue.ToString();
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            tb_NES_DOWN.Text = key;
+            tb_console.Text =   "Key: " + keyToKey(key);
+
+            if (keyToKey(key) != 0)
+            {
+                init_NES_btns[5] = keyToKey(key);
+            }
+            // prevent the key from being processed by the control
+            e.Handled = true;
         }
-        private void btn_NES_RIGHT_Pressed(object sender, KeyEventArgs e)
+
+        private void tb_NES_LEFT_KeyDown(object sender, KeyEventArgs e)
         {
-            
-            btn_NES_RIGHT.Text = ((char)e.KeyValue).ToString();
-            init_NES_btns[7] = e.KeyValue;
-            tb_console.Text = "Key: " + e.KeyValue.ToString();
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            tb_NES_LEFT.Text = key;
+            tb_console.Text =   "Key: " + keyToKey(key);
+
+            if (keyToKey(key) != 0)
+            {
+                init_NES_btns[6] = keyToKey(key);
+            }
+            // prevent the key from being processed by the control
+            e.Handled = true;
         }
+
+        private void tb_NES_RIGHT_KeyDown(object sender, KeyEventArgs e)
+        {
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            tb_NES_RIGHT.Text = key;
+            tb_console.Text =   "Key: " + keyToKey(key);
+
+            if (keyToKey(key) != 0)
+            {
+                init_NES_btns[7] = keyToKey(key);
+            }
+            // prevent the key from being processed by the control
+            e.Handled = true;
+        }
+
+
+
+
+
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -373,5 +462,22 @@ namespace SerialTest2
             if (MyDialog.ShowDialog() == DialogResult.OK)
                 btn_stop.ForeColor = MyDialog.Color;
         }
+
+        private void peek_Click(object sender, EventArgs e)
+        {
+            int adr = (int)ADR.Value;
+            int val = 0;
+            _serialPort.Write("PE," + adr.ToString() + "," + val.ToString() + "!");
+        }
+
+        private void Poke_Click(object sender, EventArgs e)
+        {
+            int adr = (int)ADR.Value;
+            int val = (int)VAL.Value;
+            _serialPort.Write("PO," + adr.ToString() + "," + val.ToString() + "!");
+            tb_console.Text = ("PO," + adr.ToString() + "," + val.ToString() + "!");
+        }
+
+        ///need to keep track of what keys were changed in remap to minimize r/w of eeprom
     }
 }

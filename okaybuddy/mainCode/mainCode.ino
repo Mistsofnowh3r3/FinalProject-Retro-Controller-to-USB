@@ -2,12 +2,15 @@
 #include <Joystick.h>
 #include <string.h>
 #include <Keyboard.h> 
-
+#include <EEPROM.h>
+#include <stdio.h>
 
 
 // Globals //
 
 String serialNow = "";
+String parts[3]; // create an array to hold the three substrings
+
 //1 = A    
 //2 = B
 //3 = SELECT
@@ -22,7 +25,30 @@ String serialNow = "";
 //11 = L
 //12 = R
 //need to read these from eeprom
-int button_values[] = {120, 121, 32, 99, KEY_UP_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW, 122, 119, 154, 162};
+int init_NES_btns[] = {
+    'z',     //B
+    'x',      //Y
+    KEY_RETURN,      //SELECT
+    32,      //START
+    KEY_UP_ARROW,      //UP   arrow keys will be wrong
+    KEY_DOWN_ARROW,      //DOWN
+    KEY_LEFT_ARROW,      //LEFT
+    KEY_RIGHT_ARROW,      //RIGHT
+};
+int init_SNES_btns[] = {
+    'z',     //B
+    'x',      //Y
+    KEY_RETURN,      //SELECT
+    32,      //START
+    KEY_UP_ARROW,      //UP   arrow keys will be wrong
+    KEY_DOWN_ARROW,      //DOWN
+    KEY_LEFT_ARROW,      //LEFT
+    KEY_RIGHT_ARROW,      //RIGHT
+    'a',      //A
+    's',      //X
+    'q',      //L
+    'w',      //R
+};
 int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
 
@@ -33,8 +59,8 @@ bool holdingLeft = 0;
 bool holdingRight = 0;
 
 //various mode related things
-bool nesMode = false; 
-bool snesMode = true; 
+bool nesMode = true; 
+bool snesMode = false; 
 bool n64Mode = false; 
 bool serialMode = false;
 
@@ -45,8 +71,8 @@ bool snesControllerConnectedLast = false;
 bool n64ControllerConnected = false;
 
 // modes for what the poutput will be 
-bool keyboardMode = false; //output as keyboard
-bool controllerMode = true; //output as controller
+bool keyboardMode = true; //output as keyboard
+bool controllerMode = false; //output as controller
 
 // Constants //
 
@@ -103,20 +129,61 @@ const int snesSwitch = 12;
 const int n64Switch = 13; 
 
 
-
-
-
-
-
-
-void flashLed (byte n) {
-	for (byte i = 0; i < n; ++i) {
-		digitalWrite (LED_BUILTIN, LOW);
-		delay (40);
-		digitalWrite (LED_BUILTIN, HIGH);
-		delay (80);
-	}
+void peekMemory(String Address) {
+    int xx = EEPROM.read(0);
+    Serial.write("F: ");
+    Serial.println(xx);
 }
+
+void pokeMemory(String Address) {
+    serialNow = Serial.readStringUntil('!');  // read the command
+    EEPROM.write(0, atoi(serialNow.c_str()));
+}
+
+void serialActions() {
+    memset(parts, 0, sizeof(parts));  // clear the parts array
+    serialNow = Serial.readStringUntil('!');  // read the command
+
+    // ChatGPT code, document and undestand it better.
+    int partIndex = 0; // initialize the array index
+    for (int i = 0; i < serialNow.length(); i++) {
+        
+        char c = serialNow.charAt(i);
+        if (c == ',') { // if the character is a comma, move to the next substring
+            partIndex++;
+        } 
+        else if (c != '!') { // if the character is not a comma or exclamation mark, add it to the current substring
+            parts[partIndex] += c;
+        }
+    }
+    if (parts[0] == "PO") { // POKE
+        int adr = parts[1].toInt();
+        int val = parts[2].toInt();
+        EEPROM.write(adr,val);
+        //Serial.write("POKE @");
+        //Serial.println(adr);
+        //Serial.write(": ");
+        //Serial.println(val);
+    }
+    if (parts[0] == "PE") { // PEEK
+        int adr = parts[1].toInt();
+        int val = EEPROM.read(adr);
+        Serial.write("PEEK @");
+        Serial.println(adr);
+        Serial.write(": ");
+        Serial.println(val);
+    }
+    
+}
+
+int loadKeyboardArray() {
+    for (int v = 0; v < 8; v++)
+    {
+        init_NES_btns[v] = EEPROM.read(v);
+    }
+}
+
+
 
 void checkSerialForEnd() {
     serialNow = Serial.readStringUntil('!');
@@ -142,10 +209,10 @@ void checkButton(int button) {
 
     if (keyboardMode == true) {
         // if in nesMode and button index < 8 then according to the inversion of the state of dataPinNes press or release a button
-        if (nesMode && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(button_values[button_index]) : Keyboard.release(button_values[button_index]);
+        if (nesMode && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(init_NES_btns[button_index]) : Keyboard.release(init_NES_btns[button_index]);
 
         // if in snesMode then according to the inversion of the state of dataPinSnes press or release a button
-        if (snesMode) !digitalRead(dataPinSnes) ? Keyboard.press(button_values[button_index]) : Keyboard.release(button_values[button_index]);
+        if (snesMode) !digitalRead(dataPinSnes) ? Keyboard.press(init_SNES_btns[button_index]) : Keyboard.release(init_SNES_btns[button_index]);
 
         return;
     }
@@ -270,77 +337,14 @@ void checkButton(int button) {
 }
 
 void clearAllButtons() {
-    usbStick.setYAxis(ANALOG_IDLE_VALUE);
-    usbStick.setXAxis(ANALOG_IDLE_VALUE);
-    for(int u = 0; u < 12; u++){
-        usbStick.setButton(controllerbutton_values[u-1], 0);
-    }
+    usbStick.setYAxis(ANALOG_IDLE_VALUE); // Clear the Dpad
+    usbStick.setXAxis(ANALOG_IDLE_VALUE); // Clear the Dpad
+    for(int u = 0; u < 12; u++) usbStick.setButton(controllerbutton_values[u-1], 0); // Clear the buttons
     usbStick.sendState();
-    Keyboard.releaseAll();
+    Keyboard.releaseAll(); // release all keys
 }
 
-void serialActions() {
 
-    serialNow = Serial.readStringUntil('!');
-    if (serialNow != "SREQ") { //check for a serial request
-        return; // there was no request, return
-    }
-    Serial.write("SACK"); //send acknowledge with the delimiter
-    while (true){ //wait for a command
-        serialNow = Serial.readStringUntil('!');
-
-        if (serialNow == "REMAP") { // the command is remap
-
-            Serial.write("REMAPACK"); // ackowledge the command
-
-            while (true) {  // wait for a system identifier 
-
-                serialNow = Serial.readStringUntil('!');
-
-                if (serialNow == "NES") { 
-                    Serial.write("NESACK");
-
-                    while(true){
-                        serialNow = Serial.readStringUntil('!');
-                        Serial.write("Got: ");
-                        Serial.write(serialNow.c_str());
-                        checkSerialForEnd();
-                    }
-                }
-                if (serialNow == "SNES") {
-                    Serial.write("SNESACK");
-
-                    while(true){
-                        serialNow = Serial.readStringUntil('!');
-                        Serial.write("Got: ");
-                        Serial.write(serialNow.c_str());
-                        if (serialNow == "DONE"){
-                            Serial.write("Ready for something else.");
-                            return;
-                        }
-                        checkSerialForEnd();
-                    }
-                }
-                if (serialNow == "N64") {
-                    Serial.write("N64ACK");
-
-                    while(true){
-                        serialNow = Serial.readStringUntil('!');
-                        Serial.write("Got: ");
-                        Serial.write(serialNow.c_str());
-                        if (serialNow == "DONE"){
-                            Serial.write("Ready for something else.");
-                            return;
-                        }
-                        checkSerialForEnd();
-                    }
-                }
-                checkSerialForEnd();
-            }   
-        }
-        checkSerialForEnd();
-    }
-}
 
 void nes() {
     nesControllerConnectedLast = nesControllerConnected; // Store the last known state of of the controllers connection
@@ -550,18 +554,26 @@ void setup() {
 	usbStick.setYAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRxAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRyAxisRange (ANALOG_MAX_VALUE, ANALOG_MIN_VALUE);
+    loadKeyboardArray();
 }
 
 void loop() {  
 
-    (snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
-
-    //checkSwitches();
-    if (serialMode == true) serialActions();
-    
+    //(snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
+//
+    ////checkSwitches();
+    //if (serialMode == true) {
+    //    while (serialMode == true) {
+    //        serialActions();
+    //    }
+    //    return;
+    //}
+    //
     nes();
+    //
+    //snes();
+    //
+    //if (n64Mode == true) n64();
+    //serialActions();
     
-    snes();
-    
-    if (n64Mode == true) n64();
 }
