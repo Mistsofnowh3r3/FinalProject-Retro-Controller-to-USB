@@ -11,44 +11,91 @@
 String serialNow = "";
 String parts[3]; // create an array to hold the three substrings
 
-//1 = A    
-//2 = B
-//3 = SELECT
-//4 = START
-//5 = UP
-//6 = DOWN
-//7 = LEFT
-//8 = RIGHT
-//snes
-//9 = A
-//10 = X
-//11 = L
-//12 = R
-//need to read these from eeprom
+//EEPROM MEMORY MAP
+//0 NES A
+//1 NES B
+//2 NES SELECT
+//3 NES START
+//4 NES UP
+//5 NES DOWN
+//6 NES LEFT
+//7 NES RIGHT
+//8 SNES B
+//9 SNES Y
+//10 SNES UP
+//11 SNES DOWN
+//12 SNES LEFT
+//13 SNES RIGHT
+//14 SNES A 
+//15 SNES X
+//16 SNES L
+//17 SNES R
+//18 N64 A
+//19 N64 B
+//20 N64 Z
+//21 N64 START 
+//22 N64 D UP
+//23 N64 D DOWN
+//24 N64 D LEFT
+//25 N64 D RIGHT
+//26 N64 C UP
+//27 N64 C DOWN
+//28 N64 L
+//29 N64 R
+//30 N64 C LEFT
+//31 N64 C RIGHT
+//32 N64 A UP
+//33 N64 A DOWN
+//34 N64 A LEFT
+//35 N64 A RIGHT
+
 int init_NES_btns[] = {
-    'z',     //B
-    'x',      //Y
-    KEY_RETURN,      //SELECT
-    32,      //START
-    KEY_UP_ARROW,      //UP   arrow keys will be wrong
-    KEY_DOWN_ARROW,      //DOWN
-    KEY_LEFT_ARROW,      //LEFT
-    KEY_RIGHT_ARROW,      //RIGHT
+    'z',            //A
+    'x',            //B
+    KEY_RETURN,     //SELECT
+    32,             //START
+    KEY_UP_ARROW,   //UP   
+    KEY_DOWN_ARROW, //DOWN
+    KEY_LEFT_ARROW, //LEFT
+    KEY_RIGHT_ARROW,//RIGHT
 };
+
 int init_SNES_btns[] = {
-    'z',     //B
-    'x',      //Y
-    KEY_RETURN,      //SELECT
-    32,      //START
-    KEY_UP_ARROW,      //UP   arrow keys will be wrong
-    KEY_DOWN_ARROW,      //DOWN
-    KEY_LEFT_ARROW,      //LEFT
-    KEY_RIGHT_ARROW,      //RIGHT
-    'a',      //A
-    's',      //X
-    'q',      //L
-    'w',      //R
+    'z',            //B
+    'x',            //Y
+    KEY_RETURN,     //SELECT
+    32,             //START
+    KEY_UP_ARROW,   //UP   
+    KEY_DOWN_ARROW, //DOWN
+    KEY_LEFT_ARROW, //LEFT
+    KEY_RIGHT_ARROW,//RIGHT
+    'a',            //A
+    's',            //X
+    'q',            //L
+    'w',            //R
 };
+
+int init_N64_btns[] = {
+    'z',            //A     
+    'x',            //B
+    KEY_RETURN,     //Z
+    32,             //START
+    KEY_UP_ARROW,   //D UP
+    KEY_DOWN_ARROW, //D DOWN
+    KEY_LEFT_ARROW, //D LEFT
+    KEY_RIGHT_ARROW,//D RIGHT
+    'a',            //C UP
+    's',            //C DOWN
+    'q',            //L
+    'w',            //R
+    'D',            //C LEFT
+    'C',            //C RIGHT
+    KEY_UP_ARROW,   //A UP
+    KEY_DOWN_ARROW, //A DOWN
+    KEY_LEFT_ARROW, //A LEFT
+    KEY_RIGHT_ARROW,//A RIGHT
+};
+
 int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
 
@@ -59,7 +106,9 @@ bool holdingLeft = 0;
 bool holdingRight = 0;
 
 //various mode related things
-bool nesMode = true; 
+// 0 serial, 1 NES, 2 SNES, 3 N64
+int modeSelect = 0;
+bool nesMode = true;    
 bool snesMode = false; 
 bool n64Mode = false; 
 bool serialMode = false;
@@ -144,7 +193,7 @@ void serialActions() {
     memset(parts, 0, sizeof(parts));  // clear the parts array
     serialNow = Serial.readStringUntil('!');  // read the command
 
-    // ChatGPT code, document and undestand it better.
+    // ChatGPT code, document and undestand it better.<
     int partIndex = 0; // initialize the array index
     for (int i = 0; i < serialNow.length(); i++) {
         
@@ -156,6 +205,7 @@ void serialActions() {
             parts[partIndex] += c;
         }
     }
+    // >END CHAT GPT CODE
     if (parts[0] == "PO") { // POKE
         int adr = parts[1].toInt();
         int val = parts[2].toInt();
@@ -176,29 +226,19 @@ void serialActions() {
     
 }
 
-int loadKeyboardArray() {
-    for (int v = 0; v < 8; v++)
+void loadKeyboardArrays() {
+    for (int v = 0; v < 36; v++)
     {
-        init_NES_btns[v] = EEPROM.read(v);
+        if ( v < 8) {
+            init_NES_btns[v] = EEPROM.read(v);
+        }
+        if ( v < 18) {
+            init_SNES_btns[v - 8] = EEPROM.read(v);
+        }
+        if ( v < 36) {
+            init_N64_btns[v - 18] = EEPROM.read(v);
+        }
     }
-}
-
-
-
-void checkSerialForEnd() {
-    serialNow = Serial.readStringUntil('!');
-    if (serialNow != "STOP") { //check for a serial request
-        return; // else just continue
-    }
-    Serial.write("9999999999999999999999999999999999999999999999999999999999999999");
-    Serial.write("9999999999999999999999999999999999999999999999999999999999999999");
-    Serial.write("9999999999999999999999999999999999999999999999999999999999999999");
-    Serial.write("9999999999999999999999999999999999999999999999999999999999999999");
-    delay(120);
-    Serial.flush();
-    Serial.write("All done, ready to move on to the next.");
-    loop(); //if there is a stop message, exit to the main loop
-    
 }
 
 void checkButton(int button) {
@@ -489,7 +529,38 @@ void n64() {
 	} 
 }
 
+void n64Keyboard() {
+    //if (!n64ControllerConnected) return;
+
+	if (!pad.read()) {
+		// Controller lost :(;
+		n64ControllerConnected = false;
+	} 
+    else {
+		N64Pad::BTN_A ? Keyboard.press(init_N64_btns[0]): Keyboard.release(init_N64_btns[0]);
+        N64Pad::BTN_B ? Keyboard.press(init_N64_btns[1]): Keyboard.release(init_N64_btns[1]);
+        N64Pad::BTN_Z ? Keyboard.press(init_N64_btns[2]): Keyboard.release(init_N64_btns[2]);
+        N64Pad::BTN_START ? Keyboard.press(init_N64_btns[3]): Keyboard.release(init_N64_btns[3]);
+        N64Pad::BTN_UP ? Keyboard.press(init_N64_btns[4]): Keyboard.release(init_N64_btns[4]);
+        N64Pad::BTN_DOWN ? Keyboard.press(init_N64_btns[5]): Keyboard.release(init_N64_btns[5]);
+        N64Pad::BTN_LEFT ? Keyboard.press(init_N64_btns[6]): Keyboard.release(init_N64_btns[6]);
+        N64Pad::BTN_RIGHT ? Keyboard.press(init_N64_btns[7]): Keyboard.release(init_N64_btns[7]);
+        N64Pad::BTN_C_UP ? Keyboard.press(init_N64_btns[8]): Keyboard.release(init_N64_btns[8]);
+        N64Pad::BTN_C_DOWN ? Keyboard.press(init_N64_btns[9]): Keyboard.release(init_N64_btns[9]);
+        N64Pad::BTN_L ? Keyboard.press(init_N64_btns[10]): Keyboard.release(init_N64_btns[10]);
+        N64Pad::BTN_R ? Keyboard.press(init_N64_btns[11]): Keyboard.release(init_N64_btns[11]);
+        N64Pad::BTN_C_LEFT ? Keyboard.press(init_N64_btns[12]): Keyboard.release(init_N64_btns[12]);
+        N64Pad::BTN_C_RIGHT ? Keyboard.press(init_N64_btns[13]): Keyboard.release(init_N64_btns[13]);
+
+		//// The analog stick gets mapped to the X/Y rotation axes
+		//usbStick.setRxAxis (pad.x);
+		//usbStick.setRyAxis (pad.y);
+		
+	} 
+}
+
 void checkSwitches() {
+                                                               
     if ( (!digitalRead(nesSwitch) + !digitalRead(snesSwitch) + !digitalRead(n64Switch)) > 1  ) { // WHat do you mean, more then one is activated at a time?!
     Serial.write("Error: Too many selected.");
         serialMode = false;  
@@ -554,7 +625,7 @@ void setup() {
 	usbStick.setYAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRxAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRyAxisRange (ANALOG_MAX_VALUE, ANALOG_MIN_VALUE);
-    loadKeyboardArray();
+    //loadKeyboardArray();
 }
 
 void loop() {  
@@ -569,11 +640,11 @@ void loop() {
     //    return;
     //}
     //
-    nes();
+    //nes();
     //
     //snes();
     //
-    //if (n64Mode == true) n64();
-    //serialActions();
+    //n64();
+    serialActions();
     
 }
