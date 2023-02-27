@@ -249,16 +249,16 @@ void checkButton(int button) {
 
     if (keyboardMode == true) {
         // if in nesMode and button index < 8 then according to the inversion of the state of dataPinNes press or release a button
-        if (nesMode && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(init_NES_btns[button_index]) : Keyboard.release(init_NES_btns[button_index]);
+        if ((modeSelect == 1) && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(init_NES_btns[button_index]) : Keyboard.release(init_NES_btns[button_index]);
 
         // if in snesMode then according to the inversion of the state of dataPinSnes press or release a button
-        if (snesMode) !digitalRead(dataPinSnes) ? Keyboard.press(init_SNES_btns[button_index]) : Keyboard.release(init_SNES_btns[button_index]);
+        if (modeSelect == 2) !digitalRead(dataPinSnes) ? Keyboard.press(init_SNES_btns[button_index]) : Keyboard.release(init_SNES_btns[button_index]);
 
         return;
     }
     
     if (controllerMode == true) {
-        if (nesMode && button_index < 8) {
+        if ((modeSelect == 1) && button_index < 8) {
             if (button_index > 3) {
                 if ((button_index == 4) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding up
                     if (holdingDown == 0 && holdingUp == 1) { // check if we are holding up
@@ -315,7 +315,7 @@ void checkButton(int button) {
             return;
         }
 
-        if (snesMode) {
+        if ((modeSelect == 2)) {
             if (button_index > 3 && button_index < 8) {
                 if ((button_index == 4) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding up
                     if (holdingDown == 0 && holdingUp == 1) { // check if we are holding up
@@ -563,40 +563,22 @@ void checkSwitches() {
                                                                
     if ( (!digitalRead(nesSwitch) + !digitalRead(snesSwitch) + !digitalRead(n64Switch)) > 1  ) { // WHat do you mean, more then one is activated at a time?!
     Serial.write("Error: Too many selected.");
-        serialMode = false;  
-        nesMode = false;
-        snesMode = false;
-        n64Mode = false;
+        modeSelect = 6;
     }
     else if (!digitalRead(nesSwitch)) {
-        serialMode = false;
-        nesMode = true;     //
-        snesMode = false;
-        n64Mode = false;
+        modeSelect = 1;
     }
     else if (!digitalRead(snesSwitch)) {
-        serialMode = false;
-        nesMode = false;
-        snesMode = true;    //
-        n64Mode = false;
+        modeSelect = 2;
     }
     else if (!digitalRead(n64Switch)) {
-        serialMode = false;
-        nesMode = false;
-        snesMode = false;
-        n64Mode = true;     //
+        modeSelect = 3;
     }
     else if (!digitalRead(serialSwitch)) {
-        serialMode = true; // 
-        nesMode = false;
-        snesMode = false;
-        n64Mode = false;
+        modeSelect = 0;
     }
     else {//fallback to serial
-        serialMode = true; 
-        nesMode = false;
-        snesMode = false;
-        n64Mode = false;
+        modeSelect = 0;
     }
 }
 
