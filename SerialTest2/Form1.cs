@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
-
+using System.Media;
 
 namespace SerialTest2
 {
@@ -25,19 +25,50 @@ namespace SerialTest2
         // string variable to store the key name
         private string key;
 
-        int[] init_NES_btns = new int[8];
+        int[] onload_NES_btns = new int[8];
 
-        int[] init_SNES_btns = new int[12];
+        int[] onload_SNES_btns = new int[12];
 
-        int[] init_N64_btns = new int[18];
+        int[] onload_N64_btns = new int[18];
+
+        int[] working_NES_btns = new int[8];
+
+        int[] working_SNES_btns = new int[12];
+
+        int[] working_N64_btns = new int[18];
+
+        string[] working_NES_btns_string = new string[8];
+
+        string[] working_SNES_btns_string = new string[12];
+
+        string[] working_N64_btns_string = new string[18];
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+            if (SerialTest2.Params.IsParamSet("NESBUTTONS"))    //if there is a param for the nes buttons already
+            {
+                this.working_NES_btns = Array.ConvertAll(SerialTest2.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
+                this.onload_NES_btns = Array.ConvertAll(SerialTest2.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
+            }
+            if (SerialTest2.Params.IsParamSet("SNESBUTTONS"))    //if there is a param for the nes buttons already
+            {
+                this.working_SNES_btns = Array.ConvertAll(SerialTest2.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse); // load it in
+                this.onload_SNES_btns = Array.ConvertAll(SerialTest2.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse); // load it in
+            }
+            if (SerialTest2.Params.IsParamSet("N64BUTTONS"))    //if there is a param for the nes buttons already
+            {
+                this.working_N64_btns = Array.ConvertAll(SerialTest2.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
+                this.onload_N64_btns = Array.ConvertAll(SerialTest2.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
+            }
 
 
-        string[] init_NES_btns_string = new string[8];
-
-        string[] init_SNES_btns_string = new string[12];
-
-        //string[] init_N64_btns_string = new string[18];
-
+            //load the button states as text into the thing
+            populateStingArrays();
+            populateTextBoxes();
+            cb_portlist.Items.Add("Select a port");
+            cb_portlist.Text = "Select a port";
+        }
 
 
         SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
@@ -61,8 +92,10 @@ namespace SerialTest2
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private void openCOM(object sender, EventArgs e)
         {
+
+            
             if (_serialPort.IsOpen)
             {
                 _serialPort.Close();
@@ -84,12 +117,20 @@ namespace SerialTest2
                     throwError("COM Port is not open!");
                     return;
                 }
+
             for (int i = 0; i < 8; i++) 
             {
-
-                _serialPort.Write("PO" + "," + i + "," + init_NES_btns[i] + "!");
+                if (working_NES_btns[i] != onload_NES_btns[i]) // if the button mapping is different then it was on load
+                {
+                    _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "!"); // send a remap
+                }
+                
                 Thread.Sleep(30);
             }
+
+            Array.Copy(onload_NES_btns, working_NES_btns, onload_NES_btns.Length); //update the onload array
+
+
         }
 
         private void ColorControls(Control parent)
@@ -150,26 +191,24 @@ namespace SerialTest2
         private void cb_portlist_DropDown(object sender, EventArgs e)
         {
             // Get a list of serial port names.
-            string[] ports = SerialPort.GetPortNames();
             var selectedItem = cb_portlist.SelectedItem;
             cb_portlist.Items.Clear();
-            if (selectedItem != null)
-            {
-                cb_portlist.Items.Add(selectedItem);
-                cb_portlist.SelectedItem = selectedItem;
-            }
-
-
-            // Display each port name to the console.
+            string[] ports = SerialPort.GetPortNames();
             foreach (string s in SerialPort.GetPortNames())
             {
                 cb_portlist.Items.Add(s);
             }
+            cb_portlist.SelectedItem = selectedItem;
         }
 
         private void cb_portlist_SelectedIndexChanged(object sender, EventArgs e)
         {
             String port = (string)cb_portlist.SelectedItem;
+            if (port == null || !port.StartsWith("COM")) 
+            {
+
+                return;
+            }
             _serialPort.Close();
             btn_stopstart.Text = "Open!";
             btn_stopstart.Enabled = true;
@@ -180,51 +219,32 @@ namespace SerialTest2
 
         private void button4_Click(object sender, EventArgs e)
         {
+
+            background1Color = "#F492A5";
+            background2Color = "#F9CBD0";
+            button2Color = "#6E82B7";
+            button1Color = "#95DAF8";
             ColorControls(this);
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            tb_console.Text = "It's: " + init_NES_btns[0];
+            tb_console.Text = "It's: " + working_NES_btns[0];
         }
         private void btn_saveSettings_Click(object sender, EventArgs e)
         {
             //SerialTest2.Params.IsParamSet("NESBUTTONS");
             //save all settings to a PARAM folder 
-            SerialTest2.Params.SetParam("NESBUTTONS", String.Join(",", init_NES_btns));
-            SerialTest2.Params.SetParam("SNESBUTTONS", String.Join(",", init_SNES_btns));
-            SerialTest2.Params.SetParam("N64BUTTONS", String.Join(",", init_N64_btns));
+            SerialTest2.Params.SetParam("NESBUTTONS", String.Join(",", working_NES_btns));
+            SerialTest2.Params.SetParam("SNESBUTTONS", String.Join(",", working_SNES_btns));
+            SerialTest2.Params.SetParam("N64BUTTONS", String.Join(",", working_N64_btns));
             //N64BUTTONS
             //COLORS
             //AKA "STEAL" CODE FROM RTC
         }
 
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
 
-            String a = SerialTest2.Params.ReadParam("NESBUTTONS");
-            String b = SerialTest2.Params.ReadParam("SNESBUTTONS");
-            String c = SerialTest2.Params.ReadParam("N64BUTTONS");
-
-            if (SerialTest2.Params.IsParamSet("NESBUTTONS"))    //if there is a param for the nes buttons already
-            {
-                this.init_NES_btns = Array.ConvertAll(a.Split(','), int.Parse); // load it in
-            }
-            if (SerialTest2.Params.IsParamSet("SNESBUTTONS"))    //if there is a param for the nes buttons already
-            {
-                this.init_SNES_btns = Array.ConvertAll(b.Split(','), int.Parse); // load it in
-            }
-            if (SerialTest2.Params.IsParamSet("N64BUTTONS"))    //if there is a param for the nes buttons already
-            {
-                this.init_N64_btns = Array.ConvertAll(b.Split(','), int.Parse); // load it in
-            }
-
-
-            //load the button states as text into the thing
-            populateStingArrays();
-            populateTextBoxes();
-        }
 
 
         int keyToKey(String key)
@@ -309,7 +329,7 @@ namespace SerialTest2
         {
             switch (key)
             {
-                //why yes, this was painful to do manually
+                // this time chatgpt came to my rescue
                 case 177: return "Escape";
                 case 96: return "`";
                 case 49: return "1";
@@ -385,24 +405,24 @@ namespace SerialTest2
         void populateStingArrays()
         {
             
-            for (int p = 0; p < 8; p++) init_NES_btns_string[p] = revKeyToKey(init_NES_btns[p]);
+            for (int p = 0; p < 8; p++) working_NES_btns_string[p] = revKeyToKey(working_NES_btns[p]);
             
-            for (int s = 0; s < 12; s++) init_SNES_btns_string[s] = revKeyToKey(init_SNES_btns[s]);
+            for (int s = 0; s < 12; s++) working_SNES_btns_string[s] = revKeyToKey(working_SNES_btns[s]);
 
-            //for (int b = 0; b < 18; b++) init_N64_btns_string[b] = revKeyToKey(init_N64_btns[b]);
+            //for (int b = 0; b < 18; b++) working_N64_btns_string[b] = revKeyToKey(onload_N64_btns[b]);
 
         }
 
         void populateTextBoxes()
         {
-            tb_NES_A.Text = init_NES_btns_string[0];
-            tb_NES_B.Text = init_NES_btns_string[1];
-            tb_NES_SELECT.Text = init_NES_btns_string[2];
-            tb_NES_START.Text = init_NES_btns_string[3];
-            tb_NES_UP.Text = init_NES_btns_string[4];
-            tb_NES_DOWN.Text = init_NES_btns_string[5];
-            tb_NES_LEFT.Text = init_NES_btns_string[6];
-            tb_NES_RIGHT.Text = init_NES_btns_string[7];
+            tb_NES_A.Text = working_NES_btns_string[0];
+            tb_NES_B.Text = working_NES_btns_string[1];
+            tb_NES_SELECT.Text = working_NES_btns_string[2];
+            tb_NES_START.Text = working_NES_btns_string[3];
+            tb_NES_UP.Text = working_NES_btns_string[4];
+            tb_NES_DOWN.Text = working_NES_btns_string[5];
+            tb_NES_LEFT.Text = working_NES_btns_string[6];
+            tb_NES_RIGHT.Text = working_NES_btns_string[7];
         }
 
         void neatHack(bool yup)
@@ -424,9 +444,9 @@ namespace SerialTest2
 
             if (keyToKey(key) != 0)
             {
-                tb_NES_A.Text = revKeyToKey(keyToKey(key));
+                tb_NES_A.Text = revKeyToKey(keyToKey(key)); // this is dumb, yet it is probably the easiest way to do this
                 tb_console.Text =   "Key: " + keyToKey(key);
-                init_NES_btns[0] = keyToKey(key);
+                working_NES_btns[0] = keyToKey(key);
             }
             else {
                 throwError("Unsupported Key.");
@@ -444,7 +464,7 @@ namespace SerialTest2
             {
                 tb_NES_B.Text = revKeyToKey(keyToKey(key));
                 tb_console.Text =   "Key: " + keyToKey(key);
-                init_NES_btns[1] = keyToKey(key);
+                working_NES_btns[1] = keyToKey(key);
             }
             else {
                 throwError("Unsupported Key.");
@@ -462,7 +482,7 @@ namespace SerialTest2
             {
                 tb_NES_SELECT.Text = revKeyToKey(keyToKey(key));
                 tb_console.Text =   "Key: " + keyToKey(key);
-                init_NES_btns[2] = keyToKey(key);
+                working_NES_btns[2] = keyToKey(key);
             }
             else {
                 throwError("Unsupported Key.");
@@ -480,7 +500,7 @@ namespace SerialTest2
             {
                 tb_NES_START.Text = revKeyToKey(keyToKey(key));
                 tb_console.Text =   "Key: " + keyToKey(key);
-                init_NES_btns[3] = keyToKey(key);
+                working_NES_btns[3] = keyToKey(key);
             }
             else {
                 throwError("Unsupported Key.");
@@ -498,7 +518,7 @@ namespace SerialTest2
             {
                 tb_NES_UP.Text = revKeyToKey(keyToKey(key));
                 tb_console.Text =   "Key: " + keyToKey(key);
-                init_NES_btns[4] = keyToKey(key);
+                working_NES_btns[4] = keyToKey(key);
             }
             else {
                 throwError("Unsupported Key.");
@@ -516,7 +536,7 @@ namespace SerialTest2
             {
                 tb_NES_DOWN.Text = revKeyToKey(keyToKey(key));
                 tb_console.Text =   "Key: " + keyToKey(key);
-                init_NES_btns[5] = keyToKey(key);
+                working_NES_btns[5] = keyToKey(key);
             }
             else {
                 throwError("Unsupported Key.");
@@ -534,7 +554,7 @@ namespace SerialTest2
             {
                 tb_NES_LEFT.Text = revKeyToKey(keyToKey(key));
                 tb_console.Text =   "Key: " + keyToKey(key);
-                init_NES_btns[6] = keyToKey(key);
+                working_NES_btns[6] = keyToKey(key);
             }
             else {
                 throwError("Unsupported Key.");
@@ -552,7 +572,7 @@ namespace SerialTest2
             {
                 tb_NES_RIGHT.Text = revKeyToKey(keyToKey(key));
                 tb_console.Text =   "Key: " + keyToKey(key);
-                init_NES_btns[7] = keyToKey(key);
+                working_NES_btns[7] = keyToKey(key);
             }
             else {
                 throwError("Unsupported Key.");
@@ -606,9 +626,12 @@ namespace SerialTest2
 
         void throwError(String message)
         {
+            SystemSounds.Exclamation.Play();  
             tb_console.Text = message;
             //MessageBox.Show(message); 
         }
+
+
 
         ///need to keep track of what keys were changed in remap to minimize r/w of eeprom
     }
