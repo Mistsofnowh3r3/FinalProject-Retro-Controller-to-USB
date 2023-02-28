@@ -108,10 +108,6 @@ bool holdingRight = 0;
 //various mode related things
 // 0 serial, 1 NES, 2 SNES, 3 N64
 int modeSelect = 0;
-bool nesMode = true;    
-bool snesMode = false; 
-bool n64Mode = false; 
-bool serialMode = false;
 
 bool nesControllerConnected = false;
 bool nesControllerConnectedLast = false; 
@@ -119,7 +115,8 @@ bool snesControllerConnected = false;
 bool snesControllerConnectedLast = false; 
 bool n64ControllerConnected = false;
 
-// modes for what the poutput will be 
+// Controller vs kyeboard mode select keyboard = 1 controller = 0 
+bool outputMode = false;
 bool keyboardMode = true; //output as keyboard
 bool controllerMode = false; //output as controller
 
@@ -176,6 +173,7 @@ const int serialSwitch = 10;
 const int nesSwitch = 11; 
 const int snesSwitch = 12; 
 const int n64Switch = 13; 
+const int outModeSwitch = PIN_A5; 
 
 
 void peekMemory(String Address) {
@@ -384,13 +382,11 @@ void clearAllButtons() {
     Keyboard.releaseAll(); // release all keys
 }
 
-
-
 void nes() {
     nesControllerConnectedLast = nesControllerConnected; // Store the last known state of of the controllers connection
 
     digitalWrite(latchPinNes, HIGH);
-    if (nesControllerConnected && nesMode) checkButton(1); // check for A here
+    if (nesControllerConnected && (modeSelect == 1)) checkButton(1); // check for A here
 
     delayMicroseconds(12);
 
@@ -405,7 +401,7 @@ void nes() {
         //6 high
         digitalWrite(pulsePinNes, HIGH);
         // check for the rest of the buttons
-        if (nesControllerConnected && nesMode) checkButton(j); 
+        if (nesControllerConnected && (modeSelect == 1)) checkButton(j); 
         delayMicroseconds(6);
 
         //6 low
@@ -434,7 +430,7 @@ void snes() {
     snesControllerConnectedLast = snesControllerConnected; // Store the last known state of of the controllers connection
     // SNES latch signal generation
     digitalWrite(latchPinSnes, HIGH);
-    if (snesControllerConnected && snesMode) checkButton(1); // first button, only read a button input if a controller is connected
+    if (snesControllerConnected && (modeSelect == 2)) checkButton(1); // first button, only read a button input if a controller is connected
 
     delayMicroseconds(12);
 
@@ -448,7 +444,7 @@ void snes() {
 
         //6 high
         digitalWrite(pulsePinSnes, HIGH);   
-        if (snesControllerConnected && snesMode) checkButton(j); // check for the rest of the buttons, only read a button input if a controller is connected
+        if (snesControllerConnected && (modeSelect == 2)) checkButton(j); // check for the rest of the buttons, only read a button input if a controller is connected
         delayMicroseconds(6);
 
         //6 low
@@ -561,11 +557,7 @@ void n64Keyboard() {
 
 void checkSwitches() {
                                                                
-    if ( (!digitalRead(nesSwitch) + !digitalRead(snesSwitch) + !digitalRead(n64Switch)) > 1  ) { // WHat do you mean, more then one is activated at a time?!
-    Serial.write("Error: Too many selected.");
-        modeSelect = 6;
-    }
-    else if (!digitalRead(nesSwitch)) {
+    if (!digitalRead(nesSwitch)) {
         modeSelect = 1;
     }
     else if (!digitalRead(snesSwitch)) {
@@ -573,9 +565,6 @@ void checkSwitches() {
     }
     else if (!digitalRead(n64Switch)) {
         modeSelect = 3;
-    }
-    else if (!digitalRead(serialSwitch)) {
-        modeSelect = 0;
     }
     else {//fallback to serial
         modeSelect = 0;
@@ -597,6 +586,7 @@ void setup() {
     pinMode(nesSwitch, INPUT_PULLUP); 
     pinMode(snesSwitch, INPUT_PULLUP);
     pinMode(n64Switch, INPUT_PULLUP);
+    pinMode(outModeSwitch, INPUT_PULLUP);
 
     pinMode(nesIndicateLed, OUTPUT);
     pinMode(snesIndicateLed, OUTPUT);
@@ -612,21 +602,14 @@ void setup() {
 
 void loop() {  
 
+    //!outModeSwitch ? outputMode = 1 : outputMode = 0;
     //(snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
-//
-    ////checkSwitches();
-    //if (serialMode == true) {
-    //    while (serialMode == true) {
-    //        serialActions();
-    //    }
-    //    return;
-    //}
+    //checkSwitches();
+    if (modeSelect == 1 )nes();
     //
-    //nes();
+    if (modeSelect == 2 )snes();
     //
-    //snes();
-    //
-    //n64();
-    serialActions();
+    if (modeSelect == 3 )n64();
+    if (modeSelect == 0 )serialActions();
     
 }
