@@ -107,7 +107,11 @@ bool holdingRight = 0;
 
 //various mode related things
 // 0 serial, 1 NES, 2 SNES, 3 N64
-int modeSelect = 3;
+int modeSelect = 0;
+int modeSelectLast = 4;
+
+
+int tests = 6; 
 
 bool nesControllerConnected = false;
 bool nesControllerConnectedLast = false; 
@@ -468,7 +472,7 @@ void snes() {
 }  
 
 void n64() {
-   static boolean haveController = false;
+    static boolean haveController = false;
 	if (!haveController) {
 		if (pad.begin ()) {
 			// Controller detected!
@@ -525,8 +529,11 @@ void n64() {
 }
 
 void checkSwitches() {
-                                                               
-    if (!digitalRead(nesSwitch)) {
+  
+    if (!digitalRead(serialSwitch)) {
+        modeSelect = 0;
+    }                                                        
+    else if (!digitalRead(nesSwitch)) {
         modeSelect = 1;
     }
     else if (!digitalRead(snesSwitch)) {
@@ -535,8 +542,7 @@ void checkSwitches() {
     else if (!digitalRead(n64Switch)) {
         modeSelect = 3;
     }
-    else {//fallback to serial
-        modeSelect = 0;
+    else {//error state 
     }
 }
 
@@ -573,12 +579,15 @@ void loop() {
 
     //!outModeSwitch ? outputMode = 1 : outputMode = 0;
     //(snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
-    //checkSwitches();
-    if (modeSelect == 1 )nes();
-    //
-    if (modeSelect == 2 )snes();
-    //
-    if (modeSelect == 3 )n64();
-    if (modeSelect == 0 )serialActions();
+
+    checkSwitches();
+    if( modeSelectLast != modeSelect) clearAllButtons;
     
+    modeSelectLast = modeSelect;
+
+    if (modeSelect == 0 )serialActions();
+    if (modeSelect == 1 )nes();
+    if (modeSelect == 2 )snes();
+    if (modeSelect == 3 )n64();
+         
 }
