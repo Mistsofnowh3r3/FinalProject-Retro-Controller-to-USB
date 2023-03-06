@@ -183,6 +183,7 @@
             this.tb_NES_RIGHT.ShortcutsEnabled = false;
             this.tb_NES_RIGHT.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_RIGHT.TabIndex = 7;
+            this.tb_NES_RIGHT.Tag = "NESRIGHT";
             this.tb_NES_RIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_NES_RIGHT_KeyDown);
             this.tb_NES_RIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
             // 
@@ -199,6 +200,7 @@
             this.tb_NES_LEFT.ShortcutsEnabled = false;
             this.tb_NES_LEFT.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_LEFT.TabIndex = 6;
+            this.tb_NES_LEFT.Tag = "NESLEFT";
             this.tb_NES_LEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_NES_LEFT_KeyDown);
             this.tb_NES_LEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
             // 
@@ -215,6 +217,7 @@
             this.tb_NES_DOWN.ShortcutsEnabled = false;
             this.tb_NES_DOWN.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_DOWN.TabIndex = 5;
+            this.tb_NES_DOWN.Tag = "NESDOWN";
             this.tb_NES_DOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_NES_DOWN_KeyDown);
             this.tb_NES_DOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
             // 
@@ -231,6 +234,7 @@
             this.tb_NES_UP.ShortcutsEnabled = false;
             this.tb_NES_UP.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_UP.TabIndex = 4;
+            this.tb_NES_UP.Tag = "NESUP";
             this.tb_NES_UP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_NES_UP_KeyDown);
             this.tb_NES_UP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
             // 
@@ -247,6 +251,7 @@
             this.tb_NES_START.ShortcutsEnabled = false;
             this.tb_NES_START.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_START.TabIndex = 3;
+            this.tb_NES_START.Tag = "NESSTART";
             this.tb_NES_START.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_NES_START_KeyDown);
             this.tb_NES_START.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
             // 
@@ -263,6 +268,7 @@
             this.tb_NES_SELECT.ShortcutsEnabled = false;
             this.tb_NES_SELECT.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_SELECT.TabIndex = 2;
+            this.tb_NES_SELECT.Tag = "NESSELECT";
             this.tb_NES_SELECT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_NES_SELECT_KeyDown);
             this.tb_NES_SELECT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
             // 
@@ -279,6 +285,7 @@
             this.tb_NES_B.ShortcutsEnabled = false;
             this.tb_NES_B.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_B.TabIndex = 1;
+            this.tb_NES_B.Tag = "NESB";
             this.tb_NES_B.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_NES_B_KeyDown);
             this.tb_NES_B.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
             // 
@@ -289,6 +296,7 @@
             this.tb_NES_A.BackColor = System.Drawing.Color.White;
             this.tb_NES_A.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.tb_NES_A.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_NES_A.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.tb_NES_A.Location = new System.Drawing.Point(57, 16);
             this.tb_NES_A.Name = "tb_NES_A";
             this.tb_NES_A.ReadOnly = true;
@@ -296,6 +304,7 @@
             this.tb_NES_A.ShortcutsEnabled = false;
             this.tb_NES_A.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_A.TabIndex = 0;
+            this.tb_NES_A.Tag = "NESA";
             this.tb_NES_A.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tb_NES_A_KeyDown);
             this.tb_NES_A.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
             // 

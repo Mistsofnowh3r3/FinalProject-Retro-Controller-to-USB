@@ -107,7 +107,7 @@ bool holdingRight = 0;
 
 //various mode related things
 // 0 serial, 1 NES, 2 SNES, 3 N64
-int modeSelect = 0;
+int modeSelect = 3;
 
 bool nesControllerConnected = false;
 bool nesControllerConnectedLast = false; 
@@ -117,8 +117,6 @@ bool n64ControllerConnected = false;
 
 // Controller vs kyeboard mode select keyboard = 1 controller = 0 
 bool outputMode = false;
-bool keyboardMode = true; //output as keyboard
-bool controllerMode = false; //output as controller
 
 // Constants //
 
@@ -245,7 +243,7 @@ void checkButton(int button) {
       
     if (button_index > 11) return; // if we have passed all the buttons just return
 
-    if (keyboardMode == true) {
+    if (outputMode == 1) {
         // if in nesMode and button index < 8 then according to the inversion of the state of dataPinNes press or release a button
         if ((modeSelect == 1) && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(init_NES_btns[button_index]) : Keyboard.release(init_NES_btns[button_index]);
 
@@ -255,7 +253,7 @@ void checkButton(int button) {
         return;
     }
     
-    if (controllerMode == true) {
+    if (outputMode == 0) {
         if ((modeSelect == 1) && button_index < 8) {
             if (button_index > 3) {
                 if ((button_index == 4) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding up
@@ -470,89 +468,60 @@ void snes() {
 }  
 
 void n64() {
-    //if (!n64ControllerConnected) return;
-
-	if (!pad.read()) {
-		// Controller lost :(;
-		n64ControllerConnected = false;
-	} 
-    else {
-		// Controller was read fine
-    
-		// Map buttons!
-        //if ((pad.buttons & N64Pad::BTN_B) != 0) {
-        //   usbStick.setButton (0, 1);
-        //}
-        //if ((pad.buttons & N64Pad::BTN_B) == 0) {
-        //    usbStick.setButton (0, 0);
-        //}
-		usbStick.setButton(0, (pad.buttons & N64Pad::BTN_B) != 0);
-		usbStick.setButton(1, (pad.buttons & N64Pad::BTN_A) != 0);
-		usbStick.setButton(2, (pad.buttons & N64Pad::BTN_C_LEFT) != 0);
-		usbStick.setButton(3, (pad.buttons & N64Pad::BTN_C_DOWN) != 0);
-		usbStick.setButton(4, (pad.buttons & N64Pad::BTN_C_UP) != 0);
-		usbStick.setButton(5, (pad.buttons & N64Pad::BTN_C_RIGHT) != 0);
-		usbStick.setButton(6, (pad.buttons & N64Pad::BTN_L) != 0);
-		usbStick.setButton(7, (pad.buttons & N64Pad::BTN_R) != 0);
-		usbStick.setButton(8, (pad.buttons & N64Pad::BTN_Z) != 0);
-		usbStick.setButton(9, (pad.buttons & N64Pad::BTN_START) != 0);
-		// D-Pad makes up the X/Y axes
-		if ((pad.buttons & N64Pad::BTN_UP) != 0) {
-			usbStick.setYAxis(ANALOG_MIN_VALUE);
-		} 
-        else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
-			usbStick.setYAxis(ANALOG_MAX_VALUE);
-		} 
-        else {
-			usbStick.setYAxis(ANALOG_IDLE_VALUE);
+   static boolean haveController = false;
+	if (!haveController) {
+		if (pad.begin ()) {
+			// Controller detected!
+				digitalWrite (LED_BUILTIN, HIGH);
+				haveController = true;
+			} else {
+				delay (333);
 		}
-		if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
-			usbStick.setXAxis(ANALOG_MIN_VALUE);
-		} 
-        else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
-			usbStick.setXAxis(ANALOG_MAX_VALUE);
-		} 
-        else {
-			usbStick.setXAxis(ANALOG_IDLE_VALUE);
+	} else {
+		if (!pad.read ()) {
+			// Controller lost :(
+			digitalWrite (LED_BUILTIN, LOW);
+			haveController = false;
+		} else {
+			// Controller was read fine
+			if ((pad.buttons & N64Pad::BTN_LRSTART) != 0) {
+				// This combo toggles mapAnalogToDPad
+			} else {
+				// Map buttons!
+				usbStick.setButton (0, (pad.buttons & N64Pad::BTN_B) != 0);
+				usbStick.setButton (1, (pad.buttons & N64Pad::BTN_A) != 0);
+				usbStick.setButton (2, (pad.buttons & N64Pad::BTN_C_LEFT) != 0);
+				usbStick.setButton (3, (pad.buttons & N64Pad::BTN_C_DOWN) != 0);
+				usbStick.setButton (4, (pad.buttons & N64Pad::BTN_C_UP) != 0);
+				usbStick.setButton (5, (pad.buttons & N64Pad::BTN_C_RIGHT) != 0);
+				usbStick.setButton (6, (pad.buttons & N64Pad::BTN_L) != 0);
+				usbStick.setButton (7, (pad.buttons & N64Pad::BTN_R) != 0);
+				usbStick.setButton (8, (pad.buttons & N64Pad::BTN_Z) != 0);
+				usbStick.setButton (9, (pad.buttons & N64Pad::BTN_START) != 0);
+				
+					// D-Pad makes up the X/Y axes
+					if ((pad.buttons & N64Pad::BTN_UP) != 0) {
+						usbStick.setYAxis (ANALOG_MIN_VALUE);
+					} else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
+						usbStick.setYAxis (ANALOG_MAX_VALUE);
+					} else {
+						usbStick.setYAxis (ANALOG_IDLE_VALUE);
+					}
+					if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
+						usbStick.setXAxis (ANALOG_MIN_VALUE);
+					} else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
+						usbStick.setXAxis (ANALOG_MAX_VALUE);
+					} else {
+						usbStick.setXAxis (ANALOG_IDLE_VALUE);
+					}
+					// The analog stick gets mapped to the X/Y rotation axes
+					usbStick.setRxAxis (pad.x);
+					usbStick.setRyAxis (pad.y);
+				// All done, send data for real!
+				usbStick.sendState ();
+			}
 		}
-		// The analog stick gets mapped to the X/Y rotation axes
-		usbStick.setRxAxis (pad.x);
-		usbStick.setRyAxis (pad.y);
-		
-		// All done, send data for real!
-		usbStick.sendState ();
-		
-	} 
-}
-
-void n64Keyboard() {
-    //if (!n64ControllerConnected) return;
-
-	if (!pad.read()) {
-		// Controller lost :(;
-		n64ControllerConnected = false;
-	} 
-    else {
-		N64Pad::BTN_A ? Keyboard.press(init_N64_btns[0]): Keyboard.release(init_N64_btns[0]);
-        N64Pad::BTN_B ? Keyboard.press(init_N64_btns[1]): Keyboard.release(init_N64_btns[1]);
-        N64Pad::BTN_Z ? Keyboard.press(init_N64_btns[2]): Keyboard.release(init_N64_btns[2]);
-        N64Pad::BTN_START ? Keyboard.press(init_N64_btns[3]): Keyboard.release(init_N64_btns[3]);
-        N64Pad::BTN_UP ? Keyboard.press(init_N64_btns[4]): Keyboard.release(init_N64_btns[4]);
-        N64Pad::BTN_DOWN ? Keyboard.press(init_N64_btns[5]): Keyboard.release(init_N64_btns[5]);
-        N64Pad::BTN_LEFT ? Keyboard.press(init_N64_btns[6]): Keyboard.release(init_N64_btns[6]);
-        N64Pad::BTN_RIGHT ? Keyboard.press(init_N64_btns[7]): Keyboard.release(init_N64_btns[7]);
-        N64Pad::BTN_C_UP ? Keyboard.press(init_N64_btns[8]): Keyboard.release(init_N64_btns[8]);
-        N64Pad::BTN_C_DOWN ? Keyboard.press(init_N64_btns[9]): Keyboard.release(init_N64_btns[9]);
-        N64Pad::BTN_L ? Keyboard.press(init_N64_btns[10]): Keyboard.release(init_N64_btns[10]);
-        N64Pad::BTN_R ? Keyboard.press(init_N64_btns[11]): Keyboard.release(init_N64_btns[11]);
-        N64Pad::BTN_C_LEFT ? Keyboard.press(init_N64_btns[12]): Keyboard.release(init_N64_btns[12]);
-        N64Pad::BTN_C_RIGHT ? Keyboard.press(init_N64_btns[13]): Keyboard.release(init_N64_btns[13]);
-
-		//// The analog stick gets mapped to the X/Y rotation axes
-		//usbStick.setRxAxis (pad.x);
-		//usbStick.setRyAxis (pad.y);
-		
-	} 
+    } 
 }
 
 void checkSwitches() {

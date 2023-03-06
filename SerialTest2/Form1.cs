@@ -7,12 +7,17 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using System.Media;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
+
 
 namespace SerialTest2
 {
 
     public partial class Form1 : Form
     {
+        [DllImport("user32.dll", EntryPoint = "HideCaret")]
+        public static extern long HideCaret(IntPtr hwnd);
 
         string background1Color = "#F492A5";
 
@@ -68,6 +73,18 @@ namespace SerialTest2
             populateTextBoxes();
             cb_portlist.Items.Add("Select a port");
             cb_portlist.Text = "Select a port";
+
+
+
+            //tb_NES_A.Cursor = Cursors.Arrow;
+            tb_NES_A.GotFocus +=   hideCaretAndSelection;
+            tb_NES_B.GotFocus +=   hideCaretAndSelection;
+            tb_NES_SELECT.GotFocus +=   hideCaretAndSelection;
+            tb_NES_START.GotFocus +=   hideCaretAndSelection;
+            tb_NES_UP.GotFocus +=   hideCaretAndSelection;
+            tb_NES_DOWN.GotFocus +=   hideCaretAndSelection;
+            tb_NES_LEFT.GotFocus +=   hideCaretAndSelection;
+            tb_NES_RIGHT.GotFocus +=   hideCaretAndSelection;
         }
 
 
@@ -249,7 +266,7 @@ namespace SerialTest2
 
         int keyToKey(String key)
         {
-            switch (key)
+                switch (key)
             {
                 //why yes, this was painful to do manually
                 case "Escape": return 177;
@@ -438,15 +455,79 @@ namespace SerialTest2
         }
 
         // textbox KeyDown event handler
+
+
+        private void textBoxGather(object sender, KeyEventArgs e)
+        {
+            System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
+            textBox.SelectionStart = 0;
+            key = new KeysConverter().ConvertToString(e.KeyCode);
+
+            if (keyToKey(key) != 0)
+            {
+                
+                textBox.Text = revKeyToKey(keyToKey(key)); // this is dumb, yet it is probably the easiest way to do this
+                tb_console.Text =   "Key: " + keyToKey(key);
+
+
+                switch (textBox.Tag.ToString())
+                {
+                    case "NESA": 
+                        working_NES_btns[0] = keyToKey(key);
+                        break;
+                    case "NESB": 
+                        working_NES_btns[1] = keyToKey(key);
+                        break;
+                    case "NESSELECT": 
+                        working_NES_btns[2] = keyToKey(key);
+                        break;
+                    case "NESSTART": 
+                        working_NES_btns[3] = keyToKey(key);
+                        break;
+                    case "NESUP": 
+                        working_NES_btns[4] = keyToKey(key);
+                        break;
+                    case "NESDOWN": 
+                        working_NES_btns[5] = keyToKey(key);
+                        break;
+                    case "NESLEFT": 
+                        working_NES_btns[6] = keyToKey(key);
+                        break;
+                    case "NESRIGHT": 
+                        working_NES_btns[7] = keyToKey(key);
+                        break;
+
+                    default : break;
+
+
+
+
+                }
+                    
+                //working_NES_btns[0] = keyToKey(key);
+            
+            }
+            else {
+                throwError("Unsupported Key.");
+                return;
+            }
+            neatHack(true);
+            SelectNextControl(ActiveControl, true, true, true, true);
+        }
+
+
+
         private void tb_NES_A_KeyDown(object sender, KeyEventArgs e)
         {
             key = new KeysConverter().ConvertToString(e.KeyCode);
 
             if (keyToKey(key) != 0)
             {
+                
                 tb_NES_A.Text = revKeyToKey(keyToKey(key)); // this is dumb, yet it is probably the easiest way to do this
                 tb_console.Text =   "Key: " + keyToKey(key);
                 working_NES_btns[0] = keyToKey(key);
+            
             }
             else {
                 throwError("Unsupported Key.");
@@ -582,6 +663,17 @@ namespace SerialTest2
             SelectNextControl(ActiveControl, true, true, true, true);
         }
 
+
+        private void hideCaretAndSelection(object sender, EventArgs e) {
+                System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
+                textBox.SelectionStart = 0;
+                textBox.SelectionStart = tb_NES_A.TextLength;
+                HideCaret(textBox.Handle);
+        }
+
+
+
+
         private void button3_Click(object sender, EventArgs e)
         {
             ColorDialog MyDialog = new ColorDialog();
@@ -630,8 +722,6 @@ namespace SerialTest2
             tb_console.Text = message;
             //MessageBox.Show(message); 
         }
-
-
 
         ///need to keep track of what keys were changed in remap to minimize r/w of eeprom
     }
