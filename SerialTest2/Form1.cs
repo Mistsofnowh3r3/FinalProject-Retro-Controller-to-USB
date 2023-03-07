@@ -37,6 +37,8 @@ namespace ccAdapterRemapper
 
         string textColor = "#ffffff";
 
+        string tabColor = "#1b2530";
+
 
 
 
@@ -163,7 +165,7 @@ namespace ccAdapterRemapper
             tb_NES_RIGHT.Text = working_NES_btns_string[7];
         }
 
-        void neatHack(bool yup)
+        void neatHack(bool yup) //Part of a solution to disable the cursor and text selection in the textboxes
         {
             tb_NES_A.TabStop = yup;
             tb_NES_B.TabStop = yup;
@@ -572,7 +574,20 @@ namespace ccAdapterRemapper
             neatHack(false);
         }
 
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (btn_saveSettings.Enabled)
+            {
+                var window = MessageBox.Show(
+                    "There are unsaved mappings, are you sure you want to close?", 
+                    "", 
+                    MessageBoxButtons.YesNo);
 
+                e.Cancel = (window == DialogResult.No);
+
+            }
+
+        }
 
         ///need to keep track of what keys were changed in remap to minimize r/w of eeprom
     }

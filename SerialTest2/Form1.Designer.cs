@@ -520,13 +520,14 @@
             this.tabControl1.Size = new System.Drawing.Size(429, 286);
             this.tabControl1.TabIndex = 5;
             this.tabControl1.TabStop = false;
+            this.tabControl1.Tag = "TAB";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(352, 90);
+            this.label4.Location = new System.Drawing.Point(346, 90);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(88, 15);
             this.label4.TabIndex = 7;
@@ -584,7 +585,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(452, 410);
+            this.ClientSize = new System.Drawing.Size(452, 401);
             this.Controls.Add(this.btn_saveSettings);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tabControl1);
@@ -597,6 +598,7 @@
             this.Name = "Form1";
             this.Tag = "background1";
             this.Text = "Remapper";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
