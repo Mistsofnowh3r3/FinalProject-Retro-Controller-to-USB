@@ -111,7 +111,6 @@ int modeSelect = 0;
 int modeSelectLast = 4;
 
 
-int tests = 6; 
 
 bool nesControllerConnected = false;
 bool nesControllerConnectedLast = false; 
@@ -132,6 +131,7 @@ const int8_t ANALOG_IDLE_VALUE = 0;
 
 N64Pad pad;
 
+//sets up the joystick
 Joystick_ usbStick (
 	JOYSTICK_DEFAULT_REPORT_ID,
 	JOYSTICK_TYPE_JOYSTICK,
@@ -585,9 +585,9 @@ void loop() {
     
     modeSelectLast = modeSelect;
 
-    if (modeSelect == 0 )serialActions();
-    if (modeSelect == 1 )nes();
-    if (modeSelect == 2 )snes();
-    if (modeSelect == 3 )n64();
+    if (modeSelect == 0) serialActions();
+    if (modeSelect == 1) nes();
+    if (modeSelect == 2) snes();
+    if (modeSelect == 3) n64();
          
 }

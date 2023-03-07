@@ -1,6 +1,6 @@
 ﻿//Code originally from RTCV https://github.com/redscientistlabs/RTCV/blob/master/Source/Libraries/NetCore/Params.cs
 
-namespace SerialTest2
+namespace ccAdapterRemapper
 {
     using System.IO;
 

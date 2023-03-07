@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SerialTest2.Properties
+namespace ccAdapterRemapper.Properties
 {
 
 
