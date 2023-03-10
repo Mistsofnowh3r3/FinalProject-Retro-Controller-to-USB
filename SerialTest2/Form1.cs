@@ -23,13 +23,13 @@ namespace ccAdapterRemapper
         #region variables
 
         //serious colors (aka RTCV)
-        string background1Color = "#23303e";
+        string dark1 = "#1b2530";
 
-        string background2Color = "#2c3c4c";
+        string dark2 = "#2c3c4c";
 
-        string button2Color = "#4b5d6f";
+        string light1 = "#23303e";
 
-        string button1Color = "#4b5d6f";
+        string light2 = "#4b5d6f";
 
         string focusColor = "#0078d7";
 
@@ -37,19 +37,17 @@ namespace ccAdapterRemapper
 
         string textColor = "#ffffff";
 
-        string tabColor = "#1b2530";
-
 
 
 
         //fun colors
-        //string background1Color = "#F492A5";
+        //string dark1 = "#F492A5";
 
-        //string background2Color = "#F9CBD0";
+        //string dark2 = "#F9CBD0";
 
-        //string button2Color = "#57cbe6";
+        //string light1 = "#57cbe6";
 
-        //string button1Color = "#95DAF8";
+        //string light2 = "#95DAF8";
 
         //string focusColor = "#4efcee";
 
@@ -183,7 +181,7 @@ namespace ccAdapterRemapper
         private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
             serialNow = _serialPort.ReadExisting();
-            tb_serialread.Invoke(new Action(() => tb_serialread.Text = serialNow));
+            tb_console.Invoke(new Action(() => tb_console.Text = serialNow));
         }
 
         private void openCOM(object sender, EventArgs e)
@@ -193,11 +191,15 @@ namespace ccAdapterRemapper
             {
                 _serialPort.Close();
                 btn_stopstart.Text = "Open";
+                btn_sendremap.Enabled = false;
+                btn_sendremap.BackColor = ColorTranslator.FromHtml(light2);
             }
             else
             {
                 _serialPort.Open();
                 btn_stopstart.Text = "Close";
+                btn_sendremap.Enabled = true;
+                btn_sendremap.BackColor = ColorTranslator.FromHtml(needsSaving);
             }
 
 
@@ -205,11 +207,11 @@ namespace ccAdapterRemapper
 
         private void ColorControls(Control parent)
         {
-            if (parent is Form && parent.Tag != null && parent.Tag.ToString().Contains("background1"))
+            if (parent is Form && parent.Tag != null && parent.Tag.ToString().Contains("dark1"))
             {
-                if (parent.Tag.ToString().Contains("background1"))
+                if (parent.Tag.ToString().Contains("dark1"))
                 {
-                    parent.BackColor = ColorTranslator.FromHtml(background1Color);
+                    parent.BackColor = ColorTranslator.FromHtml(dark1);
                 }
             }
 
@@ -221,13 +223,13 @@ namespace ccAdapterRemapper
                     {
                         if (tabPage.Tag != null)
                         {
-                            if (tabPage.Tag.ToString().Contains("background1"))
+                            if (tabPage.Tag.ToString().Contains("dark1"))
                             {
-                                tabPage.BackColor = ColorTranslator.FromHtml(background1Color);
+                                tabPage.BackColor = ColorTranslator.FromHtml(dark1);
                             }
-                            if (tabPage.Tag.ToString().Contains("background2"))
+                            if (tabPage.Tag.ToString().Contains("dark2"))
                             {
-                                tabPage.BackColor = ColorTranslator.FromHtml(background2Color);
+                                tabPage.BackColor = ColorTranslator.FromHtml(dark2);
                             }
                         }
 
@@ -236,22 +238,22 @@ namespace ccAdapterRemapper
                 }
                 else if (control.Tag != null)
                 {
-                    if (control.Tag.ToString().Contains("background1"))
+                    if (control.Tag.ToString().Contains("dark1"))
                     {
-                        control.BackColor = ColorTranslator.FromHtml(background1Color);
+                        control.BackColor = ColorTranslator.FromHtml(dark1);
                     }
-                    if (control.Tag.ToString().Contains("background2"))
+                    if (control.Tag.ToString().Contains("dark2"))
                     {
-                        control.BackColor = ColorTranslator.FromHtml(background2Color);
+                        control.BackColor = ColorTranslator.FromHtml(dark2);
                     }
-                    if (control.Tag.ToString().Contains("button2"))
+                    if (control.Tag.ToString().Contains("light1"))
                     {
-                        control.BackColor = ColorTranslator.FromHtml(button2Color);
+                        control.BackColor = ColorTranslator.FromHtml(light1);
                         control.ForeColor = ColorTranslator.FromHtml(textColor);
                     }
-                    if (control.Tag.ToString().Contains("button1"))
+                    if (control.Tag.ToString().Contains("light2"))
                     {
-                        control.BackColor = ColorTranslator.FromHtml(button1Color);
+                        control.BackColor = ColorTranslator.FromHtml(light2);
                         control.ForeColor = ColorTranslator.FromHtml(textColor);
                     }
                     if (control.Tag.ToString().Contains("label"))
@@ -463,7 +465,7 @@ namespace ccAdapterRemapper
         {
             //ccAdapterRemapper.Params.IsParamSet("NESBUTTONS");
             //save all settings to a PARAM folder 
-            btn_saveSettings.BackColor = ColorTranslator.FromHtml(button2Color);
+            btn_saveSettings.BackColor = ColorTranslator.FromHtml(light2);
             btn_saveSettings.Enabled = false;
             ccAdapterRemapper.Params.SetParam("NESBUTTONS", String.Join(",", working_NES_btns));
             ccAdapterRemapper.Params.SetParam("SNESBUTTONS", String.Join(",", working_SNES_btns));
@@ -481,10 +483,7 @@ namespace ccAdapterRemapper
 
             for (int i = 0; i < 8; i++) 
             {
-                if (working_NES_btns[i] != onload_NES_btns[i]) // if the button mapping is different then it was on load
-                {
-                    _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "!"); // send a remap
-                }
+                _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "!"); // send a remap
                 
                 Thread.Sleep(30);
             }
@@ -530,10 +529,10 @@ namespace ccAdapterRemapper
             SelectNextControl(ActiveControl, true, true, true, true);
         }
 
-        void tbFocusLost(object sender, EventArgs e)
+        void tbFocusLost(object sender, EventArgs e)    
         {
             System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
-            textBox.BackColor = ColorTranslator.FromHtml(button2Color);
+            textBox.BackColor = ColorTranslator.FromHtml(light2);
         }
 
         private void hideCaretAndSelection(object sender, EventArgs e) {
@@ -585,8 +584,31 @@ namespace ccAdapterRemapper
 
                 e.Cancel = (window == DialogResult.No);
 
+             
             }
 
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _serialPort.Close(); // ensure serial port is closed on exit
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            tb_console.Text = ("PO" + "," + 0 + "," + working_NES_btns[0] + "!");
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (!_serialPort.IsOpen)
+            {
+                    throwError("COM Port is not open!");
+                    return;
+            }
+            int adr = (int)numericUpDown1.Value;
+            int val = 0;
+            _serialPort.Write("FU," + adr.ToString() + "," + val.ToString() + "!");
         }
 
         ///need to keep track of what keys were changed in remap to minimize r/w of eeprom

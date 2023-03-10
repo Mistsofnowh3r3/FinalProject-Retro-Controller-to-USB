@@ -50,8 +50,8 @@ String parts[3]; // create an array to hold the three substrings
 //35 N64 A RIGHT
 
 int init_NES_btns[] = {
-    'z',            //A
-    'x',            //B
+    'q',            //A
+    'e',            //B
     KEY_RETURN,     //SELECT
     32,             //START
     KEY_UP_ARROW,   //UP   
@@ -69,7 +69,7 @@ int init_SNES_btns[] = {
     KEY_DOWN_ARROW, //DOWN
     KEY_LEFT_ARROW, //LEFT
     KEY_RIGHT_ARROW,//RIGHT
-    'a',            //A
+    'A',            //A
     's',            //X
     'q',            //L
     'w',            //R
@@ -119,7 +119,7 @@ bool snesControllerConnectedLast = false;
 bool n64ControllerConnected = false;
 
 // Controller vs kyeboard mode select keyboard = 1 controller = 0 
-bool outputMode = false;
+bool outputMode = 1;
 
 // Constants //
 
@@ -210,10 +210,6 @@ void serialActions() {
         int adr = parts[1].toInt();
         int val = parts[2].toInt();
         EEPROM.write(adr,val);
-        //Serial.write("POKE @");
-        //Serial.println(adr);
-        //Serial.write(": ");
-        //Serial.println(val);
     }
     if (parts[0] == "PE") { // PEEK
         int adr = parts[1].toInt();
@@ -223,22 +219,22 @@ void serialActions() {
         Serial.write(": ");
         Serial.println(val);
     }
+    if (parts[0] == "FU") { // J
+        int adr = parts[1].toInt();
+        Serial.write("FU @");
+        Serial.println(adr);
+        Serial.write(": ");
+        Serial.println(init_NES_btns[adr]);
+    }
+
     
 }
 
 void loadKeyboardArrays() {
-    for (int v = 0; v < 36; v++)
-    {
-        if ( v < 8) {
-            init_NES_btns[v] = EEPROM.read(v);
-        }
-        if ( v < 18) {
-            init_SNES_btns[v - 8] = EEPROM.read(v);
-        }
-        if ( v < 36) {
-            init_N64_btns[v - 18] = EEPROM.read(v);
-        }
+    for (int v = 0; v < 8; v++) {
+        init_NES_btns[v] = EEPROM.read(v);
     }
+
 }
 
 void checkButton(int button) {
@@ -249,7 +245,7 @@ void checkButton(int button) {
 
     if (outputMode == 1) {
         // if in nesMode and button index < 8 then according to the inversion of the state of dataPinNes press or release a button
-        if ((modeSelect == 1) && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(init_NES_btns[button_index]) : Keyboard.release(init_NES_btns[button_index]);
+        if ((modeSelect == 1) && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(tolower(init_NES_btns[button_index])) : Keyboard.release(tolower(init_NES_btns[button_index]));
 
         // if in snesMode then according to the inversion of the state of dataPinSnes press or release a button
         if (modeSelect == 2) !digitalRead(dataPinSnes) ? Keyboard.press(init_SNES_btns[button_index]) : Keyboard.release(init_SNES_btns[button_index]);
@@ -411,17 +407,17 @@ void nes() {
         delayMicroseconds(6);
     }
 
-    // Pulse genreation and check for controller
-    for (int e = 10; e < 17; e++) {
+    for (int t = 8; t < 17; t++) {
         // pulse the pulse pin
         //6 high
-        digitalWrite(pulsePinSnes, HIGH);
-        digitalRead(dataPinNes) ? nesControllerConnected = true : nesControllerConnected = false; // If data pin is high here, a controller is connected.
+        digitalWrite(pulsePinNes, HIGH);
+        digitalRead(dataPinNes) ? nesControllerConnected = false : nesControllerConnected = true; // If data pin is high here, a controller is connected.
         delayMicroseconds(6);
         //6 low
         digitalWrite(pulsePinNes, LOW);
         delayMicroseconds(6);
     }
+    
 
     if(!nesControllerConnected && (nesControllerConnected != nesControllerConnectedLast)) { // if a NES controller is not connected, and the connection has changed 
         clearAllButtons(); // need to only do this when the controller actually becomes disconnected
@@ -572,11 +568,11 @@ void setup() {
 	usbStick.setYAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRxAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRyAxisRange (ANALOG_MAX_VALUE, ANALOG_MIN_VALUE);
-    //loadKeyboardArray();
+    
 }
 
 void loop() {  
-
+loadKeyboardArrays();
     //!outModeSwitch ? outputMode = 1 : outputMode = 0;
     //(snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
 
@@ -587,7 +583,7 @@ void loop() {
 
     if (modeSelect == 0) serialActions();
     if (modeSelect == 1) nes();
-    if (modeSelect == 2) snes();
-    if (modeSelect == 3) n64();
+    //if (modeSelect == 2) snes();
+    //if (modeSelect == 3) n64();
          
 }
