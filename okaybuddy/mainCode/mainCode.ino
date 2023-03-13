@@ -9,7 +9,7 @@
 // Globals //
 
 String serialNow = "";
-String parts[3]; // create an array to hold the three substrings
+String parts[4]; // create an array to hold the three substrings
 
 //EEPROM MEMORY MAP
 //0 NES A
@@ -69,7 +69,7 @@ int init_SNES_btns[] = {
     KEY_DOWN_ARROW, //DOWN
     KEY_LEFT_ARROW, //LEFT
     KEY_RIGHT_ARROW,//RIGHT
-    'A',            //A
+    'a',            //A
     's',            //X
     'q',            //L
     'w',            //R
@@ -178,17 +178,6 @@ const int n64Switch = 13;
 const int outModeSwitch = PIN_A5; 
 
 
-void peekMemory(String Address) {
-    int xx = EEPROM.read(0);
-    Serial.write("F: ");
-    Serial.println(xx);
-}
-
-void pokeMemory(String Address) {
-    serialNow = Serial.readStringUntil('!');  // read the command
-    EEPROM.write(0, atoi(serialNow.c_str()));
-}
-
 void serialActions() {
     memset(parts, 0, sizeof(parts));  // clear the parts array
     serialNow = Serial.readStringUntil('!');  // read the command
@@ -209,6 +198,16 @@ void serialActions() {
     if (parts[0] == "PO") { // POKE
         int adr = parts[1].toInt();
         int val = parts[2].toInt();
+
+        if(parts[3] == "NES") {
+            adr += 0;
+        }
+        else if(parts[3] == "SNES") {
+            adr += 8;
+        }
+        else if(parts[3] == "N64") {
+            adr += 24;
+        }
         EEPROM.write(adr,val);
     }
     if (parts[0] == "PE") { // PEEK
@@ -219,14 +218,11 @@ void serialActions() {
         Serial.write(": ");
         Serial.println(val);
     }
-    if (parts[0] == "FU") { // J
+    if (parts[0] == "STR") { // PEEK
         int adr = parts[1].toInt();
-        Serial.write("FU @");
-        Serial.println(adr);
-        Serial.write(": ");
-        Serial.println(init_NES_btns[adr]);
-    }
+        Serial.write("??????????????");
 
+    }
     
 }
 
@@ -234,6 +230,12 @@ void loadKeyboardArrays() {
     for (int v = 0; v < 8; v++) {
         init_NES_btns[v] = EEPROM.read(v);
     }
+    for (int ed = 8; ed < 20; ed++) {
+        init_SNES_btns[ed - 8] = EEPROM.read(ed);
+    }
+    //for (int v = 20; v < 8; v++) {
+    //    init_N64_btns[v] = EEPROM.read(v);
+    //}
 
 }
 
@@ -248,7 +250,7 @@ void checkButton(int button) {
         if ((modeSelect == 1) && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(tolower(init_NES_btns[button_index])) : Keyboard.release(tolower(init_NES_btns[button_index]));
 
         // if in snesMode then according to the inversion of the state of dataPinSnes press or release a button
-        if (modeSelect == 2) !digitalRead(dataPinSnes) ? Keyboard.press(init_SNES_btns[button_index]) : Keyboard.release(init_SNES_btns[button_index]);
+        if (modeSelect == 2) !digitalRead(dataPinSnes) ? Keyboard.press(tolower(init_SNES_btns[button_index])) : Keyboard.release(tolower(init_SNES_btns[button_index]));
 
         return;
     }
@@ -369,7 +371,7 @@ void checkButton(int button) {
         }
         return;
     }
-    return; // safety return. THIS WILL NOT HAPPEN.
+
 }
 
 void clearAllButtons() {
@@ -572,7 +574,7 @@ void setup() {
 }
 
 void loop() {  
-loadKeyboardArrays();
+    loadKeyboardArrays();
     //!outModeSwitch ? outputMode = 1 : outputMode = 0;
     //(snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
 
@@ -583,7 +585,7 @@ loadKeyboardArrays();
 
     if (modeSelect == 0) serialActions();
     if (modeSelect == 1) nes();
-    //if (modeSelect == 2) snes();
-    //if (modeSelect == 3) n64();
+    if (modeSelect == 2) snes();
+    if (modeSelect == 3) n64();
          
 }
