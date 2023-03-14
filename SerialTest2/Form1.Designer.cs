@@ -90,6 +90,7 @@
             this.btn_sendremap = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -860,6 +861,7 @@
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.tabPage4.Controls.Add(this.button1);
             this.tabPage4.Controls.Add(this.pastelCB);
             this.tabPage4.Controls.Add(this.label2);
             this.tabPage4.Controls.Add(this.label13);
@@ -1027,6 +1029,16 @@
             this.panel1.TabIndex = 64;
             this.panel1.Tag = "dark2";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(60, 139);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 61;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1122,6 +1134,7 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.CheckBox pastelCB;
+        private System.Windows.Forms.Button button1;
     }
 }
 

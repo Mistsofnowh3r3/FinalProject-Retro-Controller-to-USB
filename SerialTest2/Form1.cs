@@ -426,17 +426,32 @@ namespace ccAdapterRemapper
 
         }
 
-        void throwError(String message)
+        void throwError(String message, int severity)
         {
-            SystemSounds.Exclamation.Play();  
-            tb_console.Text = message;
-            //MessageBox.Show(message); 
+            switch (severity)
+            {
+                case 1 : 
+
+                    SystemSounds.Exclamation.Play();
+                    tb_console.Text = message;
+                    break;
+
+                case 2 : //IO Error
+
+                    SystemSounds.Exclamation.Play();
+                    MessageBox.Show(new Form { TopMost = true },$"I/O Error! Port will be closed.\nException message:  | {message} |");
+                    break;
+
+                default :
+                    tb_console.Text = message;
+                    break;
+            }
         }
 
 
         private void openCOM(object sender, EventArgs e) //Attempt to open the selected COM port
         {
-            try
+            try // try to open or close the serial port
             {
                 if (_serialPort.IsOpen)
                 {
@@ -454,10 +469,26 @@ namespace ccAdapterRemapper
                 }
             }
             catch (Exception ex) // If an exception
-            {
-                throwError(ex.Message);
+            {   
+                cleanPort();
+                throwError(ex.Message, 2); //Throw the exception as an error instead
+            }
+            finally
+            { 
+                _serialPort.Dispose(); // finally dipose of the serialport 
             }
 
+        }
+
+        void cleanPort()
+        {
+            btn_stopstart.Enabled = false;
+            cb_portlist.Items.Clear(); 
+            cb_portlist.Items.Add("Select a port"); 
+            cb_portlist.Text = "Select a port";
+            btn_stopstart.Text = "Open";
+            btn_sendremap.Enabled = false;
+            btn_sendremap.BackColor = buttonDarkColor;
         }
 
         private void cb_portlist_DropDown(object sender, EventArgs e) //Handles the COMlist combobox port dropdown
@@ -517,40 +548,49 @@ namespace ccAdapterRemapper
 
         private void btn_sendremap_Click(object sender, EventArgs e)
         {
-            if (!_serialPort.IsOpen)
-                {
-                    throwError("COM Port is not open!");
-                    return;
-                }
-
-            switch (tabControl1.SelectedTab.Text)
+            try
             {
-                case "NES" : 
-                    for (int i = 0; i < 8; i++) 
-                    {
-                        if (working_NES_btns[i] != onload_NES_btns[i]) _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "NES" + "!"); // send a remap only if the current is different then before (minimize eeprom writes)
-                        Thread.Sleep(30); //buffer, might not actually be needed
-                    }
-                    ccAdapterRemapper.Params.SetParam("NESBUTTONS", String.Join(",", working_NES_btns));// Save the keys select to the PARAMs
-                    Array.Copy(onload_NES_btns, working_NES_btns, onload_NES_btns.Length); //update the onload array
-                    //btn_sendremap.BackColor = ColorTranslator.FromHtml(light2);
-                    //btn_sendremap.Enabled = false;
-                    break;
+                switch (tabControl1.SelectedTab.Text)
+                {
+                    case "NES" : 
+                        for (int i = 0; i < 8; i++) 
+                        {
+                            if (working_NES_btns[i] != onload_NES_btns[i]) _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "NES" + "!"); // send a remap only if the current is different then before (minimize eeprom writes)
+                            Thread.Sleep(30); //buffer, might not actually be needed
+                        }
+                        ccAdapterRemapper.Params.SetParam("NESBUTTONS", String.Join(",", working_NES_btns));// Save the keys select to the PARAMs
+                        Array.Copy(onload_NES_btns, working_NES_btns, onload_NES_btns.Length); //update the onload array
+                        //btn_sendremap.BackColor = ColorTranslator.FromHtml(light2);
+                        //btn_sendremap.Enabled = false;
+                        break;
 
-                case "SNES" : 
-                    for (int i = 0; i < 12; i++) 
-                    {
-                        _serialPort.Write("PO" + "," + i + "," + working_SNES_btns[i] + "SNES" + "!"); // send a remap
-                
-                        Thread.Sleep(30);
-                    }
-                    ccAdapterRemapper.Params.SetParam("SNESBUTTONS", String.Join(",", working_SNES_btns));
-                    Array.Copy(onload_SNES_btns, working_SNES_btns, onload_SNES_btns.Length); //update the onload array
-                    break;
-                case "N64" : 
-                    //ccAdapterRemapper.Params.SetParam("N64BUTTONS", String.Join(",", working_N64_btns));
-                    break;
+                    case "SNES" : 
+                        for (int i = 0; i < 12; i++) 
+                        {
+                            _serialPort.Write("PO" + "," + i + "," + working_SNES_btns[i] + "SNES" + "!"); // send a remap
+                    
+                            Thread.Sleep(30);
+                        }
+                        ccAdapterRemapper.Params.SetParam("SNESBUTTONS", String.Join(",", working_SNES_btns));
+                        Array.Copy(onload_SNES_btns, working_SNES_btns, onload_SNES_btns.Length); //update the onload array
+                        break;
+                    case "N64" : 
+                        //ccAdapterRemapper.Params.SetParam("N64BUTTONS", String.Join(",", working_N64_btns));
+                        break;
+                }
             }
+            catch (Exception ex) // If an exception
+            {   
+                //If there is an exception it is that the port does not exist so.
+                cleanPort();
+                throwError(ex.Message, 2); //Throw the exception as an error instead
+            }
+            finally
+            { 
+                _serialPort.Dispose(); // finally dipose of the serialport 
+            }
+
+
 
         }
 
@@ -595,7 +635,7 @@ namespace ccAdapterRemapper
             
             }
             else {
-                throwError("Unsupported Key.");
+                throwError("Unsupported Key.", 1);
                 return;
             }
             neatHack(true);
@@ -621,7 +661,7 @@ namespace ccAdapterRemapper
         {
             if (!_serialPort.IsOpen)
             {
-                    throwError("COM Port is not open!");
+                    throwError("COM Port is not open!", 2);
                     return;
             }
             int adr = (int)ADR.Value;
@@ -633,7 +673,7 @@ namespace ccAdapterRemapper
         {
             if (!_serialPort.IsOpen)
             {
-                    throwError("COM Port is not open!");
+                    throwError("COM Port is not open!", 2);
                     return;
             }
             int adr = (int)ADR.Value;
@@ -671,8 +711,9 @@ namespace ccAdapterRemapper
             updateColors();
         }
 
-
-        
-
+        private void button1_Click(object sender, EventArgs e)
+        {
+            
+        }
     }   
 }
