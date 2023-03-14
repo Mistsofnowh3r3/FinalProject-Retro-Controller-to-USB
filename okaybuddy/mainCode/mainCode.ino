@@ -218,11 +218,6 @@ void serialActions() {
         Serial.write(": ");
         Serial.println(val);
     }
-    if (parts[0] == "STR") { // PEEK
-        int adr = parts[1].toInt();
-        Serial.write("??????????????");
-
-    }
     
 }
 
@@ -541,6 +536,7 @@ void checkSwitches() {
         modeSelect = 3;
     }
     else {//error state 
+        modeSelect = 0;
     }
 }
 
@@ -570,7 +566,7 @@ void setup() {
 	usbStick.setYAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRxAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRyAxisRange (ANALOG_MAX_VALUE, ANALOG_MIN_VALUE);
-    
+    Serial.write("Hi"); // Send a hello
 }
 
 void loop() {  

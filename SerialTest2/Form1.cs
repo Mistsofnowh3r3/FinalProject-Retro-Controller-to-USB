@@ -23,67 +23,35 @@ namespace ccAdapterRemapper
 
         #region variables
 
-        //serious colors (aka RTCV) 
 
+        // Theme Color variables
         int baseHexColor = 0x1B2530;
         Color baseColor;
-
         Color buttonDarkColor;
         Color buttonLightColor;
         Color backDarkColor;
         Color backLightColor;
         Color textColor;
-        
-        
-
         string focusColor = "#0078d7";
-
         string needsSaving = "#ff6347";
 
         
 
 
-        //fun colors
-        //string dark1 = "#F492A5";
-
-        //string dark2 = "#F9CBD0";
-
-        //string light1 = "#57cbe6";
-
-        //string light2 = "#95DAF8";
-
-        //string focusColor = "#0078d7";
-
-        //string needsSaving = "#00ff6e";
-
-        //string textColor = "#00000000";
-
-
         // string variable to store the key name
         private string key;
 
+        // Arrays for storing the current and previous mappings
         int[] onload_NES_btns = new int[8];
-
         int[] onload_SNES_btns = new int[12];
-
         int[] onload_N64_btns = new int[18];
-
         int[] working_NES_btns = new int[8];
-
         int[] working_SNES_btns = new int[12];
-
         int[] working_N64_btns = new int[18];
 
-        string[] working_NES_btns_string = new string[8];
 
-        string[] working_SNES_btns_string = new string[12];
-
-        string[] working_N64_btns_string = new string[18];
-
-
+        // Serial port stuff
         SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
-
-
         private string serialNow;
         private readonly object _sync = new object();
 
@@ -123,9 +91,29 @@ namespace ccAdapterRemapper
             }
 
 
-            //load the button states as text into the thing
-            populateStingArrays();
-            populateTextBoxes();
+            //Poulate the textboxes with the data from the working arrays
+            tb_NES_A.Text = revKeyToKey(working_NES_btns[0]);
+            tb_NES_B.Text = revKeyToKey(working_NES_btns[1]);
+            tb_NES_SELECT.Text = revKeyToKey(working_NES_btns[2]);
+            tb_NES_START.Text = revKeyToKey(working_NES_btns[3]);
+            tb_NES_UP.Text = revKeyToKey(working_NES_btns[4]);
+            tb_NES_DOWN.Text = revKeyToKey(working_NES_btns[5]);
+            tb_NES_LEFT.Text = revKeyToKey(working_NES_btns[6]);
+            tb_NES_RIGHT.Text = revKeyToKey(working_NES_btns[7]);
+
+            tb_SNES_B.Text = revKeyToKey(working_SNES_btns[0]);
+            tb_SNES_Y.Text = revKeyToKey(working_SNES_btns[1]);
+            tb_SNES_SELECT.Text = revKeyToKey(working_SNES_btns[2]);
+            tb_SNES_START.Text = revKeyToKey(working_SNES_btns[3]);
+            tb_SNES_UP.Text = revKeyToKey(working_SNES_btns[4]);
+            tb_SNES_DOWN.Text = revKeyToKey(working_SNES_btns[5]);
+            tb_SNES_LEFT.Text = revKeyToKey(working_SNES_btns[6]);
+            tb_SNES_RIGHT.Text = revKeyToKey(working_SNES_btns[7]);
+            tb_SNES_A.Text = revKeyToKey(working_SNES_btns[8]);
+            tb_SNES_X.Text = revKeyToKey(working_SNES_btns[9]);
+            tb_SNES_L.Text = revKeyToKey(working_SNES_btns[10]);
+            tb_SNES_R.Text = revKeyToKey(working_SNES_btns[11]);
+
             cb_portlist.Items.Add("Select a port");
             cb_portlist.Text = "Select a port";
 
@@ -155,47 +143,11 @@ namespace ccAdapterRemapper
             tb_SNES_L.GotFocus +=   hideCaretAndSelection;
             tb_SNES_R.GotFocus +=   hideCaretAndSelection;
 
+            //Check if the Pastel Theme button was set
             pastelCB.Checked = ccAdapterRemapper.Params.IsParamSet("PB");
 
 
-            updateColors();
-        }
-
-        void populateStingArrays()
-        {
-            
-            for (int p = 0; p < 8; p++) working_NES_btns_string[p] = revKeyToKey(working_NES_btns[p]);
-            
-            for (int s = 0; s < 12; s++) working_SNES_btns_string[s] = revKeyToKey(working_SNES_btns[s]);
-
-            for (int b = 0; b < 18; b++) working_N64_btns_string[b] = revKeyToKey(onload_N64_btns[b]);
-
-        }
-
-        void populateTextBoxes()
-        {
-            tb_NES_A.Text = working_NES_btns_string[0];
-            tb_NES_B.Text = working_NES_btns_string[1];
-            tb_NES_SELECT.Text = working_NES_btns_string[2];
-            tb_NES_START.Text = working_NES_btns_string[3];
-            tb_NES_UP.Text = working_NES_btns_string[4];
-            tb_NES_DOWN.Text = working_NES_btns_string[5];
-            tb_NES_LEFT.Text = working_NES_btns_string[6];
-            tb_NES_RIGHT.Text = working_NES_btns_string[7];
-
-            tb_SNES_B.Text = working_SNES_btns_string[0];
-            tb_SNES_Y.Text = working_SNES_btns_string[1];
-            tb_SNES_SELECT.Text = working_SNES_btns_string[2];
-            tb_SNES_START.Text = working_SNES_btns_string[3];
-            tb_SNES_UP.Text = working_SNES_btns_string[4];
-            tb_SNES_DOWN.Text = working_SNES_btns_string[5];
-            tb_SNES_LEFT.Text = working_SNES_btns_string[6];
-            tb_SNES_RIGHT.Text = working_SNES_btns_string[7];
-            tb_SNES_A.Text = working_SNES_btns_string[8];
-            tb_SNES_X.Text = working_SNES_btns_string[9];
-            tb_SNES_L.Text = working_SNES_btns_string[10];
-            tb_SNES_R.Text = working_SNES_btns_string[11];
-
+            updateColors();// Set the app colors
         }
 
         void neatHack(bool yup) //Part of a solution to disable the cursor and text selection in the textboxes
@@ -225,31 +177,9 @@ namespace ccAdapterRemapper
         }        
 
 
-        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e) //When Serial data is recieved display it in the Console
         {
-            serialNow = _serialPort.ReadExisting();
-            tb_console.Invoke(new Action(() => tb_console.Text = serialNow));
-        }
-
-        private void openCOM(object sender, EventArgs e)
-        {
-   
-            if (_serialPort.IsOpen)
-            {
-                _serialPort.Close();
-                btn_stopstart.Text = "Open";
-                btn_sendremap.Enabled = false;
-                btn_sendremap.BackColor = buttonDarkColor;
-            }
-            else
-            {
-                _serialPort.Open();
-                btn_stopstart.Text = "Close";
-                btn_sendremap.Enabled = true;
-                btn_sendremap.BackColor = ColorTranslator.FromHtml(needsSaving);
-            }
-
-
+            tb_console.Invoke(new Action(() => tb_console.Text = _serialPort.ReadExisting()));
         }
 
         void updateColors()
@@ -504,25 +434,78 @@ namespace ccAdapterRemapper
         }
 
 
-        private void cb_portlist_DropDown(object sender, EventArgs e)
+        private void openCOM(object sender, EventArgs e) //Attempt to open the selected COM port
         {
-            // Get a list of serial port names.
-            var selectedItem = cb_portlist.SelectedItem;
-            cb_portlist.Items.Clear();
-            string[] ports = SerialPort.GetPortNames();
-            foreach (string s in SerialPort.GetPortNames())
+            try
             {
-                cb_portlist.Items.Add(s);
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                    btn_stopstart.Text = "Open";
+                    btn_sendremap.Enabled = false;
+                    btn_sendremap.BackColor = buttonDarkColor;
+                }
+                else
+                {
+                    _serialPort.Open();
+                    btn_stopstart.Text = "Close";
+                    btn_sendremap.Enabled = true;
+                    btn_sendremap.BackColor = ColorTranslator.FromHtml(needsSaving);
+                }
             }
-            cb_portlist.SelectedItem = selectedItem;
+            catch (Exception ex) // If an exception
+            {
+                throwError(ex.Message);
+            }
+
         }
 
-        private void cb_portlist_SelectedIndexChanged(object sender, EventArgs e)
+        private void cb_portlist_DropDown(object sender, EventArgs e) //Handles the COMlist combobox port dropdown
+        {
+            // Get a list of serial port names.
+            string[] ports = SerialPort.GetPortNames();
+            
+            //Check if the defult text is currently the selected one
+            if ((string)cb_portlist.SelectedItem == "Select a port") 
+            {
+                cb_portlist.Items.Clear();
+            }
+            //Check if there are even any COM ports available
+            if (ports == null || ports.Length == 0)
+            {
+                cb_portlist.Items.Clear();
+                cb_portlist.Items.Add("Select a port");
+                cb_portlist.Text = "Select a port";
+                return;
+            }
+
+            //Finally poluate the combobox with the avialable COM ports
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                if (!cb_portlist.Items.Contains(s)) //Only add an item if it is not already on the list
+                {
+                    cb_portlist.Items.Add(s);
+                }                
+            }
+        }
+
+        private void cb_portlist_DropDownClosed(object sender, EventArgs e)
+        {
+            String port = (string)cb_portlist.SelectedItem;
+            if (port == null || !port.StartsWith("COM"))  //If the selected item in the combobox is not correct
+            {
+                cb_portlist.Items.Add("Select a port");
+                cb_portlist.Text = "Select a port";
+            }
+        }
+
+
+        private void cb_portlist_SelectedIndexChanged(object sender, EventArgs e) //Handles the COMlist combobox selections
         {
             String port = (string)cb_portlist.SelectedItem;
             if (port == null || !port.StartsWith("COM")) 
             {
-
+                cb_portlist.Text = "Select a port";
                 return;
             }
             _serialPort.Close();
@@ -688,15 +671,8 @@ namespace ccAdapterRemapper
             updateColors();
         }
 
-        private void strB_Click(object sender, EventArgs e)
-        {
-            if (!_serialPort.IsOpen)
-            {
-                    throwError("COM Port is not open!");
-                    return;
-            }
-            int adr = (int)strUD.Value;
-            _serialPort.Write("STR," + adr.ToString() + "!");
-        }
+
+        
+
     }   
 }

@@ -90,9 +90,6 @@
             this.btn_sendremap = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.label1 = new System.Windows.Forms.Label();
-            this.strUD = new System.Windows.Forms.NumericUpDown();
-            this.strB = new System.Windows.Forms.Button();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -100,7 +97,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ADR)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.strUD)).BeginInit();
             this.SuspendLayout();
             // 
             // tb_serialread
@@ -147,6 +143,7 @@
             this.cb_portlist.Tag = "light2";
             this.cb_portlist.DropDown += new System.EventHandler(this.cb_portlist_DropDown);
             this.cb_portlist.SelectedIndexChanged += new System.EventHandler(this.cb_portlist_SelectedIndexChanged);
+            this.cb_portlist.DropDownClosed += new System.EventHandler(this.cb_portlist_DropDownClosed);
             // 
             // label2
             // 
@@ -863,9 +860,6 @@
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPage4.Controls.Add(this.label1);
-            this.tabPage4.Controls.Add(this.strUD);
-            this.tabPage4.Controls.Add(this.strB);
             this.tabPage4.Controls.Add(this.pastelCB);
             this.tabPage4.Controls.Add(this.label2);
             this.tabPage4.Controls.Add(this.label13);
@@ -1033,39 +1027,6 @@
             this.panel1.TabIndex = 64;
             this.panel1.Tag = "dark2";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(142, 133);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(23, 15);
-            this.label1.TabIndex = 63;
-            this.label1.Tag = "label";
-            this.label1.Text = "Val";
-            // 
-            // strUD
-            // 
-            this.strUD.Location = new System.Drawing.Point(145, 153);
-            this.strUD.Name = "strUD";
-            this.strUD.Size = new System.Drawing.Size(120, 22);
-            this.strUD.TabIndex = 62;
-            this.strUD.TabStop = false;
-            this.strUD.Tag = "light2";
-            // 
-            // strB
-            // 
-            this.strB.Location = new System.Drawing.Point(8, 122);
-            this.strB.Name = "strB";
-            this.strB.Size = new System.Drawing.Size(122, 52);
-            this.strB.TabIndex = 61;
-            this.strB.TabStop = false;
-            this.strB.Tag = "light2";
-            this.strB.Text = "String";
-            this.strB.UseVisualStyleBackColor = true;
-            this.strB.Click += new System.EventHandler(this.strB_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1094,7 +1055,6 @@
             this.tabControl1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.strUD)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1162,9 +1122,6 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.CheckBox pastelCB;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown strUD;
-        private System.Windows.Forms.Button strB;
     }
 }
 
