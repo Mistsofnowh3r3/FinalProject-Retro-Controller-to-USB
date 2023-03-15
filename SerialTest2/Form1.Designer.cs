@@ -33,7 +33,7 @@
             this.btn_stopstart = new System.Windows.Forms.Button();
             this.cb_portlist = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPageNES = new System.Windows.Forms.TabPage();
             this.tb_NES_RIGHT = new System.Windows.Forms.TextBox();
             this.tb_NES_LEFT = new System.Windows.Forms.TextBox();
             this.tb_NES_DOWN = new System.Windows.Forms.TextBox();
@@ -50,7 +50,7 @@
             this.label26 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPageSNES = new System.Windows.Forms.TabPage();
             this.tb_SNES_R = new System.Windows.Forms.TextBox();
             this.tb_SNES_L = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
@@ -75,28 +75,30 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.pastelCB = new System.Windows.Forms.CheckBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.VAL = new System.Windows.Forms.NumericUpDown();
-            this.Poke = new System.Windows.Forms.Button();
-            this.ADR = new System.Windows.Forms.NumericUpDown();
-            this.peek = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.label4 = new System.Windows.Forms.Label();
+            this.tabPageN64 = new System.Windows.Forms.TabPage();
+            this.tabPageDebug = new System.Windows.Forms.TabPage();
+            this.btn_wipeParams = new System.Windows.Forms.Button();
+            this.btn_colorPick = new System.Windows.Forms.Button();
+            this.cb_pastel = new System.Windows.Forms.CheckBox();
+            this.lb_val = new System.Windows.Forms.Label();
+            this.lb_Address = new System.Windows.Forms.Label();
+            this.nup_value = new System.Windows.Forms.NumericUpDown();
+            this.btn_poke = new System.Windows.Forms.Button();
+            this.nup_address = new System.Windows.Forms.NumericUpDown();
+            this.btn_peek = new System.Windows.Forms.Button();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.lb_debug = new System.Windows.Forms.Label();
             this.tb_console = new System.Windows.Forms.TextBox();
             this.btn_sendremap = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lb_motto = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.button1 = new System.Windows.Forms.Button();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VAL)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ADR)).BeginInit();
-            this.tabControl1.SuspendLayout();
+            this.tabPageNES.SuspendLayout();
+            this.tabPageSNES.SuspendLayout();
+            this.tabPageDebug.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nup_value)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nup_address)).BeginInit();
+            this.tabControl.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -128,7 +130,7 @@
             this.btn_stopstart.Tag = "light1";
             this.btn_stopstart.Text = "Select A Port";
             this.btn_stopstart.UseVisualStyleBackColor = false;
-            this.btn_stopstart.Click += new System.EventHandler(this.openCOM);
+            this.btn_stopstart.Click += new System.EventHandler(this.OpenCOM);
             // 
             // cb_portlist
             // 
@@ -142,9 +144,9 @@
             this.cb_portlist.TabIndex = 3;
             this.cb_portlist.TabStop = false;
             this.cb_portlist.Tag = "light2";
-            this.cb_portlist.DropDown += new System.EventHandler(this.cb_portlist_DropDown);
-            this.cb_portlist.SelectedIndexChanged += new System.EventHandler(this.cb_portlist_SelectedIndexChanged);
-            this.cb_portlist.DropDownClosed += new System.EventHandler(this.cb_portlist_DropDownClosed);
+            this.cb_portlist.DropDown += new System.EventHandler(this.Portlist_DropDown);
+            this.cb_portlist.SelectedIndexChanged += new System.EventHandler(this.Portlist_SelectedIndexChanged);
+            this.cb_portlist.DropDownClosed += new System.EventHandler(this.Portlist_DropDownClosed);
             // 
             // label2
             // 
@@ -157,32 +159,32 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Serial Log:";
             // 
-            // tabPage1
+            // tabPageNES
             // 
-            this.tabPage1.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPage1.Controls.Add(this.tb_NES_RIGHT);
-            this.tabPage1.Controls.Add(this.tb_NES_LEFT);
-            this.tabPage1.Controls.Add(this.tb_NES_DOWN);
-            this.tabPage1.Controls.Add(this.tb_NES_UP);
-            this.tabPage1.Controls.Add(this.tb_NES_START);
-            this.tabPage1.Controls.Add(this.tb_NES_SELECT);
-            this.tabPage1.Controls.Add(this.tb_NES_B);
-            this.tabPage1.Controls.Add(this.tb_NES_A);
-            this.tabPage1.Controls.Add(this.label9);
-            this.tabPage1.Controls.Add(this.label10);
-            this.tabPage1.Controls.Add(this.label11);
-            this.tabPage1.Controls.Add(this.label12);
-            this.tabPage1.Controls.Add(this.label25);
-            this.tabPage1.Controls.Add(this.label26);
-            this.tabPage1.Controls.Add(this.label27);
-            this.tabPage1.Controls.Add(this.label28);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(421, 260);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Tag = "dark2";
-            this.tabPage1.Text = "NES";
+            this.tabPageNES.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.tabPageNES.Controls.Add(this.tb_NES_RIGHT);
+            this.tabPageNES.Controls.Add(this.tb_NES_LEFT);
+            this.tabPageNES.Controls.Add(this.tb_NES_DOWN);
+            this.tabPageNES.Controls.Add(this.tb_NES_UP);
+            this.tabPageNES.Controls.Add(this.tb_NES_START);
+            this.tabPageNES.Controls.Add(this.tb_NES_SELECT);
+            this.tabPageNES.Controls.Add(this.tb_NES_B);
+            this.tabPageNES.Controls.Add(this.tb_NES_A);
+            this.tabPageNES.Controls.Add(this.label9);
+            this.tabPageNES.Controls.Add(this.label10);
+            this.tabPageNES.Controls.Add(this.label11);
+            this.tabPageNES.Controls.Add(this.label12);
+            this.tabPageNES.Controls.Add(this.label25);
+            this.tabPageNES.Controls.Add(this.label26);
+            this.tabPageNES.Controls.Add(this.label27);
+            this.tabPageNES.Controls.Add(this.label28);
+            this.tabPageNES.Location = new System.Drawing.Point(4, 22);
+            this.tabPageNES.Name = "tabPageNES";
+            this.tabPageNES.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageNES.Size = new System.Drawing.Size(421, 260);
+            this.tabPageNES.TabIndex = 0;
+            this.tabPageNES.Tag = "dark2";
+            this.tabPageNES.Text = "NES";
             // 
             // tb_NES_RIGHT
             // 
@@ -199,9 +201,9 @@
             this.tb_NES_RIGHT.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_RIGHT.TabIndex = 7;
             this.tb_NES_RIGHT.Tag = "JNESRIGHTlight2";
-            this.tb_NES_RIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_NES_RIGHT.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_NES_RIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_NES_RIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_NES_RIGHT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_NES_RIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_NES_LEFT
             // 
@@ -218,9 +220,9 @@
             this.tb_NES_LEFT.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_LEFT.TabIndex = 6;
             this.tb_NES_LEFT.Tag = "JNESLEFTlight2";
-            this.tb_NES_LEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_NES_LEFT.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_NES_LEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_NES_LEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_NES_LEFT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_NES_LEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_NES_DOWN
             // 
@@ -237,9 +239,9 @@
             this.tb_NES_DOWN.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_DOWN.TabIndex = 5;
             this.tb_NES_DOWN.Tag = "JNESDOWNlight2";
-            this.tb_NES_DOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_NES_DOWN.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_NES_DOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_NES_DOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_NES_DOWN.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_NES_DOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_NES_UP
             // 
@@ -256,9 +258,9 @@
             this.tb_NES_UP.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_UP.TabIndex = 4;
             this.tb_NES_UP.Tag = "JNESUPlight2";
-            this.tb_NES_UP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_NES_UP.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_NES_UP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_NES_UP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_NES_UP.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_NES_UP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_NES_START
             // 
@@ -275,9 +277,9 @@
             this.tb_NES_START.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_START.TabIndex = 3;
             this.tb_NES_START.Tag = "JNESSTARTlight2";
-            this.tb_NES_START.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_NES_START.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_NES_START.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_NES_START.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_NES_START.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_NES_START.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_NES_SELECT
             // 
@@ -294,9 +296,9 @@
             this.tb_NES_SELECT.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_SELECT.TabIndex = 2;
             this.tb_NES_SELECT.Tag = "JNESSELECTlight2";
-            this.tb_NES_SELECT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_NES_SELECT.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_NES_SELECT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_NES_SELECT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_NES_SELECT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_NES_SELECT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_NES_B
             // 
@@ -313,9 +315,9 @@
             this.tb_NES_B.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_B.TabIndex = 1;
             this.tb_NES_B.Tag = "JNESBlight2";
-            this.tb_NES_B.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_NES_B.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_NES_B.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_NES_B.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_NES_B.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_NES_B.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_NES_A
             // 
@@ -334,9 +336,9 @@
             this.tb_NES_A.Size = new System.Drawing.Size(103, 23);
             this.tb_NES_A.TabIndex = 0;
             this.tb_NES_A.Tag = "JNESAlight2";
-            this.tb_NES_A.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_NES_A.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_NES_A.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_NES_A.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_NES_A.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_NES_A.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // label9
             // 
@@ -434,40 +436,40 @@
             this.label28.Tag = "label";
             this.label28.Text = "A";
             // 
-            // tabPage2
+            // tabPageSNES
             // 
-            this.tabPage2.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPage2.Controls.Add(this.tb_SNES_R);
-            this.tabPage2.Controls.Add(this.tb_SNES_L);
-            this.tabPage2.Controls.Add(this.label20);
-            this.tabPage2.Controls.Add(this.label21);
-            this.tabPage2.Controls.Add(this.tb_SNES_X);
-            this.tabPage2.Controls.Add(this.tb_SNES_A);
-            this.tabPage2.Controls.Add(this.label18);
-            this.tabPage2.Controls.Add(this.label19);
-            this.tabPage2.Controls.Add(this.tb_SNES_RIGHT);
-            this.tabPage2.Controls.Add(this.tb_SNES_LEFT);
-            this.tabPage2.Controls.Add(this.tb_SNES_DOWN);
-            this.tabPage2.Controls.Add(this.tb_SNES_UP);
-            this.tabPage2.Controls.Add(this.tb_SNES_START);
-            this.tabPage2.Controls.Add(this.tb_SNES_SELECT);
-            this.tabPage2.Controls.Add(this.tb_SNES_Y);
-            this.tabPage2.Controls.Add(this.tb_SNES_B);
-            this.tabPage2.Controls.Add(this.label5);
-            this.tabPage2.Controls.Add(this.label6);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.label8);
-            this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Controls.Add(this.label15);
-            this.tabPage2.Controls.Add(this.label16);
-            this.tabPage2.Controls.Add(this.label17);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(421, 260);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Tag = "dark2";
-            this.tabPage2.Text = "SNES";
+            this.tabPageSNES.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.tabPageSNES.Controls.Add(this.tb_SNES_R);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_L);
+            this.tabPageSNES.Controls.Add(this.label20);
+            this.tabPageSNES.Controls.Add(this.label21);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_X);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_A);
+            this.tabPageSNES.Controls.Add(this.label18);
+            this.tabPageSNES.Controls.Add(this.label19);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_RIGHT);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_LEFT);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_DOWN);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_UP);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_START);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_SELECT);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_Y);
+            this.tabPageSNES.Controls.Add(this.tb_SNES_B);
+            this.tabPageSNES.Controls.Add(this.label5);
+            this.tabPageSNES.Controls.Add(this.label6);
+            this.tabPageSNES.Controls.Add(this.label7);
+            this.tabPageSNES.Controls.Add(this.label8);
+            this.tabPageSNES.Controls.Add(this.label14);
+            this.tabPageSNES.Controls.Add(this.label15);
+            this.tabPageSNES.Controls.Add(this.label16);
+            this.tabPageSNES.Controls.Add(this.label17);
+            this.tabPageSNES.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSNES.Name = "tabPageSNES";
+            this.tabPageSNES.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSNES.Size = new System.Drawing.Size(421, 260);
+            this.tabPageSNES.TabIndex = 1;
+            this.tabPageSNES.Tag = "dark2";
+            this.tabPageSNES.Text = "SNES";
             // 
             // tb_SNES_R
             // 
@@ -484,9 +486,9 @@
             this.tb_SNES_R.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_R.TabIndex = 84;
             this.tb_SNES_R.Tag = "SNESRlight2";
-            this.tb_SNES_R.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_R.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_R.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_R.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_R.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_R.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_L
             // 
@@ -505,9 +507,9 @@
             this.tb_SNES_L.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_L.TabIndex = 83;
             this.tb_SNES_L.Tag = "SNESLlight2";
-            this.tb_SNES_L.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_L.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_L.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_L.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_L.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_L.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // label20
             // 
@@ -548,9 +550,9 @@
             this.tb_SNES_X.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_X.TabIndex = 80;
             this.tb_SNES_X.Tag = "SNESXlight2";
-            this.tb_SNES_X.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_X.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_X.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_X.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_X.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_X.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_A
             // 
@@ -569,9 +571,9 @@
             this.tb_SNES_A.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_A.TabIndex = 79;
             this.tb_SNES_A.Tag = "SNESAlight2";
-            this.tb_SNES_A.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_A.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_A.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_A.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_A.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_A.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // label18
             // 
@@ -612,9 +614,9 @@
             this.tb_SNES_RIGHT.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_RIGHT.TabIndex = 70;
             this.tb_SNES_RIGHT.Tag = "SNESRIGHTlight2";
-            this.tb_SNES_RIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_RIGHT.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_RIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_RIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_RIGHT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_RIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_LEFT
             // 
@@ -631,9 +633,9 @@
             this.tb_SNES_LEFT.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_LEFT.TabIndex = 69;
             this.tb_SNES_LEFT.Tag = "SNESLEFTlight2";
-            this.tb_SNES_LEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_LEFT.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_LEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_LEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_LEFT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_LEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_DOWN
             // 
@@ -650,9 +652,9 @@
             this.tb_SNES_DOWN.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_DOWN.TabIndex = 68;
             this.tb_SNES_DOWN.Tag = "SNESDOWNlight2";
-            this.tb_SNES_DOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_DOWN.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_DOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_DOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_DOWN.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_DOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_UP
             // 
@@ -669,9 +671,9 @@
             this.tb_SNES_UP.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_UP.TabIndex = 67;
             this.tb_SNES_UP.Tag = "SNESUPlight2";
-            this.tb_SNES_UP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_UP.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_UP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_UP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_UP.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_UP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_START
             // 
@@ -688,9 +690,9 @@
             this.tb_SNES_START.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_START.TabIndex = 66;
             this.tb_SNES_START.Tag = "SNESSTARTlight2";
-            this.tb_SNES_START.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_START.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_START.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_START.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_START.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_START.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_SELECT
             // 
@@ -707,9 +709,9 @@
             this.tb_SNES_SELECT.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_SELECT.TabIndex = 65;
             this.tb_SNES_SELECT.Tag = "SNESSELECTlight2";
-            this.tb_SNES_SELECT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_SELECT.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_SELECT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_SELECT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_SELECT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_SELECT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_Y
             // 
@@ -726,9 +728,9 @@
             this.tb_SNES_Y.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_Y.TabIndex = 64;
             this.tb_SNES_Y.Tag = "SNESYlight2";
-            this.tb_SNES_Y.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_Y.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_Y.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_Y.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_Y.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_Y.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // tb_SNES_B
             // 
@@ -747,9 +749,9 @@
             this.tb_SNES_B.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_B.TabIndex = 63;
             this.tb_SNES_B.Tag = "SNESBlight2";
-            this.tb_SNES_B.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxGather);
-            this.tb_SNES_B.Leave += new System.EventHandler(this.tbFocusLost);
-            this.tb_SNES_B.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.tb_PreviewKeyDown);
+            this.tb_SNES_B.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_SNES_B.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_SNES_B.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
             // 
             // label5
             // 
@@ -847,144 +849,177 @@
             this.label17.Tag = "label";
             this.label17.Text = "B";
             // 
-            // tabPage3
+            // tabPageN64
             // 
-            this.tabPage3.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(421, 260);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Tag = "dark2";
-            this.tabPage3.Text = "N64";
+            this.tabPageN64.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.tabPageN64.Location = new System.Drawing.Point(4, 22);
+            this.tabPageN64.Name = "tabPageN64";
+            this.tabPageN64.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageN64.Size = new System.Drawing.Size(421, 260);
+            this.tabPageN64.TabIndex = 2;
+            this.tabPageN64.Tag = "dark2";
+            this.tabPageN64.Text = "N64";
             // 
-            // tabPage4
+            // tabPageDebug
             // 
-            this.tabPage4.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPage4.Controls.Add(this.button1);
-            this.tabPage4.Controls.Add(this.pastelCB);
-            this.tabPage4.Controls.Add(this.label2);
-            this.tabPage4.Controls.Add(this.label13);
-            this.tabPage4.Controls.Add(this.label3);
-            this.tabPage4.Controls.Add(this.VAL);
-            this.tabPage4.Controls.Add(this.tb_serialread);
-            this.tabPage4.Controls.Add(this.Poke);
-            this.tabPage4.Controls.Add(this.ADR);
-            this.tabPage4.Controls.Add(this.peek);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(421, 260);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Tag = "dark2";
-            this.tabPage4.Text = "Debug";
+            this.tabPageDebug.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.tabPageDebug.Controls.Add(this.btn_wipeParams);
+            this.tabPageDebug.Controls.Add(this.btn_colorPick);
+            this.tabPageDebug.Controls.Add(this.cb_pastel);
+            this.tabPageDebug.Controls.Add(this.label2);
+            this.tabPageDebug.Controls.Add(this.lb_val);
+            this.tabPageDebug.Controls.Add(this.lb_Address);
+            this.tabPageDebug.Controls.Add(this.nup_value);
+            this.tabPageDebug.Controls.Add(this.tb_serialread);
+            this.tabPageDebug.Controls.Add(this.btn_poke);
+            this.tabPageDebug.Controls.Add(this.nup_address);
+            this.tabPageDebug.Controls.Add(this.btn_peek);
+            this.tabPageDebug.Location = new System.Drawing.Point(4, 22);
+            this.tabPageDebug.Name = "tabPageDebug";
+            this.tabPageDebug.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageDebug.Size = new System.Drawing.Size(421, 260);
+            this.tabPageDebug.TabIndex = 3;
+            this.tabPageDebug.Tag = "dark2";
+            this.tabPageDebug.Text = "Debug";
             // 
-            // pastelCB
+            // btn_wipeParams
             // 
-            this.pastelCB.AutoSize = true;
-            this.pastelCB.Location = new System.Drawing.Point(8, 237);
-            this.pastelCB.Name = "pastelCB";
-            this.pastelCB.Size = new System.Drawing.Size(92, 17);
-            this.pastelCB.TabIndex = 60;
-            this.pastelCB.Tag = "label";
-            this.pastelCB.Text = "Pastel Colors";
-            this.pastelCB.UseVisualStyleBackColor = true;
-            this.pastelCB.CheckedChanged += new System.EventHandler(this.pastelCB_CheckedChanged);
+            this.btn_wipeParams.FlatAppearance.BorderSize = 0;
+            this.btn_wipeParams.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_wipeParams.Location = new System.Drawing.Point(6, 179);
+            this.btn_wipeParams.Name = "btn_wipeParams";
+            this.btn_wipeParams.Size = new System.Drawing.Size(122, 52);
+            this.btn_wipeParams.TabIndex = 62;
+            this.btn_wipeParams.Tag = "light2";
+            this.btn_wipeParams.Text = "Wipe PARAM Folder";
+            this.btn_wipeParams.UseVisualStyleBackColor = true;
+            this.btn_wipeParams.Click += new System.EventHandler(this.ParamWipebtn_Click);
             // 
-            // label13
+            // btn_colorPick
             // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label13.ForeColor = System.Drawing.Color.Black;
-            this.label13.Location = new System.Drawing.Point(140, 75);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(23, 15);
-            this.label13.TabIndex = 59;
-            this.label13.Tag = "label";
-            this.label13.Text = "Val";
+            this.btn_colorPick.FlatAppearance.BorderSize = 0;
+            this.btn_colorPick.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_colorPick.Location = new System.Drawing.Point(6, 122);
+            this.btn_colorPick.Name = "btn_colorPick";
+            this.btn_colorPick.Size = new System.Drawing.Size(122, 52);
+            this.btn_colorPick.TabIndex = 61;
+            this.btn_colorPick.Tag = "light2";
+            this.btn_colorPick.Text = "Choose Color Theme";
+            this.btn_colorPick.UseVisualStyleBackColor = true;
+            this.btn_colorPick.Click += new System.EventHandler(this.ColorPick_Click);
             // 
-            // label3
+            // cb_pastel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(140, 17);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(47, 15);
-            this.label3.TabIndex = 58;
-            this.label3.Tag = "label";
-            this.label3.Text = "address";
+            this.cb_pastel.AutoSize = true;
+            this.cb_pastel.Location = new System.Drawing.Point(8, 237);
+            this.cb_pastel.Name = "cb_pastel";
+            this.cb_pastel.Size = new System.Drawing.Size(92, 17);
+            this.cb_pastel.TabIndex = 60;
+            this.cb_pastel.Tag = "label";
+            this.cb_pastel.Text = "Pastel Colors";
+            this.cb_pastel.UseVisualStyleBackColor = true;
+            this.cb_pastel.CheckedChanged += new System.EventHandler(this.Pastel_CheckedChanged);
             // 
-            // VAL
+            // lb_val
             // 
-            this.VAL.Location = new System.Drawing.Point(143, 95);
-            this.VAL.Name = "VAL";
-            this.VAL.Size = new System.Drawing.Size(120, 22);
-            this.VAL.TabIndex = 14;
-            this.VAL.TabStop = false;
-            this.VAL.Tag = "light2";
+            this.lb_val.AutoSize = true;
+            this.lb_val.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.lb_val.ForeColor = System.Drawing.Color.Black;
+            this.lb_val.Location = new System.Drawing.Point(266, 16);
+            this.lb_val.Name = "lb_val";
+            this.lb_val.Size = new System.Drawing.Size(36, 15);
+            this.lb_val.TabIndex = 59;
+            this.lb_val.Tag = "label";
+            this.lb_val.Text = "Value";
             // 
-            // Poke
+            // lb_Address
             // 
-            this.Poke.Location = new System.Drawing.Point(6, 64);
-            this.Poke.Name = "Poke";
-            this.Poke.Size = new System.Drawing.Size(122, 52);
-            this.Poke.TabIndex = 13;
-            this.Poke.TabStop = false;
-            this.Poke.Tag = "light2";
-            this.Poke.Text = "Poke Memory.";
-            this.Poke.UseVisualStyleBackColor = true;
-            this.Poke.Click += new System.EventHandler(this.Poke_Click);
+            this.lb_Address.AutoSize = true;
+            this.lb_Address.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.lb_Address.ForeColor = System.Drawing.Color.Black;
+            this.lb_Address.Location = new System.Drawing.Point(140, 17);
+            this.lb_Address.Name = "lb_Address";
+            this.lb_Address.Size = new System.Drawing.Size(49, 15);
+            this.lb_Address.TabIndex = 58;
+            this.lb_Address.Tag = "label";
+            this.lb_Address.Text = "Address";
             // 
-            // ADR
+            // nup_value
             // 
-            this.ADR.Location = new System.Drawing.Point(143, 36);
-            this.ADR.Name = "ADR";
-            this.ADR.Size = new System.Drawing.Size(120, 22);
-            this.ADR.TabIndex = 12;
-            this.ADR.TabStop = false;
-            this.ADR.Tag = "light2";
+            this.nup_value.Location = new System.Drawing.Point(269, 36);
+            this.nup_value.Name = "nup_value";
+            this.nup_value.Size = new System.Drawing.Size(120, 22);
+            this.nup_value.TabIndex = 14;
+            this.nup_value.TabStop = false;
+            this.nup_value.Tag = "light2";
             // 
-            // peek
+            // btn_poke
             // 
-            this.peek.Location = new System.Drawing.Point(6, 6);
-            this.peek.Name = "peek";
-            this.peek.Size = new System.Drawing.Size(122, 52);
-            this.peek.TabIndex = 11;
-            this.peek.TabStop = false;
-            this.peek.Tag = "light2";
-            this.peek.Text = "Peek Memory.";
-            this.peek.UseVisualStyleBackColor = true;
-            this.peek.Click += new System.EventHandler(this.peek_Click);
+            this.btn_poke.Enabled = false;
+            this.btn_poke.FlatAppearance.BorderSize = 0;
+            this.btn_poke.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_poke.Location = new System.Drawing.Point(6, 64);
+            this.btn_poke.Name = "btn_poke";
+            this.btn_poke.Size = new System.Drawing.Size(122, 52);
+            this.btn_poke.TabIndex = 13;
+            this.btn_poke.TabStop = false;
+            this.btn_poke.Tag = "light2";
+            this.btn_poke.Text = "Poke Memory.";
+            this.btn_poke.UseVisualStyleBackColor = true;
+            this.btn_poke.Click += new System.EventHandler(this.Poke_Click);
             // 
-            // tabControl1
+            // nup_address
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Font = new System.Drawing.Font("Segoe UI Symbol", 8F);
-            this.tabControl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.tabControl1.Location = new System.Drawing.Point(12, 136);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.Padding = new System.Drawing.Point(0, 0);
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(429, 286);
-            this.tabControl1.TabIndex = 5;
-            this.tabControl1.TabStop = false;
-            this.tabControl1.Tag = "TAB";
+            this.nup_address.Location = new System.Drawing.Point(143, 36);
+            this.nup_address.Name = "nup_address";
+            this.nup_address.Size = new System.Drawing.Size(120, 22);
+            this.nup_address.TabIndex = 12;
+            this.nup_address.TabStop = false;
+            this.nup_address.Tag = "light2";
             // 
-            // label4
+            // btn_peek
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(334, 90);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(88, 15);
-            this.label4.TabIndex = 7;
-            this.label4.Tag = "label";
-            this.label4.Text = "Debug Console";
+            this.btn_peek.Enabled = false;
+            this.btn_peek.FlatAppearance.BorderSize = 0;
+            this.btn_peek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_peek.Location = new System.Drawing.Point(6, 6);
+            this.btn_peek.Name = "btn_peek";
+            this.btn_peek.Size = new System.Drawing.Size(122, 52);
+            this.btn_peek.TabIndex = 11;
+            this.btn_peek.TabStop = false;
+            this.btn_peek.Tag = "light2";
+            this.btn_peek.Text = "Peek Memory.";
+            this.btn_peek.UseVisualStyleBackColor = true;
+            this.btn_peek.Click += new System.EventHandler(this.Peek_Click);
+            // 
+            // tabControl
+            // 
+            this.tabControl.Controls.Add(this.tabPageNES);
+            this.tabControl.Controls.Add(this.tabPageSNES);
+            this.tabControl.Controls.Add(this.tabPageN64);
+            this.tabControl.Controls.Add(this.tabPageDebug);
+            this.tabControl.Font = new System.Drawing.Font("Segoe UI Symbol", 8F);
+            this.tabControl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tabControl.Location = new System.Drawing.Point(12, 136);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.Padding = new System.Drawing.Point(0, 0);
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(429, 286);
+            this.tabControl.TabIndex = 5;
+            this.tabControl.TabStop = false;
+            this.tabControl.Tag = "TAB";
+            // 
+            // lb_debug
+            // 
+            this.lb_debug.AutoSize = true;
+            this.lb_debug.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.lb_debug.ForeColor = System.Drawing.Color.White;
+            this.lb_debug.Location = new System.Drawing.Point(334, 90);
+            this.lb_debug.Name = "lb_debug";
+            this.lb_debug.Size = new System.Drawing.Size(88, 15);
+            this.lb_debug.TabIndex = 7;
+            this.lb_debug.Tag = "label";
+            this.lb_debug.Text = "Debug Console";
             // 
             // tb_console
             // 
@@ -1014,13 +1049,14 @@
             this.btn_sendremap.Tag = "light2";
             this.btn_sendremap.Text = "Write current tab to EEPROM";
             this.btn_sendremap.UseVisualStyleBackColor = true;
-            this.btn_sendremap.Click += new System.EventHandler(this.btn_sendremap_Click);
+            this.btn_sendremap.Click += new System.EventHandler(this.Sendremap_Click);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lb_motto);
             this.panel1.Controls.Add(this.tb_console);
             this.panel1.Controls.Add(this.btn_sendremap);
-            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.lb_debug);
             this.panel1.Controls.Add(this.btn_stopstart);
             this.panel1.Controls.Add(this.cb_portlist);
             this.panel1.Location = new System.Drawing.Point(12, 13);
@@ -1029,15 +1065,17 @@
             this.panel1.TabIndex = 64;
             this.panel1.Tag = "dark2";
             // 
-            // button1
+            // lb_motto
             // 
-            this.button1.Location = new System.Drawing.Point(60, 139);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 61;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.lb_motto.AutoSize = true;
+            this.lb_motto.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Italic);
+            this.lb_motto.ForeColor = System.Drawing.Color.White;
+            this.lb_motto.Location = new System.Drawing.Point(9, 90);
+            this.lb_motto.Name = "lb_motto";
+            this.lb_motto.Size = new System.Drawing.Size(164, 15);
+            this.lb_motto.TabIndex = 8;
+            this.lb_motto.Tag = "label";
+            this.lb_motto.Text = "Remap to your hearts content";
             // 
             // Form1
             // 
@@ -1047,24 +1085,23 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(453, 434);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Tag = "dark1";
             this.Text = "Remapper";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VAL)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ADR)).EndInit();
-            this.tabControl1.ResumeLayout(false);
+            this.tabPageNES.ResumeLayout(false);
+            this.tabPageNES.PerformLayout();
+            this.tabPageSNES.ResumeLayout(false);
+            this.tabPageSNES.PerformLayout();
+            this.tabPageDebug.ResumeLayout(false);
+            this.tabPageDebug.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nup_value)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nup_address)).EndInit();
+            this.tabControl.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -1077,12 +1114,12 @@
         private System.Windows.Forms.Button btn_stopstart;
         private System.Windows.Forms.ComboBox cb_portlist;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TabPage tabPageNES;
+        private System.Windows.Forms.TabPage tabPageSNES;
+        private System.Windows.Forms.TabPage tabPageN64;
+        private System.Windows.Forms.TabPage tabPageDebug;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.Label lb_debug;
         private System.Windows.Forms.TextBox tb_console;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
@@ -1093,12 +1130,12 @@
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.TextBox tb_NES_A;
-        private System.Windows.Forms.NumericUpDown ADR;
-        private System.Windows.Forms.Button peek;
-        private System.Windows.Forms.Button Poke;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.NumericUpDown VAL;
+        private System.Windows.Forms.NumericUpDown nup_address;
+        private System.Windows.Forms.Button btn_peek;
+        private System.Windows.Forms.Button btn_poke;
+        private System.Windows.Forms.Label lb_val;
+        private System.Windows.Forms.Label lb_Address;
+        private System.Windows.Forms.NumericUpDown nup_value;
         private System.Windows.Forms.TextBox tb_NES_RIGHT;
         private System.Windows.Forms.TextBox tb_NES_LEFT;
         private System.Windows.Forms.TextBox tb_NES_DOWN;
@@ -1133,8 +1170,10 @@
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ColorDialog colorDialog1;
-        private System.Windows.Forms.CheckBox pastelCB;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox cb_pastel;
+        private System.Windows.Forms.Button btn_colorPick;
+        private System.Windows.Forms.Label lb_motto;
+        private System.Windows.Forms.Button btn_wipeParams;
     }
 }
 

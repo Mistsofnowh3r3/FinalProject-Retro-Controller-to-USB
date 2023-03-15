@@ -2,14 +2,11 @@
 using System.Drawing;
 using System.IO.Ports;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using System.Threading;
-using System.Media;
-using System.Collections.Generic;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Forms;
 
 namespace ccAdapterRemapper
 {
@@ -25,35 +22,57 @@ namespace ccAdapterRemapper
 
 
         // Theme Color variables
-        int baseHexColor = 0x1B2530;
-        Color baseColor;
-        Color buttonDarkColor;
-        Color buttonLightColor;
-        Color backDarkColor;
-        Color backLightColor;
-        Color textColor;
-        string focusColor = "#0078d7";
-        string needsSaving = "#ff6347";
+        private readonly string baseHexColor = "#007FFF";
+        private Color baseColor;
+        private Color baseColorStore;
+        private Color buttonDarkColor;
+        private Color buttonLightColor;
+        private Color backDarkColor;
+        private Color backLightColor;
+        private Color textColor;
+        private readonly string focusColor = "#0078d7";
+        private readonly string needsSaving = "#ff6347";
+        private bool justRestart = false;
 
-        
-
+        // FUnny AI motto
+        private readonly string[] mottoArray = new string[] {
+            "Redefine to your heart's desire",
+            "Revise to your liking",
+            "Reinvent as you please",
+            "Rearrange to your satisfaction",
+            "Reimagine without limitations",
+            "Reconstruct to your own specifications",
+            "Re-envision to your heart's content",
+            "Reshape without bounds",
+            "Reconfigure to your unique vision",
+            "Reinterpret to your own taste",
+            "Remodel according to your desires",
+            "Revolutionize to your own accord",
+            "Rebuild to your specifications",
+            "Reinvent as you see fit",
+            "Rearrange to your liking",
+            "Reconfigure to your preferences",
+            "Reimagine in your own way",
+            "Transform to your personal style",
+            "Recreate to your satisfaction",
+            "Transmute your thoughts to crystalline form",
+            "Revamp in your own manner"
+        };
 
         // string variable to store the key name
         private string key;
 
         // Arrays for storing the current and previous mappings
-        int[] onload_NES_btns = new int[8];
-        int[] onload_SNES_btns = new int[12];
-        int[] onload_N64_btns = new int[18];
-        int[] working_NES_btns = new int[8];
-        int[] working_SNES_btns = new int[12];
-        int[] working_N64_btns = new int[18];
+        private int[] onload_NES_btns = new int[8];
+        private int[] onload_SNES_btns = new int[12];
+        private int[] onload_N64_btns = new int[18];
+        private int[] working_NES_btns = new int[8];
+        private int[] working_SNES_btns = new int[12];
+        private int[] working_N64_btns = new int[18];
 
 
         // Serial port stuff
-        SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
-        private string serialNow;
-        private readonly object _sync = new object();
+        private readonly SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
 
         #endregion variables
 
@@ -90,67 +109,85 @@ namespace ccAdapterRemapper
                 this.onload_N64_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
             }
 
+            // Randomly select one of the funny mottos
+            Random random = new Random();
+            lb_motto.Text = mottoArray[random.Next(0, mottoArray.Length)];
+
 
             //Poulate the textboxes with the data from the working arrays
-            tb_NES_A.Text = revKeyToKey(working_NES_btns[0]);
-            tb_NES_B.Text = revKeyToKey(working_NES_btns[1]);
-            tb_NES_SELECT.Text = revKeyToKey(working_NES_btns[2]);
-            tb_NES_START.Text = revKeyToKey(working_NES_btns[3]);
-            tb_NES_UP.Text = revKeyToKey(working_NES_btns[4]);
-            tb_NES_DOWN.Text = revKeyToKey(working_NES_btns[5]);
-            tb_NES_LEFT.Text = revKeyToKey(working_NES_btns[6]);
-            tb_NES_RIGHT.Text = revKeyToKey(working_NES_btns[7]);
+            tb_NES_A.Text = RevKeyToKey(working_NES_btns[0]);
+            tb_NES_B.Text = RevKeyToKey(working_NES_btns[1]);
+            tb_NES_SELECT.Text = RevKeyToKey(working_NES_btns[2]);
+            tb_NES_START.Text = RevKeyToKey(working_NES_btns[3]);
+            tb_NES_UP.Text = RevKeyToKey(working_NES_btns[4]);
+            tb_NES_DOWN.Text = RevKeyToKey(working_NES_btns[5]);
+            tb_NES_LEFT.Text = RevKeyToKey(working_NES_btns[6]);
+            tb_NES_RIGHT.Text = RevKeyToKey(working_NES_btns[7]);
 
-            tb_SNES_B.Text = revKeyToKey(working_SNES_btns[0]);
-            tb_SNES_Y.Text = revKeyToKey(working_SNES_btns[1]);
-            tb_SNES_SELECT.Text = revKeyToKey(working_SNES_btns[2]);
-            tb_SNES_START.Text = revKeyToKey(working_SNES_btns[3]);
-            tb_SNES_UP.Text = revKeyToKey(working_SNES_btns[4]);
-            tb_SNES_DOWN.Text = revKeyToKey(working_SNES_btns[5]);
-            tb_SNES_LEFT.Text = revKeyToKey(working_SNES_btns[6]);
-            tb_SNES_RIGHT.Text = revKeyToKey(working_SNES_btns[7]);
-            tb_SNES_A.Text = revKeyToKey(working_SNES_btns[8]);
-            tb_SNES_X.Text = revKeyToKey(working_SNES_btns[9]);
-            tb_SNES_L.Text = revKeyToKey(working_SNES_btns[10]);
-            tb_SNES_R.Text = revKeyToKey(working_SNES_btns[11]);
+            tb_SNES_B.Text = RevKeyToKey(working_SNES_btns[0]);
+            tb_SNES_Y.Text = RevKeyToKey(working_SNES_btns[1]);
+            tb_SNES_SELECT.Text = RevKeyToKey(working_SNES_btns[2]);
+            tb_SNES_START.Text = RevKeyToKey(working_SNES_btns[3]);
+            tb_SNES_UP.Text = RevKeyToKey(working_SNES_btns[4]);
+            tb_SNES_DOWN.Text = RevKeyToKey(working_SNES_btns[5]);
+            tb_SNES_LEFT.Text = RevKeyToKey(working_SNES_btns[6]);
+            tb_SNES_RIGHT.Text = RevKeyToKey(working_SNES_btns[7]);
+            tb_SNES_A.Text = RevKeyToKey(working_SNES_btns[8]);
+            tb_SNES_X.Text = RevKeyToKey(working_SNES_btns[9]);
+            tb_SNES_L.Text = RevKeyToKey(working_SNES_btns[10]);
+            tb_SNES_R.Text = RevKeyToKey(working_SNES_btns[11]);
 
+            // Set the text of the ComboBox
             cb_portlist.Items.Add("Select a port");
             cb_portlist.Text = "Select a port";
 
 
             //Hiding the caret and selction of the textboxes for aesthetic
             //NES
-            tb_NES_A.GotFocus +=   hideCaretAndSelection;
-            tb_NES_B.GotFocus +=   hideCaretAndSelection;
-            tb_NES_SELECT.GotFocus +=   hideCaretAndSelection;
-            tb_NES_START.GotFocus +=   hideCaretAndSelection;
-            tb_NES_UP.GotFocus +=   hideCaretAndSelection;
-            tb_NES_DOWN.GotFocus +=   hideCaretAndSelection;
-            tb_NES_LEFT.GotFocus +=   hideCaretAndSelection;
-            tb_NES_RIGHT.GotFocus +=   hideCaretAndSelection;
+            tb_NES_A.GotFocus += HideCaretAndSelection;
+            tb_NES_B.GotFocus += HideCaretAndSelection;
+            tb_NES_SELECT.GotFocus += HideCaretAndSelection;
+            tb_NES_START.GotFocus += HideCaretAndSelection;
+            tb_NES_UP.GotFocus += HideCaretAndSelection;
+            tb_NES_DOWN.GotFocus += HideCaretAndSelection;
+            tb_NES_LEFT.GotFocus += HideCaretAndSelection;
+            tb_NES_RIGHT.GotFocus += HideCaretAndSelection;
 
             //SNES
-            tb_SNES_B.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_Y.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_SELECT.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_START.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_UP.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_DOWN.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_LEFT.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_RIGHT.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_A.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_X.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_L.GotFocus +=   hideCaretAndSelection;
-            tb_SNES_R.GotFocus +=   hideCaretAndSelection;
+            tb_SNES_B.GotFocus += HideCaretAndSelection;
+            tb_SNES_Y.GotFocus += HideCaretAndSelection;
+            tb_SNES_SELECT.GotFocus += HideCaretAndSelection;
+            tb_SNES_START.GotFocus += HideCaretAndSelection;
+            tb_SNES_UP.GotFocus += HideCaretAndSelection;
+            tb_SNES_DOWN.GotFocus += HideCaretAndSelection;
+            tb_SNES_LEFT.GotFocus += HideCaretAndSelection;
+            tb_SNES_RIGHT.GotFocus += HideCaretAndSelection;
+            tb_SNES_A.GotFocus += HideCaretAndSelection;
+            tb_SNES_X.GotFocus += HideCaretAndSelection;
+            tb_SNES_L.GotFocus += HideCaretAndSelection;
+            tb_SNES_R.GotFocus += HideCaretAndSelection;
 
             //Check if the Pastel Theme button was set
-            pastelCB.Checked = ccAdapterRemapper.Params.IsParamSet("PB");
+            cb_pastel.Checked = ccAdapterRemapper.Params.IsParamSet("PB");
+
+            // CHeck if there is a saved color in the PARAMs
+            if (ccAdapterRemapper.Params.IsParamSet("COLOR"))
+            {
+                baseColor = ColorTranslator.FromHtml(ccAdapterRemapper.Params.ReadParam("COLOR"));
+                baseColorStore = baseColor;
+            }
+            else
+            {
+                baseColor = ColorTranslator.FromHtml(baseHexColor);
+                baseColorStore = baseColor;
+            }
 
 
-            updateColors();// Set the app colors
+            ColorShifter(baseColor);// Create the colors 
+            UpdateColors();// Set the app colors
         }
 
-        void neatHack(bool yup) //Part of a solution to disable the cursor and text selection in the textboxes
+        private void NeatHack(bool yup) //Part of a solution to disable the cursor and text selection in the textboxes
         {
             tb_NES_A.TabStop = yup;
             tb_NES_B.TabStop = yup;
@@ -168,13 +205,13 @@ namespace ccAdapterRemapper
             tb_SNES_UP.TabStop = yup;
             tb_SNES_DOWN.TabStop = yup;
             tb_SNES_LEFT.TabStop = yup;
-            tb_SNES_RIGHT.TabStop = yup; 
+            tb_SNES_RIGHT.TabStop = yup;
             tb_SNES_A.TabStop = yup;
             tb_SNES_X.TabStop = yup;
             tb_SNES_L.TabStop = yup;
             tb_SNES_R.TabStop = yup;
 
-        }        
+        }
 
 
         private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e) //When Serial data is recieved display it in the Console
@@ -182,16 +219,54 @@ namespace ccAdapterRemapper
             tb_console.Invoke(new Action(() => tb_console.Text = _serialPort.ReadExisting()));
         }
 
-        void updateColors()
+        // Modification of https://stackoverflow.com/a/1626232
+        private void ColorShifter(Color color)
         {
-            baseColor = ColorTranslator.FromHtml("#" + baseHexColor.ToString("X"));
-            buttonDarkColor = ColorTranslator.FromHtml("#" + (baseHexColor + 0x80B0E).ToString("X"));
-            buttonLightColor = ColorTranslator.FromHtml("#" + (baseHexColor + 0x30383F).ToString("X"));
-            backDarkColor = baseColor;
-            backLightColor = ColorTranslator.FromHtml("#" + (baseHexColor + 0x11171C).ToString("X"));
+            int max = Math.Max(color.R, Math.Max(color.G, color.B));
+            int min = Math.Min(color.R, Math.Min(color.G, color.B));
+
+            double hue = color.GetHue();
+            double saturation = (max == 0) ? 0 : 1d - (1d * min / max);
+            double value = 1;
+
+
+            backDarkColor = ColorFromHSV(hue, (saturation * .438), (value * .188));
+            backLightColor = ColorFromHSV(hue, (saturation * .421), (value * .243));
+            buttonDarkColor = ColorFromHSV(hue, (saturation * .435), (value * .298));
+            buttonLightColor = ColorFromHSV(hue, (saturation * .324), (value * .435));
+        }
+
+        //https://stackoverflow.com/a/1626232
+        public static Color ColorFromHSV(double hue, double saturation, double value)
+        {
+            int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            double f = hue / 60 - Math.Floor(hue / 60);
+
+            value *= 255;
+            int v = Convert.ToInt32(value);
+            int p = Convert.ToInt32(value * (1 - saturation));
+            int q = Convert.ToInt32(value * (1 - f * saturation));
+            int t = Convert.ToInt32(value * (1 - (1 - f) * saturation));
+
+            if (hi == 0)
+                return Color.FromArgb(255, v, t, p);
+            else if (hi == 1)
+                return Color.FromArgb(255, q, v, p);
+            else if (hi == 2)
+                return Color.FromArgb(255, p, v, t);
+            else if (hi == 3)
+                return Color.FromArgb(255, p, q, v);
+            else if (hi == 4)
+                return Color.FromArgb(255, t, p, v);
+            else
+                return Color.FromArgb(255, v, p, q);
+        }
+
+        private void UpdateColors() // Updates the current color base color or pastel color
+        {
             textColor = Color.White;
 
-            if (pastelCB.Checked)
+            if (cb_pastel.Checked)
             {
                 baseColor = ColorTranslator.FromHtml("#F492A5");
                 buttonDarkColor = ColorTranslator.FromHtml("#57cbe6");
@@ -201,12 +276,16 @@ namespace ccAdapterRemapper
                 textColor = Color.Black;
                 ccAdapterRemapper.Params.SetParam("PB");// save to PARAMs
             }
-            else ccAdapterRemapper.Params.RemoveParam("PB");// save to PARAMs
-
+            else
+            {
+                baseColor = baseColorStore;
+                ColorShifter(baseColor);
+                ccAdapterRemapper.Params.RemoveParam("PB");// save to PARAMs
+            }
             ColorControls(this);
         }
 
-        private void ColorControls(Control parent)
+        private void ColorControls(Control parent) // Colors controls
         {
             if (parent is Form && parent.Tag != null && parent.Tag.ToString().Contains("dark1"))
             {
@@ -218,9 +297,9 @@ namespace ccAdapterRemapper
 
             foreach (Control control in parent.Controls)
             {
-                if (control is TabControl)
+                if (control is TabControl control1)
                 {
-                    foreach (TabPage tabPage in ((TabControl)control).TabPages)
+                    foreach (TabPage tabPage in control1.TabPages)
                     {
                         if (tabPage.Tag != null)
                         {
@@ -272,11 +351,11 @@ namespace ccAdapterRemapper
             }
         }
 
-        int keyToKey(String key)
+        private int KeyToKey(String key)
         {
-                switch (key)
+            switch (key)
             {
-                //why yes, this was painful to do manually
+                // Converts KeysConverter().ConvertToString(e.KeyCode) output to int values that the Arduino Keyboard.h can use
                 case "Escape": return 177;
                 case "Oemtilde": return 96;
                 case "1": return 49;
@@ -349,11 +428,13 @@ namespace ccAdapterRemapper
 
         }
 
-        string revKeyToKey(int key)
+        private string RevKeyToKey(int key)
         {
             switch (key)
             {
-                // this time chatgpt came to my rescue
+                // Converts Arduino Keyboard.h key ints to the key.
+                // Notably does not convert them back into KeysConverter().ConvertToString(e.KeyCode) names,
+                // instead gives them more standard and understandable names ( , instead of OEMCOMMA, ] instead of Oem6, etc. )
                 case 177: return "Escape";
                 case 96: return "`";
                 case 49: return "1";
@@ -426,30 +507,33 @@ namespace ccAdapterRemapper
 
         }
 
-        void throwError(String message, int severity)
+        private void ThrowError(String message, int severity) // Error message thrower
         {
             switch (severity)
             {
-                case 1 : 
-
+                case 1:  //low severity (Unsupported key)
+                    // Play sound and show error in the console 
                     SystemSounds.Exclamation.Play();
                     tb_console.Text = message;
                     break;
 
-                case 2 : //IO Error
-
+                case 2: //IO Error
+                    // Play sound and show error in a pop up message
                     SystemSounds.Exclamation.Play();
-                    MessageBox.Show(new Form { TopMost = true },$"I/O Error! Port will be closed.\nException message:  | {message} |");
+                    MessageBox.Show(new Form { TopMost = true }, $"I/O Error! Program will restart.\nException message:  | {message} |");
+                    justRestart = true;
+                    System.Windows.Forms.Application.Restart(); // EUGGGGH Just restart the whole thing I guess.
                     break;
 
-                default :
+                default:
+                    // If severity is set otherwise just put message in console
                     tb_console.Text = message;
                     break;
             }
         }
 
 
-        private void openCOM(object sender, EventArgs e) //Attempt to open the selected COM port
+        private void OpenCOM(object sender, EventArgs e) //Attempt to open the selected COM port
         {
             try // try to open or close the serial port
             {
@@ -469,35 +553,19 @@ namespace ccAdapterRemapper
                 }
             }
             catch (Exception ex) // If an exception
-            {   
-                cleanPort();
-                throwError(ex.Message, 2); //Throw the exception as an error instead
-            }
-            finally
-            { 
-                _serialPort.Dispose(); // finally dipose of the serialport 
+            {
+                ThrowError(ex.Message, 2); //Throw the exception as an error instead
             }
 
         }
 
-        void cleanPort()
-        {
-            btn_stopstart.Enabled = false;
-            cb_portlist.Items.Clear(); 
-            cb_portlist.Items.Add("Select a port"); 
-            cb_portlist.Text = "Select a port";
-            btn_stopstart.Text = "Open";
-            btn_sendremap.Enabled = false;
-            btn_sendremap.BackColor = buttonDarkColor;
-        }
-
-        private void cb_portlist_DropDown(object sender, EventArgs e) //Handles the COMlist combobox port dropdown
+        private void Portlist_DropDown(object sender, EventArgs e) //Handles the COMlist combobox port dropdown
         {
             // Get a list of serial port names.
             string[] ports = SerialPort.GetPortNames();
-            
+
             //Check if the defult text is currently the selected one
-            if ((string)cb_portlist.SelectedItem == "Select a port") 
+            if ((string)cb_portlist.SelectedItem == "Select a port")
             {
                 cb_portlist.Items.Clear();
             }
@@ -516,11 +584,11 @@ namespace ccAdapterRemapper
                 if (!cb_portlist.Items.Contains(s)) //Only add an item if it is not already on the list
                 {
                     cb_portlist.Items.Add(s);
-                }                
+                }
             }
         }
 
-        private void cb_portlist_DropDownClosed(object sender, EventArgs e)
+        private void Portlist_DropDownClosed(object sender, EventArgs e)
         {
             String port = (string)cb_portlist.SelectedItem;
             if (port == null || !port.StartsWith("COM"))  //If the selected item in the combobox is not correct
@@ -531,10 +599,10 @@ namespace ccAdapterRemapper
         }
 
 
-        private void cb_portlist_SelectedIndexChanged(object sender, EventArgs e) //Handles the COMlist combobox selections
+        private void Portlist_SelectedIndexChanged(object sender, EventArgs e) //Handles the COMlist combobox selections
         {
             String port = (string)cb_portlist.SelectedItem;
-            if (port == null || !port.StartsWith("COM")) 
+            if (port == null || !port.StartsWith("COM"))
             {
                 cb_portlist.Text = "Select a port";
                 return;
@@ -546,14 +614,14 @@ namespace ccAdapterRemapper
             _serialPort.PortName = port;
         }
 
-        private void btn_sendremap_Click(object sender, EventArgs e)
+        private void Sendremap_Click(object sender, EventArgs e)
         {
             try
             {
-                switch (tabControl1.SelectedTab.Text)
+                switch (tabControl.SelectedTab.Text)
                 {
-                    case "NES" : 
-                        for (int i = 0; i < 8; i++) 
+                    case "NES":
+                        for (int i = 0; i < 8; i++)
                         {
                             if (working_NES_btns[i] != onload_NES_btns[i]) _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "NES" + "!"); // send a remap only if the current is different then before (minimize eeprom writes)
                             Thread.Sleep(30); //buffer, might not actually be needed
@@ -564,107 +632,101 @@ namespace ccAdapterRemapper
                         //btn_sendremap.Enabled = false;
                         break;
 
-                    case "SNES" : 
-                        for (int i = 0; i < 12; i++) 
+                    case "SNES":
+                        for (int i = 0; i < 12; i++)
                         {
                             _serialPort.Write("PO" + "," + i + "," + working_SNES_btns[i] + "SNES" + "!"); // send a remap
-                    
+
                             Thread.Sleep(30);
                         }
                         ccAdapterRemapper.Params.SetParam("SNESBUTTONS", String.Join(",", working_SNES_btns));
                         Array.Copy(onload_SNES_btns, working_SNES_btns, onload_SNES_btns.Length); //update the onload array
                         break;
-                    case "N64" : 
+                    case "N64":
                         //ccAdapterRemapper.Params.SetParam("N64BUTTONS", String.Join(",", working_N64_btns));
                         break;
                 }
             }
             catch (Exception ex) // If an exception
-            {   
+            {
                 //If there is an exception it is that the port does not exist so.
-                cleanPort();
-                throwError(ex.Message, 2); //Throw the exception as an error instead
+                ThrowError(ex.Message, 2); //Throw the exception as an error instead
             }
-            finally
-            { 
-                _serialPort.Dispose(); // finally dipose of the serialport 
-            }
-
-
-
         }
 
-        private void textBoxGather(object sender, KeyEventArgs e)
+        private void TextBoxGather(object sender, KeyEventArgs e)
         {
             System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
             textBox.SelectionStart = 0;
             key = new KeysConverter().ConvertToString(e.KeyCode);
 
-            if (keyToKey(key) != 0)
+            if (KeyToKey(key) != 0)
             {
-                
-                textBox.Text = revKeyToKey(keyToKey(key)); // this is dumb, yet it is probably the easiest way to do this
-                tb_console.Text =   "Key: " + keyToKey(key);
+
+                textBox.Text = RevKeyToKey(KeyToKey(key)); // this is dumb, yet it is probably the easiest way to do this
+                tb_console.Text = "Key: " + KeyToKey(key);
 
 
                 //NES ONES
-                if (textBox.Tag.ToString().Contains("JNESA")) working_NES_btns[0] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESB")) working_NES_btns[1] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESSELECT")) working_NES_btns[2] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESSTART")) working_NES_btns[3] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESUP")) working_NES_btns[4] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESDOWN")) working_NES_btns[5] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESLEFT")) working_NES_btns[6] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESRIGHT")) working_NES_btns[7] = keyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESA")) working_NES_btns[0] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESB")) working_NES_btns[1] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESSELECT")) working_NES_btns[2] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESSTART")) working_NES_btns[3] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESUP")) working_NES_btns[4] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESDOWN")) working_NES_btns[5] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESLEFT")) working_NES_btns[6] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESRIGHT")) working_NES_btns[7] = KeyToKey(key);
 
 
                 //SNES ONES
-                if (textBox.Tag.ToString().Contains("SNESB")) working_SNES_btns[0] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESY")) working_SNES_btns[1] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESSELECT")) working_SNES_btns[2] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESSTART")) working_SNES_btns[3] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESUP")) working_SNES_btns[4] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESDOWN")) working_SNES_btns[5] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESLEFT")) working_SNES_btns[6] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESRIGHT")) working_SNES_btns[7] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESA")) working_SNES_btns[8] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESX")) working_SNES_btns[9] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESL")) working_SNES_btns[10] = keyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESR")) working_SNES_btns[11] = keyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESB")) working_SNES_btns[0] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESY")) working_SNES_btns[1] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESSELECT")) working_SNES_btns[2] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESSTART")) working_SNES_btns[3] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESUP")) working_SNES_btns[4] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESDOWN")) working_SNES_btns[5] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESLEFT")) working_SNES_btns[6] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESRIGHT")) working_SNES_btns[7] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESA")) working_SNES_btns[8] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESX")) working_SNES_btns[9] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESL")) working_SNES_btns[10] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESR")) working_SNES_btns[11] = KeyToKey(key);
                 //working_NES_btns[0] = keyToKey(key);
-            
+
             }
-            else {
-                throwError("Unsupported Key.", 1);
+            else
+            {
+                ThrowError("Unsupported Key.", 1);
                 return;
             }
-            neatHack(true);
+            NeatHack(true);
 
             SelectNextControl(ActiveControl, true, true, true, true);
         }
 
-        void tbFocusLost(object sender, EventArgs e)    
+        private void FocusLost(object sender, EventArgs e)
         {
             System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
             textBox.BackColor = buttonLightColor;
         }
 
-        private void hideCaretAndSelection(object sender, EventArgs e) {
-                System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
-                textBox.BackColor = ColorTranslator.FromHtml(focusColor);
-                textBox.SelectionStart = 0;
-                textBox.SelectionStart = tb_NES_A.TextLength;
-                HideCaret(textBox.Handle);
+        private void HideCaretAndSelection(object sender, EventArgs e)
+        {
+            System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
+            textBox.BackColor = ColorTranslator.FromHtml(focusColor);
+            textBox.SelectionStart = 0;
+            textBox.SelectionStart = tb_NES_A.TextLength;
+            HideCaret(textBox.Handle);
         }
 
-        private void peek_Click(object sender, EventArgs e)
+        private void Peek_Click(object sender, EventArgs e)
         {
             if (!_serialPort.IsOpen)
             {
-                    throwError("COM Port is not open!", 2);
-                    return;
+                ThrowError("COM Port is not open!", 2);
+                return;
             }
-            int adr = (int)ADR.Value;
+            int adr = (int)nup_address.Value;
             int val = 0;
             _serialPort.Write("PE," + adr.ToString() + "," + val.ToString() + "!");
         }
@@ -673,47 +735,78 @@ namespace ccAdapterRemapper
         {
             if (!_serialPort.IsOpen)
             {
-                    throwError("COM Port is not open!", 2);
-                    return;
+                ThrowError("COM Port is not open!", 2);
+                return;
             }
-            int adr = (int)ADR.Value;
-            int val = (int)VAL.Value;
+            int adr = (int)nup_address.Value;
+            int val = (int)nup_value.Value;
             _serialPort.Write("PO," + adr.ToString() + "," + val.ToString() + "!");
             tb_console.Text = ("PO," + adr.ToString() + "," + val.ToString() + "!");
         }
 
-        private void tb_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private void PreviewKeyDownThis(object sender, PreviewKeyDownEventArgs e)
         {
-            neatHack(false);
+            NeatHack(false);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((!working_NES_btns.SequenceEqual(onload_NES_btns)) || (!working_SNES_btns.SequenceEqual(onload_SNES_btns)) || (!working_N64_btns.SequenceEqual(onload_N64_btns)))
+            if (!justRestart)
             {
-                var window = MessageBox.Show(
-                    "There are unsent mappings, are you sure you want to close?", 
-                    "", 
-                    MessageBoxButtons.YesNo);
+                if ((!working_NES_btns.SequenceEqual(onload_NES_btns)) || (!working_SNES_btns.SequenceEqual(onload_SNES_btns)) || (!working_N64_btns.SequenceEqual(onload_N64_btns)))
+                {
+                    var window = MessageBox.Show(
+                        "There are unsent mappings, are you sure you want to close?",
+                        "",
+                        MessageBoxButtons.YesNo);
 
-                e.Cancel = (window == DialogResult.No);
+                    e.Cancel = (window == DialogResult.No);
+                }
+            }
+        }
+
+        private void Pastel_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateColors();
+        }
+
+        private void ColorPick_Click(object sender, EventArgs e)
+        {
+            ColorDialog MyDialog = new ColorDialog
+            {
+                // Sets the initial color select to the current color.
+                Color = baseColor
+            };
+
+            // Update the color if the user clicks OK 
+            if (MyDialog.ShowDialog() == DialogResult.OK)
+            {
+                baseColor = MyDialog.Color;
+                baseColorStore = baseColor;
+                ColorShifter(baseColor);
+                UpdateColors();
+                ccAdapterRemapper.Params.SetParam("COLOR", ColorTranslator.ToHtml(baseColor));
+
+            }
+        }
+
+        private void ParamWipebtn_Click(object sender, EventArgs e)
+        {
+
+            DialogResult dr = MessageBox.Show("This will COMPLETELY wipe the contents of the PARAMs folder, are you sure?", "", MessageBoxButtons.YesNo);
+            switch (dr)
+            {
+                case DialogResult.Yes:
+                    ccAdapterRemapper.Params.RemoveAllParam();
+                    MessageBox.Show("It was as if it was never there.", "");
+                    justRestart = true;
+                    System.Windows.Forms.Application.Restart();
+                    break;
+                case DialogResult.No:
+                    MessageBox.Show("Then it was not.", "");
+                    break;
             }
 
         }
-
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            _serialPort.Close(); // ensure serial port is closed on exit
-        }
-
-        private void pastelCB_CheckedChanged(object sender, EventArgs e)
-        {
-            updateColors();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            
-        }
-    }   
+    }
 }

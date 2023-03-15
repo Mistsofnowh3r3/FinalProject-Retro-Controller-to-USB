@@ -39,6 +39,16 @@ namespace ccAdapterRemapper
             }
         }
 
+        //Modified code by me (Brennan)
+        public static void RemoveAllParam()
+        {
+            foreach (string f in Directory.EnumerateFiles(ParamsDir, "*"))
+            {
+                File.Delete(f);
+            }
+
+        }
+
         public static string ReadParam(string paramName)
         {
             if (IsParamSet(paramName))
