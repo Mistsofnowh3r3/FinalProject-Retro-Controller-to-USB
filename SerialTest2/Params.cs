@@ -1,17 +1,17 @@
 ﻿//Code originally from RTCV https://github.com/redscientistlabs/RTCV/blob/master/Source/Libraries/NetCore/Params.cs
 
+using System.IO;
+
 namespace ccAdapterRemapper
 {
-    using System.IO;
-
     public static class Params
     {
         public static string ParamsDir
         {
             get
             {
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "PARAMS");
-                Directory.CreateDirectory(path);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "PARAMS");
+                _ = Directory.CreateDirectory(path);
                 return Path.Combine(Directory.GetCurrentDirectory(), "PARAMS");
             }
         }
@@ -51,14 +51,12 @@ namespace ccAdapterRemapper
 
         public static string ReadParam(string paramName)
         {
-            if (IsParamSet(paramName))
-            {
-                return File.ReadAllText(Path.Combine(ParamsDir, paramName));
-            }
-
-            return null;
+            return IsParamSet(paramName) ? File.ReadAllText(Path.Combine(ParamsDir, paramName)) : null;
         }
 
-        public static bool IsParamSet(string paramName) => File.Exists(Path.Combine(ParamsDir, paramName));
+        public static bool IsParamSet(string paramName)
+        {
+            return File.Exists(Path.Combine(ParamsDir, paramName));
+        }
     }
 }

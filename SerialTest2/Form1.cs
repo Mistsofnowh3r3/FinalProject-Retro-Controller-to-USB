@@ -34,7 +34,26 @@ namespace ccAdapterRemapper
         private readonly string needsSaving = "#ff6347";
         private bool justRestart = false;
 
-        // FUnny AI motto
+
+
+        // string variable to store the key name
+        private string key;
+
+        // Arrays for storing the current and previous mappings
+        private int[] onload_NES_btns = new int[8];
+        private int[] onload_SNES_btns = new int[12];
+        private int[] onload_N64_btns = new int[18];
+        private int[] working_NES_btns = new int[8];
+        private int[] working_SNES_btns = new int[12];
+        private int[] working_N64_btns = new int[18];
+
+
+        // Serial port stuff
+        private readonly SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
+
+
+        // Funny variables
+        // Funny AI motto
         private readonly string[] mottoArray = new string[] {
             "Redefine to your heart's desire",
             "Revise to your liking",
@@ -59,20 +78,8 @@ namespace ccAdapterRemapper
             "Revamp in your own manner"
         };
 
-        // string variable to store the key name
-        private string key;
-
-        // Arrays for storing the current and previous mappings
-        private int[] onload_NES_btns = new int[8];
-        private int[] onload_SNES_btns = new int[12];
-        private int[] onload_N64_btns = new int[18];
-        private int[] working_NES_btns = new int[8];
-        private int[] working_SNES_btns = new int[12];
-        private int[] working_N64_btns = new int[18];
-
-
-        // Serial port stuff
-        private readonly SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
+        private int didNo = 0;
+        private int pastel = 0;
 
         #endregion variables
 
@@ -95,18 +102,18 @@ namespace ccAdapterRemapper
 
             if (ccAdapterRemapper.Params.IsParamSet("NESBUTTONS"))    //if there is a param for the nes buttons already
             {
-                this.working_NES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
-                this.onload_NES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
+                working_NES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
+                onload_NES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
             }
             if (ccAdapterRemapper.Params.IsParamSet("SNESBUTTONS"))    //if there is a param for the nes buttons already
             {
-                this.working_SNES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse); // load it in
-                this.onload_SNES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse); // load it in
+                working_SNES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse); // load it in
+                onload_SNES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse); // load it in
             }
             if (ccAdapterRemapper.Params.IsParamSet("N64BUTTONS"))    //if there is a param for the nes buttons already
             {
-                this.working_N64_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
-                this.onload_N64_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
+                working_N64_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
+                onload_N64_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
             }
 
             // Randomly select one of the funny mottos
@@ -138,7 +145,7 @@ namespace ccAdapterRemapper
             tb_SNES_R.Text = RevKeyToKey(working_SNES_btns[11]);
 
             // Set the text of the ComboBox
-            cb_portlist.Items.Add("Select a port");
+            _ = cb_portlist.Items.Add("Select a port");
             cb_portlist.Text = "Select a port";
 
 
@@ -216,7 +223,7 @@ namespace ccAdapterRemapper
 
         private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e) //When Serial data is recieved display it in the Console
         {
-            tb_console.Invoke(new Action(() => tb_console.Text = _serialPort.ReadExisting()));
+            _ = tb_console.Invoke(new Action(() => tb_console.Text = _serialPort.ReadExisting()));
         }
 
         // Modification of https://stackoverflow.com/a/1626232
@@ -230,36 +237,31 @@ namespace ccAdapterRemapper
             double value = 1;
 
 
-            backDarkColor = ColorFromHSV(hue, (saturation * .438), (value * .188));
-            backLightColor = ColorFromHSV(hue, (saturation * .421), (value * .243));
-            buttonDarkColor = ColorFromHSV(hue, (saturation * .435), (value * .298));
-            buttonLightColor = ColorFromHSV(hue, (saturation * .324), (value * .435));
+            backDarkColor = ColorFromHSV(hue, saturation * .438, value * .188);
+            backLightColor = ColorFromHSV(hue, saturation * .421, value * .243);
+            buttonDarkColor = ColorFromHSV(hue, saturation * .435, value * .298);
+            buttonLightColor = ColorFromHSV(hue, saturation * .324, value * .435);
         }
 
         //https://stackoverflow.com/a/1626232
         public static Color ColorFromHSV(double hue, double saturation, double value)
         {
             int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
-            double f = hue / 60 - Math.Floor(hue / 60);
+            double f = (hue / 60) - Math.Floor(hue / 60);
 
             value *= 255;
             int v = Convert.ToInt32(value);
             int p = Convert.ToInt32(value * (1 - saturation));
-            int q = Convert.ToInt32(value * (1 - f * saturation));
-            int t = Convert.ToInt32(value * (1 - (1 - f) * saturation));
+            int q = Convert.ToInt32(value * (1 - (f * saturation)));
+            int t = Convert.ToInt32(value * (1 - ((1 - f) * saturation)));
 
-            if (hi == 0)
-                return Color.FromArgb(255, v, t, p);
-            else if (hi == 1)
-                return Color.FromArgb(255, q, v, p);
-            else if (hi == 2)
-                return Color.FromArgb(255, p, v, t);
-            else if (hi == 3)
-                return Color.FromArgb(255, p, q, v);
-            else if (hi == 4)
-                return Color.FromArgb(255, t, p, v);
-            else
-                return Color.FromArgb(255, v, p, q);
+            return hi == 0
+                ? Color.FromArgb(255, v, t, p)
+                : hi == 1
+                    ? Color.FromArgb(255, q, v, p)
+                    : hi == 2
+                                    ? Color.FromArgb(255, p, v, t)
+                                    : hi == 3 ? Color.FromArgb(255, p, q, v) : hi == 4 ? Color.FromArgb(255, t, p, v) : Color.FromArgb(255, v, p, q);
         }
 
         private void UpdateColors() // Updates the current color base color or pastel color
@@ -351,7 +353,7 @@ namespace ccAdapterRemapper
             }
         }
 
-        private int KeyToKey(String key)
+        private int KeyToKey(string key)
         {
             switch (key)
             {
@@ -507,7 +509,7 @@ namespace ccAdapterRemapper
 
         }
 
-        private void ThrowError(String message, int severity) // Error message thrower
+        private void ThrowError(string message, int severity) // Error message thrower
         {
             switch (severity)
             {
@@ -520,7 +522,7 @@ namespace ccAdapterRemapper
                 case 2: //IO Error
                     // Play sound and show error in a pop up message
                     SystemSounds.Exclamation.Play();
-                    MessageBox.Show(new Form { TopMost = true }, $"I/O Error! Program will restart.\nException message:  | {message} |");
+                    _ = MessageBox.Show(new Form { TopMost = true }, $"I/O Error! Program will restart.\nException message:  | {message} |");
                     justRestart = true;
                     System.Windows.Forms.Application.Restart(); // EUGGGGH Just restart the whole thing I guess.
                     break;
@@ -573,7 +575,7 @@ namespace ccAdapterRemapper
             if (ports == null || ports.Length == 0)
             {
                 cb_portlist.Items.Clear();
-                cb_portlist.Items.Add("Select a port");
+                _ = cb_portlist.Items.Add("Select a port");
                 cb_portlist.Text = "Select a port";
                 return;
             }
@@ -583,17 +585,17 @@ namespace ccAdapterRemapper
             {
                 if (!cb_portlist.Items.Contains(s)) //Only add an item if it is not already on the list
                 {
-                    cb_portlist.Items.Add(s);
+                    _ = cb_portlist.Items.Add(s);
                 }
             }
         }
 
         private void Portlist_DropDownClosed(object sender, EventArgs e)
         {
-            String port = (string)cb_portlist.SelectedItem;
+            string port = (string)cb_portlist.SelectedItem;
             if (port == null || !port.StartsWith("COM"))  //If the selected item in the combobox is not correct
             {
-                cb_portlist.Items.Add("Select a port");
+                _ = cb_portlist.Items.Add("Select a port");
                 cb_portlist.Text = "Select a port";
             }
         }
@@ -601,7 +603,7 @@ namespace ccAdapterRemapper
 
         private void Portlist_SelectedIndexChanged(object sender, EventArgs e) //Handles the COMlist combobox selections
         {
-            String port = (string)cb_portlist.SelectedItem;
+            string port = (string)cb_portlist.SelectedItem;
             if (port == null || !port.StartsWith("COM"))
             {
                 cb_portlist.Text = "Select a port";
@@ -623,10 +625,14 @@ namespace ccAdapterRemapper
                     case "NES":
                         for (int i = 0; i < 8; i++)
                         {
-                            if (working_NES_btns[i] != onload_NES_btns[i]) _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "NES" + "!"); // send a remap only if the current is different then before (minimize eeprom writes)
+                            if (working_NES_btns[i] != onload_NES_btns[i])
+                            {
+                                _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "NES" + "!"); // send a remap only if the current is different then before (minimize eeprom writes)
+                            }
+
                             Thread.Sleep(30); //buffer, might not actually be needed
                         }
-                        ccAdapterRemapper.Params.SetParam("NESBUTTONS", String.Join(",", working_NES_btns));// Save the keys select to the PARAMs
+                        ccAdapterRemapper.Params.SetParam("NESBUTTONS", string.Join(",", working_NES_btns));// Save the keys select to the PARAMs
                         Array.Copy(onload_NES_btns, working_NES_btns, onload_NES_btns.Length); //update the onload array
                         //btn_sendremap.BackColor = ColorTranslator.FromHtml(light2);
                         //btn_sendremap.Enabled = false;
@@ -639,7 +645,7 @@ namespace ccAdapterRemapper
 
                             Thread.Sleep(30);
                         }
-                        ccAdapterRemapper.Params.SetParam("SNESBUTTONS", String.Join(",", working_SNES_btns));
+                        ccAdapterRemapper.Params.SetParam("SNESBUTTONS", string.Join(",", working_SNES_btns));
                         Array.Copy(onload_SNES_btns, working_SNES_btns, onload_SNES_btns.Length); //update the onload array
                         break;
                     case "N64":
@@ -668,29 +674,107 @@ namespace ccAdapterRemapper
 
 
                 //NES ONES
-                if (textBox.Tag.ToString().Contains("JNESA")) working_NES_btns[0] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESB")) working_NES_btns[1] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESSELECT")) working_NES_btns[2] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESSTART")) working_NES_btns[3] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESUP")) working_NES_btns[4] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESDOWN")) working_NES_btns[5] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESLEFT")) working_NES_btns[6] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("JNESRIGHT")) working_NES_btns[7] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("JNESA"))
+                {
+                    working_NES_btns[0] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("JNESB"))
+                {
+                    working_NES_btns[1] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("JNESSELECT"))
+                {
+                    working_NES_btns[2] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("JNESSTART"))
+                {
+                    working_NES_btns[3] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("JNESUP"))
+                {
+                    working_NES_btns[4] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("JNESDOWN"))
+                {
+                    working_NES_btns[5] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("JNESLEFT"))
+                {
+                    working_NES_btns[6] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("JNESRIGHT"))
+                {
+                    working_NES_btns[7] = KeyToKey(key);
+                }
 
 
                 //SNES ONES
-                if (textBox.Tag.ToString().Contains("SNESB")) working_SNES_btns[0] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESY")) working_SNES_btns[1] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESSELECT")) working_SNES_btns[2] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESSTART")) working_SNES_btns[3] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESUP")) working_SNES_btns[4] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESDOWN")) working_SNES_btns[5] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESLEFT")) working_SNES_btns[6] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESRIGHT")) working_SNES_btns[7] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESA")) working_SNES_btns[8] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESX")) working_SNES_btns[9] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESL")) working_SNES_btns[10] = KeyToKey(key);
-                if (textBox.Tag.ToString().Contains("SNESR")) working_SNES_btns[11] = KeyToKey(key);
+                if (textBox.Tag.ToString().Contains("SNESB"))
+                {
+                    working_SNES_btns[0] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESY"))
+                {
+                    working_SNES_btns[1] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESSELECT"))
+                {
+                    working_SNES_btns[2] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESSTART"))
+                {
+                    working_SNES_btns[3] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESUP"))
+                {
+                    working_SNES_btns[4] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESDOWN"))
+                {
+                    working_SNES_btns[5] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESLEFT"))
+                {
+                    working_SNES_btns[6] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESRIGHT"))
+                {
+                    working_SNES_btns[7] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESA"))
+                {
+                    working_SNES_btns[8] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESX"))
+                {
+                    working_SNES_btns[9] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESL"))
+                {
+                    working_SNES_btns[10] = KeyToKey(key);
+                }
+
+                if (textBox.Tag.ToString().Contains("SNESR"))
+                {
+                    working_SNES_btns[11] = KeyToKey(key);
+                }
                 //working_NES_btns[0] = keyToKey(key);
 
             }
@@ -701,7 +785,7 @@ namespace ccAdapterRemapper
             }
             NeatHack(true);
 
-            SelectNextControl(ActiveControl, true, true, true, true);
+            _ = SelectNextControl(ActiveControl, true, true, true, true);
         }
 
         private void FocusLost(object sender, EventArgs e)
@@ -716,7 +800,7 @@ namespace ccAdapterRemapper
             textBox.BackColor = ColorTranslator.FromHtml(focusColor);
             textBox.SelectionStart = 0;
             textBox.SelectionStart = tb_NES_A.TextLength;
-            HideCaret(textBox.Handle);
+            _ = HideCaret(textBox.Handle);
         }
 
         private void Peek_Click(object sender, EventArgs e)
@@ -741,7 +825,7 @@ namespace ccAdapterRemapper
             int adr = (int)nup_address.Value;
             int val = (int)nup_value.Value;
             _serialPort.Write("PO," + adr.ToString() + "," + val.ToString() + "!");
-            tb_console.Text = ("PO," + adr.ToString() + "," + val.ToString() + "!");
+            tb_console.Text = "PO," + adr.ToString() + "," + val.ToString() + "!";
         }
 
         private void PreviewKeyDownThis(object sender, PreviewKeyDownEventArgs e)
@@ -755,12 +839,12 @@ namespace ccAdapterRemapper
             {
                 if ((!working_NES_btns.SequenceEqual(onload_NES_btns)) || (!working_SNES_btns.SequenceEqual(onload_SNES_btns)) || (!working_N64_btns.SequenceEqual(onload_N64_btns)))
                 {
-                    var window = MessageBox.Show(
+                    DialogResult window = MessageBox.Show(
                         "There are unsent mappings, are you sure you want to close?",
                         "",
                         MessageBoxButtons.YesNo);
 
-                    e.Cancel = (window == DialogResult.No);
+                    e.Cancel = window == DialogResult.No;
                 }
             }
         }
@@ -768,6 +852,14 @@ namespace ccAdapterRemapper
         private void Pastel_CheckedChanged(object sender, EventArgs e)
         {
             UpdateColors();
+            pastel++;
+            tb_console.Text = pastel.ToString();
+            if (pastel >= 420)
+            {
+                MessageBox.Show("Unlocked, GOLD", "(:");
+                MessageBox.Show("lol just kidding", "):");
+                
+            }
         }
 
         private void ColorPick_Click(object sender, EventArgs e)
@@ -793,17 +885,18 @@ namespace ccAdapterRemapper
         private void ParamWipebtn_Click(object sender, EventArgs e)
         {
 
-            DialogResult dr = MessageBox.Show("This will COMPLETELY wipe the contents of the PARAMs folder, are you sure?", "", MessageBoxButtons.YesNo);
+            DialogResult dr = MessageBox.Show("This will COMPLETELY wipe the contents of the PARAMs folder and clear ALL settings, are you sure?", "", MessageBoxButtons.YesNo);
             switch (dr)
             {
                 case DialogResult.Yes:
                     ccAdapterRemapper.Params.RemoveAllParam();
-                    MessageBox.Show("It was as if it was never there.", "");
+                    _ = MessageBox.Show("It was as if it was never there.", "");
                     justRestart = true;
                     System.Windows.Forms.Application.Restart();
                     break;
                 case DialogResult.No:
-                    MessageBox.Show("Then it was not.", "");
+                    _ = didNo >= 3 ? MessageBox.Show("How odd.", "") : MessageBox.Show("Then it was left as is.", "");
+                    didNo++;
                     break;
             }
 
