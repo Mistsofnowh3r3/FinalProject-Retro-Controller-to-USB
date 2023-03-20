@@ -86,25 +86,26 @@ int init_N64_btns[] = {
     KEY_DOWN_ARROW, //D DOWN
     KEY_LEFT_ARROW, //D LEFT
     KEY_RIGHT_ARROW,//D RIGHT
-    'a',            //C DOWN
-    's',            //C LEFT
+    'k',            //C DOWN
+    'j',            //C LEFT
     'q',            //L
-    'w',            //R
-    'D',            //C UP
-    'C',            //C RIGHT
-    '4',   //A UP
-    '7', //A DOWN
-    '6', //A LEFT
-    '1',//A RIGHT
+    'e',            //R
+    'i',            //C UP
+    'l',            //C RIGHT
+    'w',   //A UP
+    's', //A DOWN
+    'a', //A LEFT
+    'd',//A RIGHT
 };
 
 int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-
+int n64KeyJoystickDeadZone = 20;
 
 // Used for making sure that the DPAD functions correctly.
 int holdCheckUpDown = 5;
 int holdCheckLeftRight = 5;
-
+int holdCheckUpDownN64Joy = 5;
+int holdCheckLeftRightN64Joy = 5;
 
 //various mode related things
 // 0 serial, 1 NES, 2 SNES, 3 N64
@@ -567,16 +568,50 @@ void n64() {
                 ((pad.buttons & N64Pad::BTN_C_UP) != 0) ? Keyboard.press(tolower(init_N64_btns[12])) : Keyboard.release(tolower(init_N64_btns[12]));
                 ((pad.buttons & N64Pad::BTN_C_RIGHT) != 0) ? Keyboard.press(tolower(init_N64_btns[13])) : Keyboard.release(tolower(init_N64_btns[13]));
   
-                // D-Pad makes up the X/Y axes
 
-                // The analog stick gets mapped to the X/Y rotation axes
-                //usbStick.setRxAxis(pad.x);
-                //usbStick.setRyAxis(pad.y);
-                // All done, send data for real!
-                //usbStick.sendState();
-                
+                if (pad.y < n64KeyJoystickDeadZone) { // Try to stop holding up
+                    if (holdCheckUpDownN64Joy == 1) { // check if we are holding up
+                        Keyboard.release(tolower(init_N64_btns[14])); // release up
+                        holdCheckUpDownN64Joy = 0; // Let us know it's no longer held
+                    } 
+                }
+                if (pad.y > (-1 * n64KeyJoystickDeadZone)) { // Try to stop holding down
+                    if (holdCheckUpDownN64Joy == 2) { // check if we are holding down
+                        Keyboard.release(tolower(init_N64_btns[15])); // release down
+                        holdCheckUpDownN64Joy = 0; // Let us know it's no longer held
+                    } 
+                }
+                if (pad.y > n64KeyJoystickDeadZone) { //if 4th and read data from dataPin
+                    Keyboard.press(tolower(init_N64_btns[14])); // press up
+                    holdCheckUpDownN64Joy = 1; // we are holding up
+                }
+                if (pad.y < (-1 * n64KeyJoystickDeadZone)) { //if 5th and read data from dataPin
+                    Keyboard.press(tolower(init_N64_btns[15])); // press down
+                    holdCheckUpDownN64Joy = 2; // we are holding down
+                }
+
+
+                if (pad.x < n64KeyJoystickDeadZone) { // Try to stop holding left
+                    if (holdCheckLeftRightN64Joy == 1) { // check if we are holding left
+                        Keyboard.release(tolower(init_N64_btns[17])); // release left
+                        holdCheckLeftRightN64Joy = 0; // Let us know it's no longer held
+                    } 
+                }
+                if (pad.x > (-1 * n64KeyJoystickDeadZone)) { // Try to stop holding right
+                    if (holdCheckLeftRightN64Joy == 2) { // check if we are holding right
+                        Keyboard.release(tolower(init_N64_btns[16])); // release
+                        holdCheckLeftRightN64Joy = 0; // Let us know it's no longer held
+                    } 
+                }
+                if (pad.x > n64KeyJoystickDeadZone) { //if 6th and read data from dataPin
+                    Keyboard.press(tolower(init_N64_btns[17])); // press left
+                    holdCheckLeftRightN64Joy = 1; // we are holding left
+                }
+                if (pad.x < (-1 * n64KeyJoystickDeadZone)) { //if 7th and read data from dataPin
+                    Keyboard.press(tolower(init_N64_btns[16])); // press right
+                    holdCheckLeftRightN64Joy = 2; // we are holding right
+                }               
             }
-			
 		}
     } 
 }
