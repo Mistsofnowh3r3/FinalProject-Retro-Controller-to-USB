@@ -86,16 +86,16 @@ int init_N64_btns[] = {
     KEY_DOWN_ARROW, //D DOWN
     KEY_LEFT_ARROW, //D LEFT
     KEY_RIGHT_ARROW,//D RIGHT
-    'a',            //C UP
-    's',            //C DOWN
+    'a',            //C DOWN
+    's',            //C LEFT
     'q',            //L
     'w',            //R
-    'D',            //C LEFT
+    'D',            //C UP
     'C',            //C RIGHT
-    KEY_UP_ARROW,   //A UP
-    KEY_DOWN_ARROW, //A DOWN
-    KEY_LEFT_ARROW, //A LEFT
-    KEY_RIGHT_ARROW,//A RIGHT
+    '4',   //A UP
+    '7', //A DOWN
+    '6', //A LEFT
+    '1',//A RIGHT
 };
 
 int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
@@ -120,7 +120,7 @@ bool snesControllerConnectedLast = false;
 bool n64ControllerConnected = false;
 
 // Controller vs kyeboard mode select keyboard = 1 controller = 0 
-bool outputMode = 0;
+bool outputMode = 1;
 
 // Constants //
 
@@ -518,24 +518,48 @@ void n64() {
                 ((pad.buttons & N64Pad::BTN_B) != 0) ? Keyboard.press(tolower(init_N64_btns[1])) : Keyboard.release(tolower(init_N64_btns[1]));
                 ((pad.buttons & N64Pad::BTN_Z) != 0) ? Keyboard.press(tolower(init_N64_btns[2])) : Keyboard.release(tolower(init_N64_btns[2]));
                 ((pad.buttons & N64Pad::BTN_START) != 0) ? Keyboard.press(tolower(init_N64_btns[3])) : Keyboard.release(tolower(init_N64_btns[3]));
-                //if ((pad.buttons & N64Pad::BTN_UP) != 0) {
-                //    usbStick.setYAxis(ANALOG_MIN_VALUE);
-                //}
-                //else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
-                //    usbStick.setYAxis(ANALOG_MAX_VALUE);
-                //} 
-                //else {
-                //    usbStick.setYAxis(ANALOG_IDLE_VALUE);
-                //}
-                //if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
-                //    usbStick.setXAxis(ANALOG_MIN_VALUE);
-                //} 
-                //else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
-                //    usbStick.setXAxis(ANALOG_MAX_VALUE);
-                //} 
-                //else {
-                //    usbStick.setXAxis(ANALOG_IDLE_VALUE);
-                //}
+                if ((pad.buttons & N64Pad::BTN_UP) == 0) { // Try to stop holding up
+                    if (holdCheckUpDown == 1) { // check if we are holding up
+                        Keyboard.release(tolower(init_N64_btns[4])); // release up
+                        holdCheckUpDown = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((pad.buttons & N64Pad::BTN_DOWN) == 0) { // Try to stop holding down
+                    if (holdCheckUpDown == 2) { // check if we are holding down
+                        Keyboard.release(tolower(init_N64_btns[5])); // release down
+                        holdCheckUpDown = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((pad.buttons & N64Pad::BTN_UP) != 0) { //if 4th and read data from dataPin
+                    Keyboard.press(tolower(init_N64_btns[4])); // press up
+                    holdCheckUpDown = 1; // we are holding up
+                }
+                if ((pad.buttons & N64Pad::BTN_DOWN) != 0) { //if 5th and read data from dataPin
+                    Keyboard.press(tolower(init_N64_btns[5])); // press down
+                    holdCheckUpDown = 2; // we are holding down
+                }
+
+
+                if ((pad.buttons & N64Pad::BTN_LEFT) == 0) { // Try to stop holding left
+                    if (holdCheckLeftRight == 1) { // check if we are holding left
+                        Keyboard.release(tolower(init_N64_btns[6])); // release left
+                        holdCheckLeftRight = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((pad.buttons & N64Pad::BTN_RIGHT) == 0) { // Try to stop holding right
+                    if (holdCheckLeftRight == 2) { // check if we are holding right
+                        Keyboard.release(tolower(init_N64_btns[7])); // release
+                        holdCheckLeftRight = 0; // Let us know it's no longer held
+                    } 
+                }
+                if ((pad.buttons & N64Pad::BTN_LEFT) != 0) { //if 6th and read data from dataPin
+                    Keyboard.press(tolower(init_N64_btns[6])); // press left
+                    holdCheckLeftRight = 1; // we are holding left
+                }
+                if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) { //if 7th and read data from dataPin
+                    Keyboard.press(tolower(init_N64_btns[7])); // press right
+                    holdCheckLeftRight = 2; // we are holding right
+                }
                 ((pad.buttons & N64Pad::BTN_C_DOWN) != 0) ? Keyboard.press(tolower(init_N64_btns[8])) : Keyboard.release(tolower(init_N64_btns[8]));
                 ((pad.buttons & N64Pad::BTN_C_LEFT) != 0) ? Keyboard.press(tolower(init_N64_btns[9])) : Keyboard.release(tolower(init_N64_btns[9]));
                 ((pad.buttons & N64Pad::BTN_L) != 0) ? Keyboard.press(tolower(init_N64_btns[10])) : Keyboard.release(tolower(init_N64_btns[10]));
