@@ -102,12 +102,9 @@ int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
 
 // Used for making sure that the DPAD functions correctly.
-bool holdingUp = 0;
-bool holdingDown = 0;
 int holdCheckUpDown = 5;
 int holdCheckLeftRight = 5;
-bool holdingLeft = 0;
-bool holdingRight = 0;
+
 
 //various mode related things
 // 0 serial, 1 NES, 2 SNES, 3 N64
@@ -312,50 +309,45 @@ void checkButton(int button) {
         if (modeSelect == 2) {
             if (button_index > 3 && button_index < 8) {
                 if ((button_index == 4) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding up
-                    if (holdingDown == 0 && holdingUp == 1) { // check if we are holding up
+                    if (holdCheckUpDown == 1) { // check if we are holding up
                         usbStick.setYAxis(ANALOG_IDLE_VALUE); // release up
-                        holdingUp = 0; // Let us know it's no longer held
+                        holdCheckUpDown = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((button_index == 5) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding down
-                    if (holdingDown == 1 && holdingUp == 0) { // check if we are holding down
+                    if (holdCheckUpDown == 2) { // check if we are holding down
                         usbStick.setYAxis(ANALOG_IDLE_VALUE); // release down
-                        holdingDown = 0; // Let us know it's no longer held
+                        holdCheckUpDown = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((button_index == 4) && (digitalRead(dataPinSnes) == LOW)) { //if 4th and read data from dataPin
                     usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
-                    holdingUp = 1; // let us know it is being held
-                    holdingDown = 0; // cannot hold up and down at the same time
+                    holdCheckUpDown = 1; // we are holding up
                 }
                 if ((button_index == 5) && (digitalRead(dataPinSnes) == LOW)) { //if 5th and read data from dataPin
                     usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
-                    holdingDown = 1; // let us know it is being held
-                    holdingUp = 0; // cannot hold up and down at the same time
+                    holdCheckUpDown = 2; // we are holding down
                 }
 
-
                 if ((button_index == 6) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding left
-                    if (holdingRight == 0 && holdingLeft == 1) { // check if we are holding down
+                    if (holdCheckLeftRight == 1) { // check if we are holding left
                         usbStick.setXAxis(ANALOG_IDLE_VALUE); // release left
-                        holdingLeft = 0; // Let us know it's no longer held
+                        holdCheckLeftRight = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((button_index == 7) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding right
-                    if (holdingRight == 1 && holdingLeft == 0) { // check if we are holding down right
+                    if (holdCheckLeftRight == 2) { // check if we are holding right
                         usbStick.setXAxis(ANALOG_IDLE_VALUE); // release
-                        holdingRight = 0; // Let us know it's no longer held
-                    } 
+                        holdCheckLeftRight = 0; // Let us know it's no longer held
+                    }  
                 }
                 if ((button_index == 6) && (digitalRead(dataPinSnes) == LOW)) { //if 6th and read data from dataPin
-                    usbStick.setXAxis(ANALOG_MIN_VALUE); // press up
-                    holdingLeft = 1; // let us know it is being held
-                    holdingRight = 0; // cannot hold right and left at the same time
+                    usbStick.setXAxis(ANALOG_MIN_VALUE); // press left
+                    holdCheckLeftRight = 1; // we are holding left
                 }
                 if ((button_index == 7) && (digitalRead(dataPinSnes) == LOW)) { //if 7th and read data from dataPin
-                    usbStick.setXAxis(ANALOG_MAX_VALUE); // press down
-                    holdingRight = 1; // let us know it is being held
-                    holdingLeft = 0; // cannot hold right and left at the same time
+                    usbStick.setXAxis(ANALOG_MAX_VALUE); // press right
+                    holdCheckLeftRight = 2; // we are holding right
                 }
                 usbStick.sendState();
                 return;
