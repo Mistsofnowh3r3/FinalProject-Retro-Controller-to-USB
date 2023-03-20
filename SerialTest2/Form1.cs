@@ -144,35 +144,39 @@ namespace ccAdapterRemapper
             tb_SNES_L.Text = RevKeyToKey(working_SNES_btns[10]);
             tb_SNES_R.Text = RevKeyToKey(working_SNES_btns[11]);
 
+            tb_N64_A.Text = RevKeyToKey(working_N64_btns[0]); 
+            tb_N64_B.Text = RevKeyToKey(working_N64_btns[1]);
+            tb_N64_Z.Text = RevKeyToKey(working_N64_btns[2]);
+            tb_N64_START.Text = RevKeyToKey(working_N64_btns[3]);
+            tb_N64_DPADUP.Text = RevKeyToKey(working_N64_btns[4]);
+            tb_N64_DPADDOWN.Text = RevKeyToKey(working_N64_btns[5]);
+            tb_N64_DPADLEFT.Text = RevKeyToKey(working_N64_btns[6]);
+            tb_N64_DPADRIGHT.Text = RevKeyToKey(working_N64_btns[7]);
+            tb_N64_CPADDOWN.Text = RevKeyToKey(working_N64_btns[8]);
+            tb_N64_CPADLEFT.Text = RevKeyToKey(working_N64_btns[9]);
+            tb_N64_L.Text = RevKeyToKey(working_N64_btns[10]);
+            tb_N64_R.Text = RevKeyToKey(working_N64_btns[11]);
+            tb_N64_JOYSTICKUP.Text = RevKeyToKey(working_N64_btns[12]);
+            tb_N64_JOYSTICKDOWN.Text = RevKeyToKey(working_N64_btns[13]);
+            tb_N64_JOYSTICKLEFT.Text = RevKeyToKey(working_N64_btns[14]);
+            tb_N64_JOYSTICKRIGHT.Text = RevKeyToKey(working_N64_btns[15]);
+            tb_N64_CPADUP.Text = RevKeyToKey(working_N64_btns[16]);
+            tb_N64_CPADRIGHT.Text = RevKeyToKey(working_N64_btns[17]);
+
+
+
+
             // Set the text of the ComboBox
             _ = cb_portlist.Items.Add("Select a port");
             cb_portlist.Text = "Select a port";
 
 
             //Hiding the caret and selction of the textboxes for aesthetic
-            //NES
-            tb_NES_A.GotFocus += HideCaretAndSelection;
-            tb_NES_B.GotFocus += HideCaretAndSelection;
-            tb_NES_SELECT.GotFocus += HideCaretAndSelection;
-            tb_NES_START.GotFocus += HideCaretAndSelection;
-            tb_NES_UP.GotFocus += HideCaretAndSelection;
-            tb_NES_DOWN.GotFocus += HideCaretAndSelection;
-            tb_NES_LEFT.GotFocus += HideCaretAndSelection;
-            tb_NES_RIGHT.GotFocus += HideCaretAndSelection;
+            foreach (Control c in tabControl.Controls)
+                foreach (Control x in c.Controls)
+                    if (x.GetType() == typeof(TextBox)) 
+                        x.GotFocus += HideCaretAndSelection;  
 
-            //SNES
-            tb_SNES_B.GotFocus += HideCaretAndSelection;
-            tb_SNES_Y.GotFocus += HideCaretAndSelection;
-            tb_SNES_SELECT.GotFocus += HideCaretAndSelection;
-            tb_SNES_START.GotFocus += HideCaretAndSelection;
-            tb_SNES_UP.GotFocus += HideCaretAndSelection;
-            tb_SNES_DOWN.GotFocus += HideCaretAndSelection;
-            tb_SNES_LEFT.GotFocus += HideCaretAndSelection;
-            tb_SNES_RIGHT.GotFocus += HideCaretAndSelection;
-            tb_SNES_A.GotFocus += HideCaretAndSelection;
-            tb_SNES_X.GotFocus += HideCaretAndSelection;
-            tb_SNES_L.GotFocus += HideCaretAndSelection;
-            tb_SNES_R.GotFocus += HideCaretAndSelection;
 
             //Check if the Pastel Theme button was set
             cb_pastel.Checked = ccAdapterRemapper.Params.IsParamSet("PB");
@@ -194,30 +198,12 @@ namespace ccAdapterRemapper
             UpdateColors();// Set the app colors
         }
 
-        private void NeatHack(bool yup) //Part of a solution to disable the cursor and text selection in the textboxes
+        private void NeatHack(bool yup) //When pressing a button on a control, quickly disable tabstop so that the box can accept tab
         {
-            tb_NES_A.TabStop = yup;
-            tb_NES_B.TabStop = yup;
-            tb_NES_SELECT.TabStop = yup;
-            tb_NES_START.TabStop = yup;
-            tb_NES_UP.TabStop = yup;
-            tb_NES_DOWN.TabStop = yup;
-            tb_NES_LEFT.TabStop = yup;
-            tb_NES_RIGHT.TabStop = yup;
-
-            tb_SNES_B.TabStop = yup;
-            tb_SNES_Y.TabStop = yup;
-            tb_SNES_SELECT.TabStop = yup;
-            tb_SNES_START.TabStop = yup;
-            tb_SNES_UP.TabStop = yup;
-            tb_SNES_DOWN.TabStop = yup;
-            tb_SNES_LEFT.TabStop = yup;
-            tb_SNES_RIGHT.TabStop = yup;
-            tb_SNES_A.TabStop = yup;
-            tb_SNES_X.TabStop = yup;
-            tb_SNES_L.TabStop = yup;
-            tb_SNES_R.TabStop = yup;
-
+            foreach (Control c in tabControl.Controls)
+                foreach (Control x in c.Controls)
+                    if (x.GetType() == typeof(TextBox)) 
+                        x.TabStop = yup;           
         }
 
 
@@ -314,7 +300,6 @@ namespace ccAdapterRemapper
                                 tabPage.BackColor = backLightColor;
                             }
                         }
-
                         ColorControls(tabPage);
                     }
                 }
@@ -342,10 +327,7 @@ namespace ccAdapterRemapper
                     {
                         control.ForeColor = textColor;
                     }
-
-
                 }
-
                 if (control.HasChildren)
                 {
                     ColorControls(control);
@@ -649,7 +631,14 @@ namespace ccAdapterRemapper
                         Array.Copy(onload_SNES_btns, working_SNES_btns, onload_SNES_btns.Length); //update the onload array
                         break;
                     case "N64":
-                        //ccAdapterRemapper.Params.SetParam("N64BUTTONS", String.Join(",", working_N64_btns));
+                        for (int i = 0; i < 18; i++)
+                        {
+                            _serialPort.Write("PO" + "," + i + "," + working_SNES_btns[i] + "N64" + "!"); // send a remap
+                        
+                            Thread.Sleep(30);
+                        }
+                        ccAdapterRemapper.Params.SetParam("N64BUTTONS", string.Join(",", working_SNES_btns));
+                        Array.Copy(onload_N64_btns, working_N64_btns, onload_N64_btns.Length); //update the onload array
                         break;
                 }
             }
@@ -736,22 +725,22 @@ namespace ccAdapterRemapper
                     working_SNES_btns[3] = KeyToKey(key);
                 }
 
-                if (textBox.Tag.ToString().Contains("SNESUP"))
+                if (textBox.Tag.ToString().Contains("SNESDUP"))
                 {
                     working_SNES_btns[4] = KeyToKey(key);
                 }
 
-                if (textBox.Tag.ToString().Contains("SNESDOWN"))
+                if (textBox.Tag.ToString().Contains("SNESDDOWN"))
                 {
                     working_SNES_btns[5] = KeyToKey(key);
                 }
 
-                if (textBox.Tag.ToString().Contains("SNESLEFT"))
+                if (textBox.Tag.ToString().Contains("SNESDLEFT"))
                 {
                     working_SNES_btns[6] = KeyToKey(key);
                 }
 
-                if (textBox.Tag.ToString().Contains("SNESRIGHT"))
+                if (textBox.Tag.ToString().Contains("SNESDRIGHT"))
                 {
                     working_SNES_btns[7] = KeyToKey(key);
                 }
@@ -775,7 +764,81 @@ namespace ccAdapterRemapper
                 {
                     working_SNES_btns[11] = KeyToKey(key);
                 }
-                //working_NES_btns[0] = keyToKey(key);
+
+
+                //N64 buttons
+                if (textBox.Tag.ToString().Contains("N64A"))
+                {
+                    working_N64_btns[0] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64B"))
+                {
+                    working_N64_btns[1] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64Z"))
+                {
+                    working_N64_btns[2] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64START"))
+                {
+                    working_N64_btns[3] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64DUP"))
+                {
+                    working_N64_btns[4] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64DDOWN"))
+                {
+                    working_N64_btns[5] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64DLEFT"))
+                {
+                    working_N64_btns[6] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64DRIGHT"))
+                {
+                    working_N64_btns[7] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64CDOWN"))
+                {
+                    working_N64_btns[8] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64CLEFT"))
+                {
+                    working_N64_btns[9] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64L"))
+                {
+                    working_N64_btns[10] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64R"))
+                {
+                    working_N64_btns[11] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64CUP"))
+                {
+                    working_N64_btns[12] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64CRIGHT"))
+                {
+                    working_N64_btns[13] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64JUP"))
+                {
+                    working_N64_btns[14] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64JDOWN"))
+                {
+                    working_N64_btns[15] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64JLEFT"))
+                {
+                    working_N64_btns[16] = KeyToKey(key);
+                }
+                if (textBox.Tag.ToString().Contains("N64JRIGHT"))
+                {
+                    working_N64_btns[17] = KeyToKey(key);
+                }
 
             }
             else

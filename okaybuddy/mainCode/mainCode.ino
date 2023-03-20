@@ -52,8 +52,8 @@ String parts[4]; // create an array to hold the three substrings
 
 
 int init_NES_btns[] = {
-    'q',            //A
-    'e',            //B
+    'z',            //A
+    'x',            //B
     KEY_RETURN,     //SELECT
     32,             //START
     KEY_UP_ARROW,   //UP   
@@ -92,10 +92,10 @@ int init_N64_btns[] = {
     'e',            //R
     'i',            //C UP
     'l',            //C RIGHT
-    'w',   //A UP
-    's', //A DOWN
-    'a', //A LEFT
-    'd',//A RIGHT
+    'w',            //A UP
+    's',            //A DOWN
+    'a',            //A LEFT
+    'd',            //A RIGHT
 };
 
 int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
@@ -181,7 +181,7 @@ const int outModeSwitch = PIN_A5;
 
 
 void serialActions() {
-    clearAllButtons();
+    clearAllButtons(); 
     memset(parts, 0, sizeof(parts));  // clear the parts array
     serialNow = Serial.readStringUntil('!');  // read the command
 
@@ -209,7 +209,7 @@ void serialActions() {
             adr += 8;
         }
         else if(parts[3] == "N64") {
-            adr += 24;
+            adr += 18;
         }
         EEPROM.write(adr,val);
     }
@@ -231,10 +231,9 @@ void loadKeyboardArrays() {
     for (int ed = 8; ed < 20; ed++) {
         init_SNES_btns[ed - 8] = EEPROM.read(ed);
     }
-    //for (int v = 20; v < 38; v++) {
-    //    init_N64_btns[v] = EEPROM.read(v);
-    //}
-
+    for (int df = 18; df < 36; df++) {
+        init_N64_btns[df - 18] = EEPROM.read(df);
+    }
 }
 
 void checkButton(int button) {

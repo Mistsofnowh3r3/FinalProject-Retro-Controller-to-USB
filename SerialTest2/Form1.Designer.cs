@@ -76,6 +76,44 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.tabPageN64 = new System.Windows.Forms.TabPage();
+            this.tb_N64_CPADRIGHT = new System.Windows.Forms.TextBox();
+            this.tb_N64_CPADUP = new System.Windows.Forms.TextBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.tb_N64_JOYSTICKRIGHT = new System.Windows.Forms.TextBox();
+            this.tb_N64_JOYSTICKLEFT = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.tb_N64_JOYSTICKDOWN = new System.Windows.Forms.TextBox();
+            this.tb_N64_JOYSTICKUP = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.tb_N64_R = new System.Windows.Forms.TextBox();
+            this.tb_N64_L = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tb_N64_CPADLEFT = new System.Windows.Forms.TextBox();
+            this.tb_N64_CPADDOWN = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.tb_N64_DPADRIGHT = new System.Windows.Forms.TextBox();
+            this.tb_N64_DPADLEFT = new System.Windows.Forms.TextBox();
+            this.tb_N64_DPADDOWN = new System.Windows.Forms.TextBox();
+            this.tb_N64_DPADUP = new System.Windows.Forms.TextBox();
+            this.tb_N64_START = new System.Windows.Forms.TextBox();
+            this.tb_N64_Z = new System.Windows.Forms.TextBox();
+            this.tb_N64_B = new System.Windows.Forms.TextBox();
+            this.tb_N64_A = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
             this.tabPageDebug = new System.Windows.Forms.TabPage();
             this.btn_wipeParams = new System.Windows.Forms.Button();
             this.btn_colorPick = new System.Windows.Forms.Button();
@@ -96,6 +134,8 @@
             this.tab = new System.Windows.Forms.TabPage();
             this.tabPageNES.SuspendLayout();
             this.tabPageSNES.SuspendLayout();
+            this.tabPageN64.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabPageDebug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nup_value)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nup_address)).BeginInit();
@@ -614,7 +654,7 @@
             this.tb_SNES_RIGHT.ShortcutsEnabled = false;
             this.tb_SNES_RIGHT.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_RIGHT.TabIndex = 70;
-            this.tb_SNES_RIGHT.Tag = "SNESRIGHTlight2";
+            this.tb_SNES_RIGHT.Tag = "SNESDRIGHTlight2";
             this.tb_SNES_RIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
             this.tb_SNES_RIGHT.Leave += new System.EventHandler(this.FocusLost);
             this.tb_SNES_RIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
@@ -633,7 +673,7 @@
             this.tb_SNES_LEFT.ShortcutsEnabled = false;
             this.tb_SNES_LEFT.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_LEFT.TabIndex = 69;
-            this.tb_SNES_LEFT.Tag = "SNESLEFTlight2";
+            this.tb_SNES_LEFT.Tag = "SNESDLEFTlight2";
             this.tb_SNES_LEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
             this.tb_SNES_LEFT.Leave += new System.EventHandler(this.FocusLost);
             this.tb_SNES_LEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
@@ -652,7 +692,7 @@
             this.tb_SNES_DOWN.ShortcutsEnabled = false;
             this.tb_SNES_DOWN.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_DOWN.TabIndex = 68;
-            this.tb_SNES_DOWN.Tag = "SNESDOWNlight2";
+            this.tb_SNES_DOWN.Tag = "SNESDDOWNlight2";
             this.tb_SNES_DOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
             this.tb_SNES_DOWN.Leave += new System.EventHandler(this.FocusLost);
             this.tb_SNES_DOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
@@ -671,7 +711,7 @@
             this.tb_SNES_UP.ShortcutsEnabled = false;
             this.tb_SNES_UP.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_UP.TabIndex = 67;
-            this.tb_SNES_UP.Tag = "SNESUPlight2";
+            this.tb_SNES_UP.Tag = "SNESDUPlight2";
             this.tb_SNES_UP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
             this.tb_SNES_UP.Leave += new System.EventHandler(this.FocusLost);
             this.tb_SNES_UP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
@@ -749,7 +789,7 @@
             this.tb_SNES_B.ShortcutsEnabled = false;
             this.tb_SNES_B.Size = new System.Drawing.Size(103, 23);
             this.tb_SNES_B.TabIndex = 63;
-            this.tb_SNES_B.Tag = "SNESBlight2";
+            this.tb_SNES_B.Tag = "SNESBlight2qwert";
             this.tb_SNES_B.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
             this.tb_SNES_B.Leave += new System.EventHandler(this.FocusLost);
             this.tb_SNES_B.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
@@ -853,6 +893,44 @@
             // tabPageN64
             // 
             this.tabPageN64.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.tabPageN64.Controls.Add(this.tb_N64_CPADRIGHT);
+            this.tabPageN64.Controls.Add(this.tb_N64_CPADUP);
+            this.tabPageN64.Controls.Add(this.label39);
+            this.tabPageN64.Controls.Add(this.label40);
+            this.tabPageN64.Controls.Add(this.label38);
+            this.tabPageN64.Controls.Add(this.numericUpDown1);
+            this.tabPageN64.Controls.Add(this.tb_N64_JOYSTICKRIGHT);
+            this.tabPageN64.Controls.Add(this.tb_N64_JOYSTICKLEFT);
+            this.tabPageN64.Controls.Add(this.label34);
+            this.tabPageN64.Controls.Add(this.label35);
+            this.tabPageN64.Controls.Add(this.tb_N64_JOYSTICKDOWN);
+            this.tabPageN64.Controls.Add(this.tb_N64_JOYSTICKUP);
+            this.tabPageN64.Controls.Add(this.label36);
+            this.tabPageN64.Controls.Add(this.label37);
+            this.tabPageN64.Controls.Add(this.tb_N64_R);
+            this.tabPageN64.Controls.Add(this.tb_N64_L);
+            this.tabPageN64.Controls.Add(this.label1);
+            this.tabPageN64.Controls.Add(this.label3);
+            this.tabPageN64.Controls.Add(this.tb_N64_CPADLEFT);
+            this.tabPageN64.Controls.Add(this.tb_N64_CPADDOWN);
+            this.tabPageN64.Controls.Add(this.label4);
+            this.tabPageN64.Controls.Add(this.label13);
+            this.tabPageN64.Controls.Add(this.tb_N64_DPADRIGHT);
+            this.tabPageN64.Controls.Add(this.tb_N64_DPADLEFT);
+            this.tabPageN64.Controls.Add(this.tb_N64_DPADDOWN);
+            this.tabPageN64.Controls.Add(this.tb_N64_DPADUP);
+            this.tabPageN64.Controls.Add(this.tb_N64_START);
+            this.tabPageN64.Controls.Add(this.tb_N64_Z);
+            this.tabPageN64.Controls.Add(this.tb_N64_B);
+            this.tabPageN64.Controls.Add(this.tb_N64_A);
+            this.tabPageN64.Controls.Add(this.label22);
+            this.tabPageN64.Controls.Add(this.label23);
+            this.tabPageN64.Controls.Add(this.label24);
+            this.tabPageN64.Controls.Add(this.label29);
+            this.tabPageN64.Controls.Add(this.label30);
+            this.tabPageN64.Controls.Add(this.label31);
+            this.tabPageN64.Controls.Add(this.label32);
+            this.tabPageN64.Controls.Add(this.label33);
             this.tabPageN64.Location = new System.Drawing.Point(4, 22);
             this.tabPageN64.Name = "tabPageN64";
             this.tabPageN64.Padding = new System.Windows.Forms.Padding(3);
@@ -860,6 +938,597 @@
             this.tabPageN64.TabIndex = 2;
             this.tabPageN64.Tag = "dark2";
             this.tabPageN64.Text = "N64";
+            // 
+            // tb_N64_CPADRIGHT
+            // 
+            this.tb_N64_CPADRIGHT.AcceptsReturn = true;
+            this.tb_N64_CPADRIGHT.AcceptsTab = true;
+            this.tb_N64_CPADRIGHT.BackColor = System.Drawing.Color.White;
+            this.tb_N64_CPADRIGHT.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_CPADRIGHT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_CPADRIGHT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_CPADRIGHT.Location = new System.Drawing.Point(333, 221);
+            this.tb_N64_CPADRIGHT.Name = "tb_N64_CPADRIGHT";
+            this.tb_N64_CPADRIGHT.ReadOnly = true;
+            this.tb_N64_CPADRIGHT.ShortcutsEnabled = false;
+            this.tb_N64_CPADRIGHT.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_CPADRIGHT.TabIndex = 122;
+            this.tb_N64_CPADRIGHT.Tag = "N64CRIGHTlight2";
+            this.tb_N64_CPADRIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_CPADRIGHT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_CPADRIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_CPADUP
+            // 
+            this.tb_N64_CPADUP.AcceptsReturn = true;
+            this.tb_N64_CPADUP.AcceptsTab = true;
+            this.tb_N64_CPADUP.BackColor = System.Drawing.Color.White;
+            this.tb_N64_CPADUP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_CPADUP.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_CPADUP.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_CPADUP.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tb_N64_CPADUP.Location = new System.Drawing.Point(333, 192);
+            this.tb_N64_CPADUP.Name = "tb_N64_CPADUP";
+            this.tb_N64_CPADUP.ReadOnly = true;
+            this.tb_N64_CPADUP.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tb_N64_CPADUP.ShortcutsEnabled = false;
+            this.tb_N64_CPADUP.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_CPADUP.TabIndex = 121;
+            this.tb_N64_CPADUP.Tag = "N64CUPlight2";
+            this.tb_N64_CPADUP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_CPADUP.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_CPADUP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label39.ForeColor = System.Drawing.Color.Black;
+            this.label39.Location = new System.Drawing.Point(287, 223);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(49, 15);
+            this.label39.TabIndex = 124;
+            this.label39.Tag = "label";
+            this.label39.Text = "CRIGHT";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label40.ForeColor = System.Drawing.Color.Black;
+            this.label40.Location = new System.Drawing.Point(287, 194);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(30, 15);
+            this.label40.TabIndex = 123;
+            this.label40.Tag = "label";
+            this.label40.Text = "CUP";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label38.ForeColor = System.Drawing.Color.Black;
+            this.label38.Location = new System.Drawing.Point(334, 55);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(68, 15);
+            this.label38.TabIndex = 120;
+            this.label38.Tag = "label";
+            this.label38.Text = "DEADZONE";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(320, 20);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(88, 22);
+            this.numericUpDown1.TabIndex = 119;
+            this.numericUpDown1.TabStop = false;
+            this.numericUpDown1.Tag = "N64DEADZONElight2";
+            // 
+            // tb_N64_JOYSTICKRIGHT
+            // 
+            this.tb_N64_JOYSTICKRIGHT.AcceptsReturn = true;
+            this.tb_N64_JOYSTICKRIGHT.AcceptsTab = true;
+            this.tb_N64_JOYSTICKRIGHT.BackColor = System.Drawing.Color.White;
+            this.tb_N64_JOYSTICKRIGHT.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_JOYSTICKRIGHT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_JOYSTICKRIGHT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_JOYSTICKRIGHT.Location = new System.Drawing.Point(197, 221);
+            this.tb_N64_JOYSTICKRIGHT.Name = "tb_N64_JOYSTICKRIGHT";
+            this.tb_N64_JOYSTICKRIGHT.ReadOnly = true;
+            this.tb_N64_JOYSTICKRIGHT.ShortcutsEnabled = false;
+            this.tb_N64_JOYSTICKRIGHT.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_JOYSTICKRIGHT.TabIndex = 116;
+            this.tb_N64_JOYSTICKRIGHT.Tag = "N64JRIGHTlight2";
+            this.tb_N64_JOYSTICKRIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_JOYSTICKRIGHT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_JOYSTICKRIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_JOYSTICKLEFT
+            // 
+            this.tb_N64_JOYSTICKLEFT.AcceptsReturn = true;
+            this.tb_N64_JOYSTICKLEFT.AcceptsTab = true;
+            this.tb_N64_JOYSTICKLEFT.BackColor = System.Drawing.Color.White;
+            this.tb_N64_JOYSTICKLEFT.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_JOYSTICKLEFT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_JOYSTICKLEFT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_JOYSTICKLEFT.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tb_N64_JOYSTICKLEFT.Location = new System.Drawing.Point(197, 192);
+            this.tb_N64_JOYSTICKLEFT.Name = "tb_N64_JOYSTICKLEFT";
+            this.tb_N64_JOYSTICKLEFT.ReadOnly = true;
+            this.tb_N64_JOYSTICKLEFT.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tb_N64_JOYSTICKLEFT.ShortcutsEnabled = false;
+            this.tb_N64_JOYSTICKLEFT.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_JOYSTICKLEFT.TabIndex = 115;
+            this.tb_N64_JOYSTICKLEFT.Tag = "N64JLEFTlight2";
+            this.tb_N64_JOYSTICKLEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_JOYSTICKLEFT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_JOYSTICKLEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label34.ForeColor = System.Drawing.Color.Black;
+            this.label34.Location = new System.Drawing.Point(151, 223);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(49, 15);
+            this.label34.TabIndex = 118;
+            this.label34.Tag = "label";
+            this.label34.Text = "ARIGHT";
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label35.ForeColor = System.Drawing.Color.Black;
+            this.label35.Location = new System.Drawing.Point(151, 194);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(40, 15);
+            this.label35.TabIndex = 117;
+            this.label35.Tag = "label";
+            this.label35.Text = "ALEFT";
+            // 
+            // tb_N64_JOYSTICKDOWN
+            // 
+            this.tb_N64_JOYSTICKDOWN.AcceptsReturn = true;
+            this.tb_N64_JOYSTICKDOWN.AcceptsTab = true;
+            this.tb_N64_JOYSTICKDOWN.BackColor = System.Drawing.Color.White;
+            this.tb_N64_JOYSTICKDOWN.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_JOYSTICKDOWN.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_JOYSTICKDOWN.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_JOYSTICKDOWN.Location = new System.Drawing.Point(197, 162);
+            this.tb_N64_JOYSTICKDOWN.Name = "tb_N64_JOYSTICKDOWN";
+            this.tb_N64_JOYSTICKDOWN.ReadOnly = true;
+            this.tb_N64_JOYSTICKDOWN.ShortcutsEnabled = false;
+            this.tb_N64_JOYSTICKDOWN.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_JOYSTICKDOWN.TabIndex = 112;
+            this.tb_N64_JOYSTICKDOWN.Tag = "N64JDOWNlight2";
+            this.tb_N64_JOYSTICKDOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_JOYSTICKDOWN.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_JOYSTICKDOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_JOYSTICKUP
+            // 
+            this.tb_N64_JOYSTICKUP.AcceptsReturn = true;
+            this.tb_N64_JOYSTICKUP.AcceptsTab = true;
+            this.tb_N64_JOYSTICKUP.BackColor = System.Drawing.Color.White;
+            this.tb_N64_JOYSTICKUP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_JOYSTICKUP.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_JOYSTICKUP.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_JOYSTICKUP.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tb_N64_JOYSTICKUP.Location = new System.Drawing.Point(197, 133);
+            this.tb_N64_JOYSTICKUP.Name = "tb_N64_JOYSTICKUP";
+            this.tb_N64_JOYSTICKUP.ReadOnly = true;
+            this.tb_N64_JOYSTICKUP.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tb_N64_JOYSTICKUP.ShortcutsEnabled = false;
+            this.tb_N64_JOYSTICKUP.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_JOYSTICKUP.TabIndex = 111;
+            this.tb_N64_JOYSTICKUP.Tag = "N64JUPlight2";
+            this.tb_N64_JOYSTICKUP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_JOYSTICKUP.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_JOYSTICKUP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label36.ForeColor = System.Drawing.Color.Black;
+            this.label36.Location = new System.Drawing.Point(151, 164);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(52, 15);
+            this.label36.TabIndex = 114;
+            this.label36.Tag = "label";
+            this.label36.Text = "ADOWN";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label37.ForeColor = System.Drawing.Color.Black;
+            this.label37.Location = new System.Drawing.Point(151, 135);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(30, 15);
+            this.label37.TabIndex = 113;
+            this.label37.Tag = "label";
+            this.label37.Text = "AUP";
+            // 
+            // tb_N64_R
+            // 
+            this.tb_N64_R.AcceptsReturn = true;
+            this.tb_N64_R.AcceptsTab = true;
+            this.tb_N64_R.BackColor = System.Drawing.Color.White;
+            this.tb_N64_R.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_R.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_R.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_R.Location = new System.Drawing.Point(197, 106);
+            this.tb_N64_R.Name = "tb_N64_R";
+            this.tb_N64_R.ReadOnly = true;
+            this.tb_N64_R.ShortcutsEnabled = false;
+            this.tb_N64_R.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_R.TabIndex = 108;
+            this.tb_N64_R.Tag = "N64Rlight2";
+            this.tb_N64_R.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_R.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_R.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_L
+            // 
+            this.tb_N64_L.AcceptsReturn = true;
+            this.tb_N64_L.AcceptsTab = true;
+            this.tb_N64_L.BackColor = System.Drawing.Color.White;
+            this.tb_N64_L.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_L.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_L.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_L.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tb_N64_L.Location = new System.Drawing.Point(197, 77);
+            this.tb_N64_L.Name = "tb_N64_L";
+            this.tb_N64_L.ReadOnly = true;
+            this.tb_N64_L.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tb_N64_L.ShortcutsEnabled = false;
+            this.tb_N64_L.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_L.TabIndex = 107;
+            this.tb_N64_L.Tag = "N64Llight2";
+            this.tb_N64_L.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_L.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_L.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(151, 108);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(14, 15);
+            this.label1.TabIndex = 110;
+            this.label1.Tag = "label";
+            this.label1.Text = "R";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label3.ForeColor = System.Drawing.Color.Black;
+            this.label3.Location = new System.Drawing.Point(151, 79);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(13, 15);
+            this.label3.TabIndex = 109;
+            this.label3.Tag = "label";
+            this.label3.Text = "L";
+            // 
+            // tb_N64_CPADLEFT
+            // 
+            this.tb_N64_CPADLEFT.AcceptsReturn = true;
+            this.tb_N64_CPADLEFT.AcceptsTab = true;
+            this.tb_N64_CPADLEFT.BackColor = System.Drawing.Color.White;
+            this.tb_N64_CPADLEFT.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_CPADLEFT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_CPADLEFT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_CPADLEFT.Location = new System.Drawing.Point(197, 47);
+            this.tb_N64_CPADLEFT.Name = "tb_N64_CPADLEFT";
+            this.tb_N64_CPADLEFT.ReadOnly = true;
+            this.tb_N64_CPADLEFT.ShortcutsEnabled = false;
+            this.tb_N64_CPADLEFT.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_CPADLEFT.TabIndex = 104;
+            this.tb_N64_CPADLEFT.Tag = "N64CLEFTlight2";
+            this.tb_N64_CPADLEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_CPADLEFT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_CPADLEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_CPADDOWN
+            // 
+            this.tb_N64_CPADDOWN.AcceptsReturn = true;
+            this.tb_N64_CPADDOWN.AcceptsTab = true;
+            this.tb_N64_CPADDOWN.BackColor = System.Drawing.Color.White;
+            this.tb_N64_CPADDOWN.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_CPADDOWN.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_CPADDOWN.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_CPADDOWN.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tb_N64_CPADDOWN.Location = new System.Drawing.Point(197, 18);
+            this.tb_N64_CPADDOWN.Name = "tb_N64_CPADDOWN";
+            this.tb_N64_CPADDOWN.ReadOnly = true;
+            this.tb_N64_CPADDOWN.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tb_N64_CPADDOWN.ShortcutsEnabled = false;
+            this.tb_N64_CPADDOWN.Size = new System.Drawing.Size(75, 23);
+            this.tb_N64_CPADDOWN.TabIndex = 103;
+            this.tb_N64_CPADDOWN.Tag = "N64CDOWNlight2";
+            this.tb_N64_CPADDOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_CPADDOWN.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_CPADDOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label4.ForeColor = System.Drawing.Color.Black;
+            this.label4.Location = new System.Drawing.Point(151, 49);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(43, 15);
+            this.label4.TabIndex = 106;
+            this.label4.Tag = "label";
+            this.label4.Text = "C LEFT";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label13.ForeColor = System.Drawing.Color.Black;
+            this.label13.Location = new System.Drawing.Point(151, 20);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(52, 15);
+            this.label13.TabIndex = 105;
+            this.label13.Tag = "label";
+            this.label13.Text = "CDOWN";
+            // 
+            // tb_N64_DPADRIGHT
+            // 
+            this.tb_N64_DPADRIGHT.AcceptsReturn = true;
+            this.tb_N64_DPADRIGHT.AcceptsTab = true;
+            this.tb_N64_DPADRIGHT.BackColor = System.Drawing.Color.White;
+            this.tb_N64_DPADRIGHT.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_DPADRIGHT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_DPADRIGHT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_DPADRIGHT.Location = new System.Drawing.Point(66, 216);
+            this.tb_N64_DPADRIGHT.Name = "tb_N64_DPADRIGHT";
+            this.tb_N64_DPADRIGHT.ReadOnly = true;
+            this.tb_N64_DPADRIGHT.ShortcutsEnabled = false;
+            this.tb_N64_DPADRIGHT.Size = new System.Drawing.Size(76, 23);
+            this.tb_N64_DPADRIGHT.TabIndex = 94;
+            this.tb_N64_DPADRIGHT.Tag = "N64DRIGHTlight2";
+            this.tb_N64_DPADRIGHT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_DPADRIGHT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_DPADRIGHT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_DPADLEFT
+            // 
+            this.tb_N64_DPADLEFT.AcceptsReturn = true;
+            this.tb_N64_DPADLEFT.AcceptsTab = true;
+            this.tb_N64_DPADLEFT.BackColor = System.Drawing.Color.White;
+            this.tb_N64_DPADLEFT.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_DPADLEFT.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_DPADLEFT.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_DPADLEFT.Location = new System.Drawing.Point(66, 188);
+            this.tb_N64_DPADLEFT.Name = "tb_N64_DPADLEFT";
+            this.tb_N64_DPADLEFT.ReadOnly = true;
+            this.tb_N64_DPADLEFT.ShortcutsEnabled = false;
+            this.tb_N64_DPADLEFT.Size = new System.Drawing.Size(76, 23);
+            this.tb_N64_DPADLEFT.TabIndex = 93;
+            this.tb_N64_DPADLEFT.Tag = "N64DLEFTlight2";
+            this.tb_N64_DPADLEFT.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_DPADLEFT.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_DPADLEFT.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_DPADDOWN
+            // 
+            this.tb_N64_DPADDOWN.AcceptsReturn = true;
+            this.tb_N64_DPADDOWN.AcceptsTab = true;
+            this.tb_N64_DPADDOWN.BackColor = System.Drawing.Color.White;
+            this.tb_N64_DPADDOWN.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_DPADDOWN.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_DPADDOWN.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_DPADDOWN.Location = new System.Drawing.Point(66, 160);
+            this.tb_N64_DPADDOWN.Name = "tb_N64_DPADDOWN";
+            this.tb_N64_DPADDOWN.ReadOnly = true;
+            this.tb_N64_DPADDOWN.ShortcutsEnabled = false;
+            this.tb_N64_DPADDOWN.Size = new System.Drawing.Size(76, 23);
+            this.tb_N64_DPADDOWN.TabIndex = 92;
+            this.tb_N64_DPADDOWN.Tag = "N64DDOWNlight2";
+            this.tb_N64_DPADDOWN.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_DPADDOWN.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_DPADDOWN.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_DPADUP
+            // 
+            this.tb_N64_DPADUP.AcceptsReturn = true;
+            this.tb_N64_DPADUP.AcceptsTab = true;
+            this.tb_N64_DPADUP.BackColor = System.Drawing.Color.White;
+            this.tb_N64_DPADUP.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_DPADUP.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_DPADUP.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_DPADUP.Location = new System.Drawing.Point(66, 131);
+            this.tb_N64_DPADUP.Name = "tb_N64_DPADUP";
+            this.tb_N64_DPADUP.ReadOnly = true;
+            this.tb_N64_DPADUP.ShortcutsEnabled = false;
+            this.tb_N64_DPADUP.Size = new System.Drawing.Size(76, 23);
+            this.tb_N64_DPADUP.TabIndex = 91;
+            this.tb_N64_DPADUP.Tag = "N64DUPlight2";
+            this.tb_N64_DPADUP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_DPADUP.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_DPADUP.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_START
+            // 
+            this.tb_N64_START.AcceptsReturn = true;
+            this.tb_N64_START.AcceptsTab = true;
+            this.tb_N64_START.BackColor = System.Drawing.Color.White;
+            this.tb_N64_START.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_START.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_START.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_START.Location = new System.Drawing.Point(66, 103);
+            this.tb_N64_START.Name = "tb_N64_START";
+            this.tb_N64_START.ReadOnly = true;
+            this.tb_N64_START.ShortcutsEnabled = false;
+            this.tb_N64_START.Size = new System.Drawing.Size(76, 23);
+            this.tb_N64_START.TabIndex = 90;
+            this.tb_N64_START.Tag = "N64STARTlight2";
+            this.tb_N64_START.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_START.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_START.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_Z
+            // 
+            this.tb_N64_Z.AcceptsReturn = true;
+            this.tb_N64_Z.AcceptsTab = true;
+            this.tb_N64_Z.BackColor = System.Drawing.Color.White;
+            this.tb_N64_Z.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_Z.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_Z.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_Z.Location = new System.Drawing.Point(66, 73);
+            this.tb_N64_Z.Name = "tb_N64_Z";
+            this.tb_N64_Z.ReadOnly = true;
+            this.tb_N64_Z.ShortcutsEnabled = false;
+            this.tb_N64_Z.Size = new System.Drawing.Size(76, 23);
+            this.tb_N64_Z.TabIndex = 89;
+            this.tb_N64_Z.Tag = "N64Zlight2";
+            this.tb_N64_Z.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_Z.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_Z.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_B
+            // 
+            this.tb_N64_B.AcceptsReturn = true;
+            this.tb_N64_B.AcceptsTab = true;
+            this.tb_N64_B.BackColor = System.Drawing.Color.White;
+            this.tb_N64_B.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_B.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_B.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_B.Location = new System.Drawing.Point(66, 45);
+            this.tb_N64_B.Name = "tb_N64_B";
+            this.tb_N64_B.ReadOnly = true;
+            this.tb_N64_B.ShortcutsEnabled = false;
+            this.tb_N64_B.Size = new System.Drawing.Size(76, 23);
+            this.tb_N64_B.TabIndex = 88;
+            this.tb_N64_B.Tag = "N64Blight2";
+            this.tb_N64_B.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_B.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_B.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // tb_N64_A
+            // 
+            this.tb_N64_A.AcceptsReturn = true;
+            this.tb_N64_A.AcceptsTab = true;
+            this.tb_N64_A.BackColor = System.Drawing.Color.White;
+            this.tb_N64_A.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tb_N64_A.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.tb_N64_A.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.tb_N64_A.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.tb_N64_A.Location = new System.Drawing.Point(66, 16);
+            this.tb_N64_A.Name = "tb_N64_A";
+            this.tb_N64_A.ReadOnly = true;
+            this.tb_N64_A.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.tb_N64_A.ShortcutsEnabled = false;
+            this.tb_N64_A.Size = new System.Drawing.Size(76, 23);
+            this.tb_N64_A.TabIndex = 87;
+            this.tb_N64_A.Tag = "N64Alight2";
+            this.tb_N64_A.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxGather);
+            this.tb_N64_A.Leave += new System.EventHandler(this.FocusLost);
+            this.tb_N64_A.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.PreviewKeyDownThis);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label22.ForeColor = System.Drawing.Color.Black;
+            this.label22.Location = new System.Drawing.Point(19, 218);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(49, 15);
+            this.label22.TabIndex = 102;
+            this.label22.Tag = "label";
+            this.label22.Text = "DRIGHT";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label23.ForeColor = System.Drawing.Color.Black;
+            this.label23.Location = new System.Drawing.Point(27, 190);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(40, 15);
+            this.label23.TabIndex = 101;
+            this.label23.Tag = "label";
+            this.label23.Text = "DLEFT";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label24.ForeColor = System.Drawing.Color.Black;
+            this.label24.Location = new System.Drawing.Point(15, 162);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(52, 15);
+            this.label24.TabIndex = 100;
+            this.label24.Tag = "label";
+            this.label24.Text = "DDOWN";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label29.ForeColor = System.Drawing.Color.Black;
+            this.label29.Location = new System.Drawing.Point(27, 133);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(30, 15);
+            this.label29.TabIndex = 99;
+            this.label29.Tag = "label";
+            this.label29.Text = "DUP";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label30.ForeColor = System.Drawing.Color.Black;
+            this.label30.Location = new System.Drawing.Point(17, 105);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(42, 15);
+            this.label30.TabIndex = 98;
+            this.label30.Tag = "label";
+            this.label30.Text = "START";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label31.ForeColor = System.Drawing.Color.Black;
+            this.label31.Location = new System.Drawing.Point(45, 77);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(14, 15);
+            this.label31.TabIndex = 97;
+            this.label31.Tag = "label";
+            this.label31.Text = "Z";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label32.ForeColor = System.Drawing.Color.Black;
+            this.label32.Location = new System.Drawing.Point(45, 47);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(14, 15);
+            this.label32.TabIndex = 96;
+            this.label32.Tag = "label";
+            this.label32.Text = "B";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label33.ForeColor = System.Drawing.Color.Black;
+            this.label33.Location = new System.Drawing.Point(45, 18);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(15, 15);
+            this.label33.TabIndex = 95;
+            this.label33.Tag = "label";
+            this.label33.Text = "A";
             // 
             // tabPageDebug
             // 
@@ -1108,6 +1777,9 @@
             this.tabPageNES.PerformLayout();
             this.tabPageSNES.ResumeLayout(false);
             this.tabPageSNES.PerformLayout();
+            this.tabPageN64.ResumeLayout(false);
+            this.tabPageN64.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabPageDebug.ResumeLayout(false);
             this.tabPageDebug.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nup_value)).EndInit();
@@ -1186,6 +1858,44 @@
         private System.Windows.Forms.Label lb_motto;
         private System.Windows.Forms.Button btn_wipeParams;
         private System.Windows.Forms.TabPage tab;
+        private System.Windows.Forms.TextBox tb_N64_JOYSTICKRIGHT;
+        private System.Windows.Forms.TextBox tb_N64_JOYSTICKLEFT;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.TextBox tb_N64_JOYSTICKDOWN;
+        private System.Windows.Forms.TextBox tb_N64_JOYSTICKUP;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.TextBox tb_N64_R;
+        private System.Windows.Forms.TextBox tb_N64_L;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tb_N64_CPADLEFT;
+        private System.Windows.Forms.TextBox tb_N64_CPADDOWN;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox tb_N64_DPADRIGHT;
+        private System.Windows.Forms.TextBox tb_N64_DPADLEFT;
+        private System.Windows.Forms.TextBox tb_N64_DPADDOWN;
+        private System.Windows.Forms.TextBox tb_N64_DPADUP;
+        private System.Windows.Forms.TextBox tb_N64_START;
+        private System.Windows.Forms.TextBox tb_N64_Z;
+        private System.Windows.Forms.TextBox tb_N64_B;
+        private System.Windows.Forms.TextBox tb_N64_A;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.TextBox tb_N64_CPADRIGHT;
+        private System.Windows.Forms.TextBox tb_N64_CPADUP;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label40;
     }
 }
 
