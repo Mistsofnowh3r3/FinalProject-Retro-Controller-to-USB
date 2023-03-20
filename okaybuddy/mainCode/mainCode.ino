@@ -30,24 +30,26 @@ String parts[4]; // create an array to hold the three substrings
 //15 SNES X
 //16 SNES L
 //17 SNES R
-//18 N64 A
-//19 N64 B
-//20 N64 Z
-//21 N64 START 
-//22 N64 D UP
-//23 N64 D DOWN
-//24 N64 D LEFT
-//25 N64 D RIGHT
-//26 N64 C UP
-//27 N64 C DOWN
-//28 N64 L
-//29 N64 R
-//30 N64 C LEFT
-//31 N64 C RIGHT
-//32 N64 A UP
-//33 N64 A DOWN
-//34 N64 A LEFT
-//35 N64 A RIGHT
+//18 N64 //A     
+//19 N64 //B
+//20 N64 //Z
+//21 N64 //START
+//22 N64 //D UP
+//23 N64 //D DOWN
+//24 N64 //D LEFT
+//25 N64 //D RIGHT
+//26 N64 //C DOWN
+//27 N64 //C LEFT
+//28 N64 //L
+//29 N64 //R
+//30 N64 //C UP
+//31 N64 //C RIGHT
+//32 N64 //A UP
+//33 N64 //A DOWN
+//34 N64 //A LEFT
+//35 N64 //A RIGHT
+
+
 
 int init_NES_btns[] = {
     'q',            //A
@@ -102,6 +104,8 @@ int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 // Used for making sure that the DPAD functions correctly.
 bool holdingUp = 0;
 bool holdingDown = 0;
+int holdCheckUpDown = 5;
+int holdCheckLeftRight = 5;
 bool holdingLeft = 0;
 bool holdingRight = 0;
 
@@ -119,7 +123,7 @@ bool snesControllerConnectedLast = false;
 bool n64ControllerConnected = false;
 
 // Controller vs kyeboard mode select keyboard = 1 controller = 0 
-bool outputMode = 1;
+bool outputMode = 0;
 
 // Constants //
 
@@ -179,6 +183,7 @@ const int outModeSwitch = PIN_A5;
 
 
 void serialActions() {
+    clearAllButtons();
     memset(parts, 0, sizeof(parts));  // clear the parts array
     serialNow = Serial.readStringUntil('!');  // read the command
 
@@ -228,7 +233,7 @@ void loadKeyboardArrays() {
     for (int ed = 8; ed < 20; ed++) {
         init_SNES_btns[ed - 8] = EEPROM.read(ed);
     }
-    //for (int v = 20; v < 8; v++) {
+    //for (int v = 20; v < 38; v++) {
     //    init_N64_btns[v] = EEPROM.read(v);
     //}
 
@@ -254,50 +259,46 @@ void checkButton(int button) {
         if ((modeSelect == 1) && button_index < 8) {
             if (button_index > 3) {
                 if ((button_index == 4) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding up
-                    if (holdingDown == 0 && holdingUp == 1) { // check if we are holding up
+                    if (holdCheckUpDown == 1) { // check if we are holding up
                         usbStick.setYAxis(ANALOG_IDLE_VALUE); // release up
-                        holdingUp = 0; // Let us know it's no longer held
+                        holdCheckUpDown = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((button_index == 5) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding down
-                    if (holdingDown == 1 && holdingUp == 0) { // check if we are holding down
+                    if (holdCheckUpDown == 2) { // check if we are holding down
                         usbStick.setYAxis(ANALOG_IDLE_VALUE); // release down
-                        holdingDown = 0; // Let us know it's no longer held
+                        holdCheckUpDown = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((button_index == 4) && (digitalRead(dataPinNes) == LOW)) { //if 4th and read data from dataPin
                     usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
-                    holdingUp = 1; // let us know it is being held
-                    holdingDown = 0; // cannot hold up and down at the same time
+                    holdCheckUpDown = 1; // we are holding up
                 }
                 if ((button_index == 5) && (digitalRead(dataPinNes) == LOW)) { //if 5th and read data from dataPin
                     usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
-                    holdingDown = 1; // let us know it is being held
-                    holdingUp = 0; // cannot hold up and down at the same time
+                    holdCheckUpDown = 2; // we are holding down
                 }
 
 
                 if ((button_index == 6) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding left
-                    if (holdingRight == 0 && holdingLeft == 1) { // check if we are holding down
+                    if (holdCheckLeftRight == 1) { // check if we are holding left
                         usbStick.setXAxis(ANALOG_IDLE_VALUE); // release left
-                        holdingLeft = 0; // Let us know it's no longer held
+                        holdCheckLeftRight = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((button_index == 7) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding right
-                    if (holdingRight == 1 && holdingLeft == 0) { // check if we are holding down right
+                    if (holdCheckLeftRight == 2) { // check if we are holding right
                         usbStick.setXAxis(ANALOG_IDLE_VALUE); // release
-                        holdingRight = 0; // Let us know it's no longer held
+                        holdCheckLeftRight = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((button_index == 6) && (digitalRead(dataPinNes) == LOW)) { //if 6th and read data from dataPin
-                    usbStick.setXAxis(ANALOG_MIN_VALUE); // press up
-                    holdingLeft = 1; // let us know it is being held
-                    holdingRight = 0; // cannot hold right and left at the same time
+                    usbStick.setXAxis(ANALOG_MIN_VALUE); // press left
+                    holdCheckLeftRight = 1; // we are holding left
                 }
                 if ((button_index == 7) && (digitalRead(dataPinNes) == LOW)) { //if 7th and read data from dataPin
-                    usbStick.setXAxis(ANALOG_MAX_VALUE); // press down
-                    holdingRight = 1; // let us know it is being held
-                    holdingLeft = 0; // cannot hold right and left at the same time
+                    usbStick.setXAxis(ANALOG_MAX_VALUE); // press right
+                    holdCheckLeftRight = 2; // we are holding right
                 }
                 usbStick.sendState();
                 return;
@@ -308,7 +309,7 @@ void checkButton(int button) {
             return;
         }
 
-        if ((modeSelect == 2)) {
+        if (modeSelect == 2) {
             if (button_index > 3 && button_index < 8) {
                 if ((button_index == 4) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding up
                     if (holdingDown == 0 && holdingUp == 1) { // check if we are holding up
@@ -372,7 +373,7 @@ void checkButton(int button) {
 void clearAllButtons() {
     usbStick.setYAxis(ANALOG_IDLE_VALUE); // Clear the Dpad
     usbStick.setXAxis(ANALOG_IDLE_VALUE); // Clear the Dpad
-    for(int u = 0; u < 12; u++) usbStick.setButton(controllerbutton_values[u-1], 0); // Clear the buttons
+    for(int u = 0; u < 12; u++) usbStick.setButton(controllerbutton_values[u], 0); // Clear the buttons
     usbStick.sendState();
     Keyboard.releaseAll(); // release all keys
 }
@@ -480,43 +481,86 @@ void n64() {
 			digitalWrite (LED_BUILTIN, LOW);
 			haveController = false;
 		} else {
-			// Controller was read fine
-			if ((pad.buttons & N64Pad::BTN_LRSTART) != 0) {
-				// This combo toggles mapAnalogToDPad
-			} else {
-				// Map buttons!
-				usbStick.setButton (0, (pad.buttons & N64Pad::BTN_B) != 0);
-				usbStick.setButton (1, (pad.buttons & N64Pad::BTN_A) != 0);
-				usbStick.setButton (2, (pad.buttons & N64Pad::BTN_C_LEFT) != 0);
-				usbStick.setButton (3, (pad.buttons & N64Pad::BTN_C_DOWN) != 0);
-				usbStick.setButton (4, (pad.buttons & N64Pad::BTN_C_UP) != 0);
-				usbStick.setButton (5, (pad.buttons & N64Pad::BTN_C_RIGHT) != 0);
-				usbStick.setButton (6, (pad.buttons & N64Pad::BTN_L) != 0);
-				usbStick.setButton (7, (pad.buttons & N64Pad::BTN_R) != 0);
-				usbStick.setButton (8, (pad.buttons & N64Pad::BTN_Z) != 0);
-				usbStick.setButton (9, (pad.buttons & N64Pad::BTN_START) != 0);
-				
-					// D-Pad makes up the X/Y axes
-					if ((pad.buttons & N64Pad::BTN_UP) != 0) {
-						usbStick.setYAxis (ANALOG_MIN_VALUE);
-					} else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
-						usbStick.setYAxis (ANALOG_MAX_VALUE);
-					} else {
-						usbStick.setYAxis (ANALOG_IDLE_VALUE);
-					}
-					if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
-						usbStick.setXAxis (ANALOG_MIN_VALUE);
-					} else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
-						usbStick.setXAxis (ANALOG_MAX_VALUE);
-					} else {
-						usbStick.setXAxis (ANALOG_IDLE_VALUE);
-					}
-					// The analog stick gets mapped to the X/Y rotation axes
-					usbStick.setRxAxis (pad.x);
-					usbStick.setRyAxis (pad.y);
-				// All done, send data for real!
-				usbStick.sendState ();
-			}
+            if (outputMode == 0) {
+                // map to controller
+                // Controller was read fine
+			    // Map buttons!
+			    usbStick.setButton (0, (pad.buttons & N64Pad::BTN_B) != 0);
+			    usbStick.setButton (1, (pad.buttons & N64Pad::BTN_A) != 0);
+			    usbStick.setButton (2, (pad.buttons & N64Pad::BTN_C_LEFT) != 0);
+			    usbStick.setButton (3, (pad.buttons & N64Pad::BTN_C_DOWN) != 0);
+			    usbStick.setButton (4, (pad.buttons & N64Pad::BTN_C_UP) != 0);
+			    usbStick.setButton (5, (pad.buttons & N64Pad::BTN_C_RIGHT) != 0);
+			    usbStick.setButton (6, (pad.buttons & N64Pad::BTN_L) != 0);
+			    usbStick.setButton (7, (pad.buttons & N64Pad::BTN_R) != 0);
+			    usbStick.setButton (8, (pad.buttons & N64Pad::BTN_Z) != 0);
+			    usbStick.setButton (9, (pad.buttons & N64Pad::BTN_START) != 0);
+
+			    	// D-Pad makes up the X/Y axes
+			    	if ((pad.buttons & N64Pad::BTN_UP) != 0) {
+			    		usbStick.setYAxis (ANALOG_MIN_VALUE);
+			    	} else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
+			    		usbStick.setYAxis (ANALOG_MAX_VALUE);
+			    	} else {
+			    		usbStick.setYAxis (ANALOG_IDLE_VALUE);
+			    	}
+			    	if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
+			    		usbStick.setXAxis (ANALOG_MIN_VALUE);
+			    	} else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
+			    		usbStick.setXAxis (ANALOG_MAX_VALUE);
+			    	} else {
+			    		usbStick.setXAxis (ANALOG_IDLE_VALUE);
+			    	}
+			    	// The analog stick gets mapped to the X/Y rotation axes
+			    	usbStick.setRxAxis (pad.x);
+			    	usbStick.setRyAxis (pad.y);
+			    // All done, send data for real!
+			    usbStick.sendState ();
+			    
+            }
+            else {
+                //map to keyboard
+                // Map buttons!
+                
+                ((pad.buttons & N64Pad::BTN_A) != 0) ? Keyboard.press(tolower(init_N64_btns[0])) : Keyboard.release(tolower(init_N64_btns[0]));
+                ((pad.buttons & N64Pad::BTN_B) != 0) ? Keyboard.press(tolower(init_N64_btns[1])) : Keyboard.release(tolower(init_N64_btns[1]));
+                ((pad.buttons & N64Pad::BTN_Z) != 0) ? Keyboard.press(tolower(init_N64_btns[2])) : Keyboard.release(tolower(init_N64_btns[2]));
+                ((pad.buttons & N64Pad::BTN_START) != 0) ? Keyboard.press(tolower(init_N64_btns[3])) : Keyboard.release(tolower(init_N64_btns[3]));
+                //if ((pad.buttons & N64Pad::BTN_UP) != 0) {
+                //    usbStick.setYAxis(ANALOG_MIN_VALUE);
+                //}
+                //else if ((pad.buttons & N64Pad::BTN_DOWN) != 0) {
+                //    usbStick.setYAxis(ANALOG_MAX_VALUE);
+                //} 
+                //else {
+                //    usbStick.setYAxis(ANALOG_IDLE_VALUE);
+                //}
+                //if ((pad.buttons & N64Pad::BTN_LEFT) != 0) {
+                //    usbStick.setXAxis(ANALOG_MIN_VALUE);
+                //} 
+                //else if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) {
+                //    usbStick.setXAxis(ANALOG_MAX_VALUE);
+                //} 
+                //else {
+                //    usbStick.setXAxis(ANALOG_IDLE_VALUE);
+                //}
+                ((pad.buttons & N64Pad::BTN_C_DOWN) != 0) ? Keyboard.press(tolower(init_N64_btns[8])) : Keyboard.release(tolower(init_N64_btns[8]));
+                ((pad.buttons & N64Pad::BTN_C_LEFT) != 0) ? Keyboard.press(tolower(init_N64_btns[9])) : Keyboard.release(tolower(init_N64_btns[9]));
+                ((pad.buttons & N64Pad::BTN_L) != 0) ? Keyboard.press(tolower(init_N64_btns[10])) : Keyboard.release(tolower(init_N64_btns[10]));
+                ((pad.buttons & N64Pad::BTN_R) != 0) ? Keyboard.press(tolower(init_N64_btns[11])) : Keyboard.release(tolower(init_N64_btns[11]));
+                ((pad.buttons & N64Pad::BTN_C_UP) != 0) ? Keyboard.press(tolower(init_N64_btns[12])) : Keyboard.release(tolower(init_N64_btns[12]));
+                ((pad.buttons & N64Pad::BTN_C_RIGHT) != 0) ? Keyboard.press(tolower(init_N64_btns[13])) : Keyboard.release(tolower(init_N64_btns[13]));
+  
+                // D-Pad makes up the X/Y axes
+
+                // The analog stick gets mapped to the X/Y rotation axes
+                //usbStick.setRxAxis(pad.x);
+                //usbStick.setRyAxis(pad.y);
+                // All done, send data for real!
+                //usbStick.sendState();
+                
+            }
+			
 		}
     } 
 }
@@ -566,7 +610,6 @@ void setup() {
 	usbStick.setYAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRxAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRyAxisRange (ANALOG_MAX_VALUE, ANALOG_MIN_VALUE);
-    Serial.write("Hi"); // Send a hello
 }
 
 void loop() {  
@@ -575,8 +618,9 @@ void loop() {
     //(snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
 
     checkSwitches();
-    if( modeSelectLast != modeSelect) clearAllButtons;
-    
+    if( modeSelectLast != modeSelect) {
+        clearAllButtons();
+    }
     modeSelectLast = modeSelect;
 
     if (modeSelect == 0) serialActions();

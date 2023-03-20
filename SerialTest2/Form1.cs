@@ -854,7 +854,7 @@ namespace ccAdapterRemapper
             UpdateColors();
             pastel++;
             tb_console.Text = pastel.ToString();
-            if (pastel >= 420)
+            if (pastel >= 100)
             {
                 MessageBox.Show("Unlocked, GOLD", "(:");
                 MessageBox.Show("lol just kidding", "):");
