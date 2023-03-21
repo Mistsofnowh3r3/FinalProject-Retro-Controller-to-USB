@@ -115,7 +115,6 @@
             this.label32 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.tabPageDebug = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
             this.btn_wipeParams = new System.Windows.Forms.Button();
             this.btn_colorPick = new System.Windows.Forms.Button();
             this.cb_pastel = new System.Windows.Forms.CheckBox();
@@ -1533,7 +1532,6 @@
             // tabPageDebug
             // 
             this.tabPageDebug.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.tabPageDebug.Controls.Add(this.button1);
             this.tabPageDebug.Controls.Add(this.btn_wipeParams);
             this.tabPageDebug.Controls.Add(this.btn_colorPick);
             this.tabPageDebug.Controls.Add(this.cb_pastel);
@@ -1552,20 +1550,6 @@
             this.tabPageDebug.TabIndex = 3;
             this.tabPageDebug.Tag = "dark2";
             this.tabPageDebug.Text = "Debug";
-            // 
-            // button1
-            // 
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(293, 202);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(122, 52);
-            this.button1.TabIndex = 63;
-            this.button1.TabStop = false;
-            this.button1.Tag = "light2";
-            this.button1.Text = "Test Button";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // btn_wipeParams
             // 
@@ -1911,7 +1895,6 @@
         private System.Windows.Forms.TextBox tb_N64_CPADUP;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.Button button1;
     }
 }
 
