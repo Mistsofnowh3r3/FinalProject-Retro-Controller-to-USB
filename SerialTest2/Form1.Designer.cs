@@ -115,6 +115,7 @@
             this.label32 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.tabPageDebug = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.btn_wipeParams = new System.Windows.Forms.Button();
             this.btn_colorPick = new System.Windows.Forms.Button();
             this.cb_pastel = new System.Windows.Forms.CheckBox();
@@ -171,7 +172,7 @@
             this.btn_stopstart.Tag = "light1";
             this.btn_stopstart.Text = "Select A Port";
             this.btn_stopstart.UseVisualStyleBackColor = false;
-            this.btn_stopstart.Click += new System.EventHandler(this.OpenCOM);
+            this.btn_stopstart.Click += new System.EventHandler(this.OpenCloseCOM);
             // 
             // cb_portlist
             // 
@@ -187,7 +188,6 @@
             this.cb_portlist.Tag = "light2";
             this.cb_portlist.DropDown += new System.EventHandler(this.Portlist_DropDown);
             this.cb_portlist.SelectedIndexChanged += new System.EventHandler(this.Portlist_SelectedIndexChanged);
-            this.cb_portlist.DropDownClosed += new System.EventHandler(this.Portlist_DropDownClosed);
             // 
             // label2
             // 
@@ -1533,6 +1533,7 @@
             // tabPageDebug
             // 
             this.tabPageDebug.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.tabPageDebug.Controls.Add(this.button1);
             this.tabPageDebug.Controls.Add(this.btn_wipeParams);
             this.tabPageDebug.Controls.Add(this.btn_colorPick);
             this.tabPageDebug.Controls.Add(this.cb_pastel);
@@ -1551,6 +1552,20 @@
             this.tabPageDebug.TabIndex = 3;
             this.tabPageDebug.Tag = "dark2";
             this.tabPageDebug.Text = "Debug";
+            // 
+            // button1
+            // 
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Location = new System.Drawing.Point(293, 202);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(122, 52);
+            this.button1.TabIndex = 63;
+            this.button1.TabStop = false;
+            this.button1.Tag = "light2";
+            this.button1.Text = "Test Button";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // btn_wipeParams
             // 
@@ -1716,7 +1731,7 @@
             this.btn_sendremap.Size = new System.Drawing.Size(114, 75);
             this.btn_sendremap.TabIndex = 1;
             this.btn_sendremap.TabStop = false;
-            this.btn_sendremap.Tag = "light2";
+            this.btn_sendremap.Tag = "light1";
             this.btn_sendremap.Text = "Write current tab to EEPROM";
             this.btn_sendremap.UseVisualStyleBackColor = true;
             this.btn_sendremap.Click += new System.EventHandler(this.Sendremap_Click);
@@ -1896,6 +1911,7 @@
         private System.Windows.Forms.TextBox tb_N64_CPADUP;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -211,6 +211,9 @@ void serialActions() {
         else if(parts[3] == "N64") {
             adr += 18;
         }
+        //Serial.write("Wrote: " + val);
+        //Serial.write("to: " + adr);
+        //Serial.write("\n");
         EEPROM.write(adr,val);
     }
     if (parts[0] == "PE") { // PEEK

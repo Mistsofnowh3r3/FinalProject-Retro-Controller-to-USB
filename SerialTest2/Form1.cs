@@ -30,8 +30,11 @@ namespace ccAdapterRemapper
         private Color backDarkColor;
         private Color backLightColor;
         private Color textColor;
-        private readonly string focusColor = "#0078d7";
-        private readonly string needsSaving = "#ff6347";
+        private readonly string focusColor = "#0078d7"; // Color of selected box
+        private readonly string needsSaving = "#ff6347"; //send remap active color
+        
+        
+        // When true, bypass the unsent remap check on app exit
         private bool justRestart = false;
 
 
@@ -78,6 +81,8 @@ namespace ccAdapterRemapper
             "Revamp in your own manner"
         };
 
+
+
         private int didNo = 0;
         private int pastel = 0;
 
@@ -89,6 +94,7 @@ namespace ccAdapterRemapper
 
         public Form1()
         {
+            // Intilize the serial port
             _serialPort.Encoding = Encoding.UTF8;
             _serialPort.DtrEnable = true;
             _serialPort.ReadTimeout = 2000;
@@ -100,6 +106,7 @@ namespace ccAdapterRemapper
         private void Form1_Load(object sender, EventArgs e)
         {
 
+            // Check for previously saved controller mappings. Load them if they exist.
             if (ccAdapterRemapper.Params.IsParamSet("NESBUTTONS"))    //if there is a param for the nes buttons already
             {
                 working_NES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
@@ -121,7 +128,8 @@ namespace ccAdapterRemapper
             lb_motto.Text = mottoArray[random.Next(0, mottoArray.Length)];
 
 
-            //Poulate the textboxes with the data from the working arrays
+            
+            #region //Poulate the textboxes with the data from the working arrays
             tb_NES_A.Text = RevKeyToKey(working_NES_btns[0]);
             tb_NES_B.Text = RevKeyToKey(working_NES_btns[1]);
             tb_NES_SELECT.Text = RevKeyToKey(working_NES_btns[2]);
@@ -162,7 +170,7 @@ namespace ccAdapterRemapper
             tb_N64_JOYSTICKRIGHT.Text = RevKeyToKey(working_N64_btns[15]);
             tb_N64_CPADUP.Text = RevKeyToKey(working_N64_btns[16]);
             tb_N64_CPADRIGHT.Text = RevKeyToKey(working_N64_btns[17]);
-
+            #endregion
 
 
 
@@ -171,7 +179,7 @@ namespace ccAdapterRemapper
             cb_portlist.Text = "Select a port";
 
 
-            //Hiding the caret and selction of the textboxes for aesthetic
+            //iterate through every control contained in the tabcontrol and hide the caret and selction of the textboxes for aesthetic
             foreach (Control c in tabControl.Controls)
                 foreach (Control x in c.Controls)
                     if (x.GetType() == typeof(TextBox)) 
@@ -183,27 +191,21 @@ namespace ccAdapterRemapper
 
             // CHeck if there is a saved color in the PARAMs
             if (ccAdapterRemapper.Params.IsParamSet("COLOR"))
-            {
                 baseColor = ColorTranslator.FromHtml(ccAdapterRemapper.Params.ReadParam("COLOR"));
-                baseColorStore = baseColor;
-            }
             else
-            {
                 baseColor = ColorTranslator.FromHtml(baseHexColor);
-                baseColorStore = baseColor;
-            }
-
+            baseColorStore = baseColor; // create a backup of the baseColor
 
             ColorShifter(baseColor);// Create the colors 
             UpdateColors();// Set the app colors
         }
 
-        private void NeatHack(bool yup) //When pressing a button on a control, quickly disable tabstop so that the box can accept tab
+        private void TabStopHack(bool setEnable) //When pentering a key in a textbox, quickly disable tabstop so that the box can accept the TAB key
         {
             foreach (Control c in tabControl.Controls)
                 foreach (Control x in c.Controls)
                     if (x.GetType() == typeof(TextBox)) 
-                        x.TabStop = yup;           
+                        x.TabStop = setEnable;           
         }
 
 
@@ -254,7 +256,7 @@ namespace ccAdapterRemapper
         {
             textColor = Color.White;
 
-            if (cb_pastel.Checked)
+            if (cb_pastel.Checked) // if the pastel box is checked, set the colors as pastel
             {
                 baseColor = ColorTranslator.FromHtml("#F492A5");
                 buttonDarkColor = ColorTranslator.FromHtml("#57cbe6");
@@ -264,46 +266,43 @@ namespace ccAdapterRemapper
                 textColor = Color.Black;
                 ccAdapterRemapper.Params.SetParam("PB");// save to PARAMs
             }
-            else
+            else // Otherwise generate and load colors based off baseColor
             {
-                baseColor = baseColorStore;
+                baseColor = baseColorStore; // reload the baseColor from baseColorStore incase base color was overwrote with pastel
                 ColorShifter(baseColor);
                 ccAdapterRemapper.Params.RemoveParam("PB");// save to PARAMs
             }
-            ColorControls(this);
+            ColorControls(this); // this being the form itself
         }
 
         private void ColorControls(Control parent) // Colors controls
         {
-            if (parent is Form && parent.Tag != null && parent.Tag.ToString().Contains("dark1"))
-            {
+            if (parent.Tag.ToString().Contains("dark1"))
+            { 
                 if (parent.Tag.ToString().Contains("dark1"))
                 {
                     parent.BackColor = backDarkColor;
                 }
-            }
+            }      
 
-            foreach (Control control in parent.Controls)
+            foreach (Control control in parent.Controls) // for each control in the controls of the parent(form)
             {
-                if (control is TabControl control1)
+                if (control is TabControl control1) // if the control is a tab
                 {
-                    foreach (TabPage tabPage in control1.TabPages)
+                    foreach (TabPage tabPage in control1.TabPages) // then for each tabpage in the tabcontrol
                     {
-                        if (tabPage.Tag != null)
+                        if (tabPage.Tag.ToString().Contains("dark1"))
                         {
-                            if (tabPage.Tag.ToString().Contains("dark1"))
-                            {
-                                tabPage.BackColor = backDarkColor;
-                            }
-                            if (tabPage.Tag.ToString().Contains("dark2"))
-                            {
-                                tabPage.BackColor = backLightColor;
-                            }
+                            tabPage.BackColor = backDarkColor;
                         }
-                        ColorControls(tabPage);
+                        if (tabPage.Tag.ToString().Contains("dark2"))
+                        {
+                            tabPage.BackColor = backLightColor;
+                        }
+                        //ColorControls(tabPage);
                     }
                 }
-                else if (control.Tag != null)
+                else if (control.Tag != null) 
                 {
                     if (control.Tag.ToString().Contains("dark1"))
                     {
@@ -328,7 +327,7 @@ namespace ccAdapterRemapper
                         control.ForeColor = textColor;
                     }
                 }
-                if (control.HasChildren)
+                if (control.HasChildren) // Recursively color all the controls 
                 {
                     ColorControls(control);
                 }
@@ -504,8 +503,8 @@ namespace ccAdapterRemapper
                 case 2: //IO Error
                     // Play sound and show error in a pop up message
                     SystemSounds.Exclamation.Play();
-                    _ = MessageBox.Show(new Form { TopMost = true }, $"I/O Error! Program will restart.\nException message:  | {message} |");
-                    justRestart = true;
+                    _ = MessageBox.Show(new Form { TopMost = true }, $"Error! Program will restart.\nException message:  | {message} |");
+                    justRestart = true; // Skip unsent mappings check
                     System.Windows.Forms.Application.Restart(); // EUGGGGH Just restart the whole thing I guess.
                     break;
 
@@ -517,24 +516,19 @@ namespace ccAdapterRemapper
         }
 
 
-        private void OpenCOM(object sender, EventArgs e) //Attempt to open the selected COM port
+        private void OpenCloseCOM(object sender, EventArgs e) //Attempt to open the selected COM port
         {
+            string port = (string)cb_portlist.SelectedItem;
+            if (port == null || !port.StartsWith("COM")) // Don't let user open or close a port if the selected item is not a port
+            {
+                ClosePort();
+                btn_stopstart.Enabled = false;
+                return; 
+            }
             try // try to open or close the serial port
             {
-                if (_serialPort.IsOpen)
-                {
-                    _serialPort.Close();
-                    btn_stopstart.Text = "Open";
-                    btn_sendremap.Enabled = false;
-                    btn_sendremap.BackColor = buttonDarkColor;
-                }
-                else
-                {
-                    _serialPort.Open();
-                    btn_stopstart.Text = "Close";
-                    btn_sendremap.Enabled = true;
-                    btn_sendremap.BackColor = ColorTranslator.FromHtml(needsSaving);
-                }
+                if (_serialPort.IsOpen && port.StartsWith("COM")) ClosePort();  
+                else OpenPort();    
             }
             catch (Exception ex) // If an exception
             {
@@ -543,25 +537,31 @@ namespace ccAdapterRemapper
 
         }
 
+        void ClosePort()
+        {
+            _serialPort.Close();
+            btn_stopstart.Text = "Open selected.";
+            btn_sendremap.Enabled = false;
+            btn_peek.Enabled = false;
+            btn_poke.Enabled = false;
+            btn_sendremap.BackColor = buttonDarkColor;
+        }
+
+        void OpenPort()
+        {
+            _serialPort.Open();
+            btn_stopstart.Text = "Close selected.";
+            btn_sendremap.Enabled = true;
+            btn_peek.Enabled = true;
+            btn_poke.Enabled = true;
+            btn_sendremap.BackColor = ColorTranslator.FromHtml(needsSaving);
+        }
+
+
         private void Portlist_DropDown(object sender, EventArgs e) //Handles the COMlist combobox port dropdown
         {
             // Get a list of serial port names.
             string[] ports = SerialPort.GetPortNames();
-
-            //Check if the defult text is currently the selected one
-            if ((string)cb_portlist.SelectedItem == "Select a port")
-            {
-                cb_portlist.Items.Clear();
-            }
-            //Check if there are even any COM ports available
-            if (ports == null || ports.Length == 0)
-            {
-                cb_portlist.Items.Clear();
-                _ = cb_portlist.Items.Add("Select a port");
-                cb_portlist.Text = "Select a port";
-                return;
-            }
-
             //Finally poluate the combobox with the avialable COM ports
             foreach (string s in SerialPort.GetPortNames())
             {
@@ -572,30 +572,21 @@ namespace ccAdapterRemapper
             }
         }
 
-        private void Portlist_DropDownClosed(object sender, EventArgs e)
-        {
-            string port = (string)cb_portlist.SelectedItem;
-            if (port == null || !port.StartsWith("COM"))  //If the selected item in the combobox is not correct
-            {
-                _ = cb_portlist.Items.Add("Select a port");
-                cb_portlist.Text = "Select a port";
-            }
-        }
-
-
         private void Portlist_SelectedIndexChanged(object sender, EventArgs e) //Handles the COMlist combobox selections
         {
             string port = (string)cb_portlist.SelectedItem;
-            if (port == null || !port.StartsWith("COM"))
+
+
+            if (port == null || !port.StartsWith("COM")) // Don't let user open a port if the selected item is not a port
             {
-                cb_portlist.Text = "Select a port";
-                return;
+                ClosePort();
+                btn_stopstart.Enabled = false;
+                return; 
             }
-            _serialPort.Close();
-            btn_stopstart.Text = "Open!";
-            btn_stopstart.Enabled = true;
+            _serialPort.Close(); // Ensure port is closed be fore opening a new one.
             // Change the serial port's COM
             _serialPort.PortName = port;
+            btn_stopstart.Enabled = true;
         }
 
         private void Sendremap_Click(object sender, EventArgs e)
@@ -608,14 +599,13 @@ namespace ccAdapterRemapper
                         for (int i = 0; i < 8; i++)
                         {
                             if (working_NES_btns[i] != onload_NES_btns[i])
-                            {
-                                _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "NES" + "!"); // send a remap only if the current is different then before (minimize eeprom writes)
-                            }
+                                _serialPort.Write("PO" + "," + i + "," + working_NES_btns[i] + "," + "NES" + "!"); // send a remap only if the current is different then before (minimize eeprom writes)
+                            
 
                             Thread.Sleep(30); //buffer, might not actually be needed
                         }
                         ccAdapterRemapper.Params.SetParam("NESBUTTONS", string.Join(",", working_NES_btns));// Save the keys select to the PARAMs
-                        Array.Copy(onload_NES_btns, working_NES_btns, onload_NES_btns.Length); //update the onload array
+                        Array.Copy(working_NES_btns, onload_NES_btns, onload_NES_btns.Length); //update the onload array
                         //btn_sendremap.BackColor = ColorTranslator.FromHtml(light2);
                         //btn_sendremap.Enabled = false;
                         break;
@@ -623,22 +613,24 @@ namespace ccAdapterRemapper
                     case "SNES":
                         for (int i = 0; i < 12; i++)
                         {
-                            _serialPort.Write("PO" + "," + i + "," + working_SNES_btns[i] + "SNES" + "!"); // send a remap
+                            if (working_SNES_btns[i] != onload_SNES_btns[i])
+                                _serialPort.Write("PO" + "," + i + "," + working_SNES_btns[i] + "," + "SNES" + "!"); // send a remap
 
                             Thread.Sleep(30);
                         }
                         ccAdapterRemapper.Params.SetParam("SNESBUTTONS", string.Join(",", working_SNES_btns));
-                        Array.Copy(onload_SNES_btns, working_SNES_btns, onload_SNES_btns.Length); //update the onload array
+                        Array.Copy(working_SNES_btns, onload_SNES_btns,  onload_SNES_btns.Length); //update the onload array
                         break;
                     case "N64":
                         for (int i = 0; i < 18; i++)
                         {
-                            _serialPort.Write("PO" + "," + i + "," + working_SNES_btns[i] + "N64" + "!"); // send a remap
-                        
+                            if (working_N64_btns[i] != onload_N64_btns[i])
+                                _serialPort.Write("PO" + "," + i + "," + working_N64_btns[i] + "," + "N64" + "!"); // send a remap
+                            
                             Thread.Sleep(30);
                         }
-                        ccAdapterRemapper.Params.SetParam("N64BUTTONS", string.Join(",", working_SNES_btns));
-                        Array.Copy(onload_N64_btns, working_N64_btns, onload_N64_btns.Length); //update the onload array
+                        ccAdapterRemapper.Params.SetParam("N64BUTTONS", string.Join(",",  working_N64_btns));
+                        Array.Copy(working_N64_btns, onload_N64_btns,  onload_N64_btns.Length); //update the onload array
                         break;
                 }
             }
@@ -846,7 +838,7 @@ namespace ccAdapterRemapper
                 ThrowError("Unsupported Key.", 1);
                 return;
             }
-            NeatHack(true);
+            TabStopHack(true);
 
             _ = SelectNextControl(ActiveControl, true, true, true, true);
         }
@@ -893,7 +885,7 @@ namespace ccAdapterRemapper
 
         private void PreviewKeyDownThis(object sender, PreviewKeyDownEventArgs e)
         {
-            NeatHack(false);
+            TabStopHack(false);
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -963,6 +955,11 @@ namespace ccAdapterRemapper
                     break;
             }
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            _serialPort.Write("PO,0,69,N64!");
         }
     }
 }
