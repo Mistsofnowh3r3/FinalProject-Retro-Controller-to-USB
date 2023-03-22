@@ -405,6 +405,15 @@ void checkButton(int button) {
 }
 
 void clearAllButtons() {
+    for(int sdv = 0; sdv < 8; sdv++) {
+        held_NES_btns[sdv] = 0;
+    }
+    for(int sdv = 0; sdv < 12; sdv++) {
+        held_SNES_btns[sdv] = 0;
+    }
+    for(int sdv = 0; sdv < 18; sdv++) {
+        held_N64_btns[sdv] = 0;
+    }
     usbStick.setYAxis(ANALOG_IDLE_VALUE); // Clear the Dpad
     usbStick.setXAxis(ANALOG_IDLE_VALUE); // Clear the Dpad
     for(int u = 0; u < 12; u++) usbStick.setButton(controllerbutton_values[u], 0); // Clear the buttons
