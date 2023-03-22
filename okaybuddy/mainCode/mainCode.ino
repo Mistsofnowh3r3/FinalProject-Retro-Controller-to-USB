@@ -61,6 +61,7 @@ int init_NES_btns[] = {
     KEY_LEFT_ARROW, //LEFT
     KEY_RIGHT_ARROW,//RIGHT
 };
+int held_NES_btns[8];
 
 int init_SNES_btns[] = {
     'z',            //B
@@ -247,8 +248,26 @@ void checkButton(int button) {
 
     if (outputMode == 1) {
         // if in nesMode and button index < 8 then according to the inversion of the state of dataPinNes press or release a button
-        if ((modeSelect == 1) && button_index < 8) !digitalRead(dataPinNes) ? Keyboard.press(tolower(init_NES_btns[button_index])) : Keyboard.release(tolower(init_NES_btns[button_index]));
-
+        if ((modeSelect == 1) && button_index < 8) {
+            if(!digitalRead(dataPinNes)) { 
+                Keyboard.press(tolower(init_NES_btns[button_index]));
+                held_NES_btns[button_index] = init_NES_btns[button_index]; // add the button to the held array
+            }
+            else {
+                for(int op; op < 8; op++ ) { // check if the button is curretnyl in the held array
+                    if (op == button_index ){ // We do not care if the button currently being checked has the key held.
+                        continue; // so skip the check
+                    }
+                    if (held_NES_btns[op] == init_NES_btns[button_index]) {
+                        held_NES_btns[button_index] = 0; // Do reset the hold
+                        return; // if it is, return without unpressing the key
+                    }
+                }
+                // if not, unpress the key 
+                Keyboard.release(tolower(init_NES_btns[button_index]));
+                held_NES_btns[button_index] = 0; // then remove it from the held array
+            }
+        }
         // if in snesMode then according to the inversion of the state of dataPinSnes press or release a button
         if (modeSelect == 2) !digitalRead(dataPinSnes) ? Keyboard.press(tolower(init_SNES_btns[button_index])) : Keyboard.release(tolower(init_SNES_btns[button_index]));
 
