@@ -31,7 +31,8 @@ namespace ccAdapterRemapper
         private Color backLightColor;
         private Color textColor;
         private readonly string focusColor = "#0078d7"; // Color of selected box
-        private readonly string needsSaving = "#ff6347"; //send remap active color
+        private readonly string greenColor = "#47FF59";
+        private string needsSaving = "#ff6347"; //send remap active color
 
 
         // When true, bypass the unsent remap check on app exit
@@ -52,7 +53,7 @@ namespace ccAdapterRemapper
 
 
         // Serial port stuff
-        private readonly SerialPort _serialPort = new System.IO.Ports.SerialPort("COM0", 9600);
+        private readonly SerialPort _serialPort = new SerialPort("COM0", 9600);
 
 
         // Funny variables
@@ -84,7 +85,6 @@ namespace ccAdapterRemapper
 
 
         private int didNo = 0;
-        private int pastel = 0;
 
         #endregion variables
 
@@ -105,6 +105,13 @@ namespace ccAdapterRemapper
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Only add the debug page if a DEBUG PARAM is set
+            tabControl.TabPages.Remove(tabPageDebug);
+            if (ccAdapterRemapper.Params.IsParamSet("DEBUG"))
+            {
+                tabControl.TabPages.Add(tabPageDebug);
+            }
+
 
             // Check for previously saved controller mappings. Load them if they exist.
             LoadArrays();
@@ -209,22 +216,21 @@ namespace ccAdapterRemapper
         private void LoadArrays()
         {
             // Check for previously saved controller mappings. Load them if they exist.
-            if (ccAdapterRemapper.Params.IsParamSet("NESBUTTONS"))    //if there is a param for the nes buttons already
-            {
-                working_NES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
-                onload_NES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("NESBUTTONS").Split(','), int.Parse); // load it in
-            }
-            if (ccAdapterRemapper.Params.IsParamSet("SNESBUTTONS"))    //if there is a param for the nes buttons already
-            {
-                working_SNES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse); // load it in
-                onload_SNES_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse); // load it in
-            }
-            if (ccAdapterRemapper.Params.IsParamSet("N64BUTTONS"))    //if there is a param for the nes buttons already
-            {
-                working_N64_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
-                onload_N64_btns = Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("N64BUTTONS").Split(','), int.Parse); // load it in
-            }
+            //if there is a param for the nes buttons already load them, other
+            working_NES_btns = ccAdapterRemapper.Params.IsParamSet("NESBUTTONS") ? 
+                Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("NESBUTTONS").Split(','), int.Parse) : 
+                Enumerable.Repeat(0, working_NES_btns.Length).ToArray();
+            Array.Copy(working_NES_btns, onload_NES_btns, working_NES_btns.Length);
 
+            working_SNES_btns = ccAdapterRemapper.Params.IsParamSet("SNESBUTTONS") ? 
+                Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("SNESBUTTONS").Split(','), int.Parse) : 
+                Enumerable.Repeat(0, working_SNES_btns.Length).ToArray();
+            Array.Copy(working_SNES_btns, onload_SNES_btns, working_SNES_btns.Length);
+
+            working_N64_btns = ccAdapterRemapper.Params.IsParamSet("N64BUTTONS") ? 
+                Array.ConvertAll(ccAdapterRemapper.Params.ReadParam("N64BUTTONS").Split(','), int.Parse) : 
+                Enumerable.Repeat(0, working_N64_btns.Length).ToArray();
+            Array.Copy(working_N64_btns, onload_N64_btns, working_N64_btns.Length);
         }
 
         private void TabStopHack(bool setEnable) //When pentering a key in a textbox, quickly disable tabstop so that the box can accept the TAB key
@@ -297,10 +303,12 @@ namespace ccAdapterRemapper
                 backDarkColor = baseColor;
                 backLightColor = ColorTranslator.FromHtml("#F9CBD0");
                 textColor = Color.Black;
+                needsSaving = "#40FF91";
                 ccAdapterRemapper.Params.SetParam("PB");// save to PARAMs
             }
             else // Otherwise generate and load colors based off baseColor
             {
+                needsSaving = "#ff6347";
                 baseColor = baseColorStore; // reload the baseColor from baseColorStore incase base color was overwrote with pastel
                 ColorShifter(baseColor);
                 ccAdapterRemapper.Params.RemoveParam("PB");// save to PARAMs
@@ -518,7 +526,7 @@ namespace ccAdapterRemapper
                 case 216: return "Left";
                 case 217: return "Down";
                 case 215: return "Right";
-                default: return " ";
+                default: return "Not set!";
             }
 
         }
@@ -547,7 +555,6 @@ namespace ccAdapterRemapper
                     break;
             }
         }
-
 
         private void OpenCloseCOM(object sender, EventArgs e) //Attempt to open the selected COM port
         {
@@ -585,6 +592,8 @@ namespace ccAdapterRemapper
             btn_peek.Enabled = false;
             btn_poke.Enabled = false;
             btn_stopstart.Text = "Open selected.";
+            
+            
             btn_sendremap.BackColor = buttonDarkColor;
             foreach (Control c in tabControl.Controls)
             {
@@ -602,6 +611,7 @@ namespace ccAdapterRemapper
         {
             _serialPort.Open();
             btn_stopstart.Text = "Close selected.";
+            btn_sendremap.BackColor = buttonLightColor;
             btn_peek.Enabled = true;
             btn_poke.Enabled = true;
             foreach (Control c in tabControl.Controls)
@@ -639,6 +649,7 @@ namespace ccAdapterRemapper
             if (port == null || !port.StartsWith("COM")) // Close and disable if the selected item is not a port.
             {
                 ClosePort();
+                btn_stopstart.BackColor = buttonDarkColor;
                 btn_stopstart.Enabled = false;
                 return;
             }
@@ -646,6 +657,7 @@ namespace ccAdapterRemapper
             // Change the serial port's COM
             _serialPort.PortName = port;
             btn_stopstart.Enabled = true;
+            btn_stopstart.BackColor = ColorTranslator.FromHtml(needsSaving);
         }
 
         private void Sendremap_Click(object sender, EventArgs e)
@@ -707,7 +719,7 @@ namespace ccAdapterRemapper
 
         private void TextBoxGather(object sender, KeyEventArgs e)
         {
-            System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
+            TextBox textBox = sender as TextBox;
             textBox.SelectionStart = 0;
             key = new KeysConverter().ConvertToString(e.KeyCode);
 
@@ -915,13 +927,13 @@ namespace ccAdapterRemapper
 
         private void HideCaretAndSelection(object sender, EventArgs e)
         {
-            System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
+            TextBox textBox = sender as TextBox;
             textBox.BackColor = ColorTranslator.FromHtml(focusColor);
             _ = HideCaret(textBox.Handle);
         }
         private void FocusLost(object sender, EventArgs e)
         {
-            System.Windows.Forms.TextBox textBox = sender as System.Windows.Forms.TextBox;
+            TextBox textBox = sender as TextBox;
             textBox.BackColor = buttonLightColor;
         }
 
@@ -1005,6 +1017,7 @@ namespace ccAdapterRemapper
                     ccAdapterRemapper.Params.RemoveAllParam();
                     _ = MessageBox.Show("It was as if it was never there.", "");
                     justRestart = true;
+                    ccAdapterRemapper.Params.SetParam("DEBUG");
                     System.Windows.Forms.Application.Restart();
                     break;
                 case DialogResult.No:
