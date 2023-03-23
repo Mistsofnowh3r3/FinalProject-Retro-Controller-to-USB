@@ -421,6 +421,28 @@ void clearAllButtons() {
     Keyboard.releaseAll(); // release all keys
 }
 
+void n64KeyPress(bool check, int button)
+{
+    if(check) { // Check if the button was pressed 
+        Keyboard.press(tolower(init_N64_btns[button])); // if so press it
+        held_N64_btns[button] = init_N64_btns[button]; // add the button to the held array
+    }
+    else { //or released
+        for(int op; op < 18; op++ ) { // check if the button is curretnyl in the held array
+            if (op == button ){ // We do not care if the button currently being checked has the key held.
+                continue; // so skip the check
+            }
+            if (held_N64_btns[op] == init_N64_btns[button]) {
+                held_N64_btns[button] = 0; // Do reset the hold but don't unpress
+                return; // if it is, return without unpressing the key
+            }
+        }
+        // if not, unpress the key 
+        Keyboard.release(tolower(init_N64_btns[button]));
+        held_N64_btns[button] = 0; // then remove it from the held array
+    }
+}
+
 void nes() {
     nesControllerConnectedLast = nesControllerConnected; // Store the last known state of of the controllers connection
 
@@ -565,102 +587,106 @@ void n64() {
                 //map to keyboard
                 // Map buttons!
                 
-                ((pad.buttons & N64Pad::BTN_A) != 0) ? Keyboard.press(tolower(init_N64_btns[0])) : Keyboard.release(tolower(init_N64_btns[0]));
-                ((pad.buttons & N64Pad::BTN_B) != 0) ? Keyboard.press(tolower(init_N64_btns[1])) : Keyboard.release(tolower(init_N64_btns[1]));
-                ((pad.buttons & N64Pad::BTN_Z) != 0) ? Keyboard.press(tolower(init_N64_btns[2])) : Keyboard.release(tolower(init_N64_btns[2]));
-                ((pad.buttons & N64Pad::BTN_START) != 0) ? Keyboard.press(tolower(init_N64_btns[3])) : Keyboard.release(tolower(init_N64_btns[3]));
+                n64KeyPress((pad.buttons & N64Pad::BTN_A) != 0, 0);
+                n64KeyPress((pad.buttons & N64Pad::BTN_B) != 0, 1);
+                n64KeyPress((pad.buttons & N64Pad::BTN_Z) != 0, 2);
+                n64KeyPress((pad.buttons & N64Pad::BTN_START) != 0, 3);
+
                 if ((pad.buttons & N64Pad::BTN_UP) == 0) { // Try to stop holding up
                     if (holdCheckUpDown == 1) { // check if we are holding up
-                        Keyboard.release(tolower(init_N64_btns[4])); // release up
+                        n64KeyPress(false, 4); // release up
                         holdCheckUpDown = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((pad.buttons & N64Pad::BTN_DOWN) == 0) { // Try to stop holding down
                     if (holdCheckUpDown == 2) { // check if we are holding down
-                        Keyboard.release(tolower(init_N64_btns[5])); // release down
+                        n64KeyPress(false, 5); // release down
                         holdCheckUpDown = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((pad.buttons & N64Pad::BTN_UP) != 0) { //if 4th and read data from dataPin
-                    Keyboard.press(tolower(init_N64_btns[4])); // press up
+                    n64KeyPress(true, 4); // press up
                     holdCheckUpDown = 1; // we are holding up
                 }
                 if ((pad.buttons & N64Pad::BTN_DOWN) != 0) { //if 5th and read data from dataPin
-                    Keyboard.press(tolower(init_N64_btns[5])); // press down
+                    n64KeyPress(true, 5); // press down
                     holdCheckUpDown = 2; // we are holding down
                 }
 
 
                 if ((pad.buttons & N64Pad::BTN_LEFT) == 0) { // Try to stop holding left
                     if (holdCheckLeftRight == 1) { // check if we are holding left
-                        Keyboard.release(tolower(init_N64_btns[6])); // release left
+                        n64KeyPress(false, 6); // release left
                         holdCheckLeftRight = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((pad.buttons & N64Pad::BTN_RIGHT) == 0) { // Try to stop holding right
                     if (holdCheckLeftRight == 2) { // check if we are holding right
-                        Keyboard.release(tolower(init_N64_btns[7])); // release
+                        n64KeyPress(false, 7); // release
                         holdCheckLeftRight = 0; // Let us know it's no longer held
                     } 
                 }
                 if ((pad.buttons & N64Pad::BTN_LEFT) != 0) { //if 6th and read data from dataPin
-                    Keyboard.press(tolower(init_N64_btns[6])); // press left
+                    n64KeyPress(true, 6); // press left
                     holdCheckLeftRight = 1; // we are holding left
                 }
                 if ((pad.buttons & N64Pad::BTN_RIGHT) != 0) { //if 7th and read data from dataPin
-                    Keyboard.press(tolower(init_N64_btns[7])); // press right
+                    n64KeyPress(true, 7); // press right
                     holdCheckLeftRight = 2; // we are holding right
                 }
-                ((pad.buttons & N64Pad::BTN_C_DOWN) != 0) ? Keyboard.press(tolower(init_N64_btns[8])) : Keyboard.release(tolower(init_N64_btns[8]));
-                ((pad.buttons & N64Pad::BTN_C_LEFT) != 0) ? Keyboard.press(tolower(init_N64_btns[9])) : Keyboard.release(tolower(init_N64_btns[9]));
-                ((pad.buttons & N64Pad::BTN_L) != 0) ? Keyboard.press(tolower(init_N64_btns[10])) : Keyboard.release(tolower(init_N64_btns[10]));
-                ((pad.buttons & N64Pad::BTN_R) != 0) ? Keyboard.press(tolower(init_N64_btns[11])) : Keyboard.release(tolower(init_N64_btns[11]));
-                ((pad.buttons & N64Pad::BTN_C_UP) != 0) ? Keyboard.press(tolower(init_N64_btns[12])) : Keyboard.release(tolower(init_N64_btns[12]));
-                ((pad.buttons & N64Pad::BTN_C_RIGHT) != 0) ? Keyboard.press(tolower(init_N64_btns[13])) : Keyboard.release(tolower(init_N64_btns[13]));
-  
+                
+                n64KeyPress((pad.buttons & N64Pad::BTN_C_DOWN) != 0, 8);
+                n64KeyPress((pad.buttons & N64Pad::BTN_C_LEFT) != 0, 9);
+                n64KeyPress((pad.buttons & N64Pad::BTN_L) != 0, 10);
+                n64KeyPress((pad.buttons & N64Pad::BTN_R) != 0, 11);
+                n64KeyPress((pad.buttons & N64Pad::BTN_C_UP) != 0, 12);
+                n64KeyPress((pad.buttons & N64Pad::BTN_C_RIGHT) != 0, 13);
 
                 if (pad.y < n64KeyJoystickDeadZone) { // Try to stop holding up
                     if (holdCheckUpDownN64Joy == 1) { // check if we are holding up
-                        Keyboard.release(tolower(init_N64_btns[14])); // release up
+                        n64KeyPress(false, 14); // release up
                         holdCheckUpDownN64Joy = 0; // Let us know it's no longer held
                     } 
                 }
                 if (pad.y > (-1 * n64KeyJoystickDeadZone)) { // Try to stop holding down
                     if (holdCheckUpDownN64Joy == 2) { // check if we are holding down
-                        Keyboard.release(tolower(init_N64_btns[15])); // release down
+                        n64KeyPress(false, 15); // release down
                         holdCheckUpDownN64Joy = 0; // Let us know it's no longer held
                     } 
                 }
                 if (pad.y > n64KeyJoystickDeadZone) { //if 4th and read data from dataPin
-                    Keyboard.press(tolower(init_N64_btns[14])); // press up
+                    n64KeyPress(true, 14); // press up
                     holdCheckUpDownN64Joy = 1; // we are holding up
                 }
                 if (pad.y < (-1 * n64KeyJoystickDeadZone)) { //if 5th and read data from dataPin
-                    Keyboard.press(tolower(init_N64_btns[15])); // press down
+                    n64KeyPress(true, 15); // press down
                     holdCheckUpDownN64Joy = 2; // we are holding down
                 }
 
+                if (pad.x > (-1 * n64KeyJoystickDeadZone)) { // Try to stop holding right
+                    if (holdCheckLeftRightN64Joy == 2) { // check if we are holding right
+                        n64KeyPress(false, 16); // release
+                        holdCheckLeftRightN64Joy = 0; // Let us know it's no longer held
+                    } 
+                }
 
                 if (pad.x < n64KeyJoystickDeadZone) { // Try to stop holding left
                     if (holdCheckLeftRightN64Joy == 1) { // check if we are holding left
-                        Keyboard.release(tolower(init_N64_btns[17])); // release left
+                        n64KeyPress(false, 17); // release left
                         holdCheckLeftRightN64Joy = 0; // Let us know it's no longer held
                     } 
                 }
-                if (pad.x > (-1 * n64KeyJoystickDeadZone)) { // Try to stop holding right
-                    if (holdCheckLeftRightN64Joy == 2) { // check if we are holding right
-                        Keyboard.release(tolower(init_N64_btns[16])); // release
-                        holdCheckLeftRightN64Joy = 0; // Let us know it's no longer held
-                    } 
-                }
+
+                if (pad.x < (-1 * n64KeyJoystickDeadZone)) { //if 7th and read data from dataPin
+                    n64KeyPress(true, 16); // press right
+                    holdCheckLeftRightN64Joy = 2; // we are holding right
+                } 
+
                 if (pad.x > n64KeyJoystickDeadZone) { //if 6th and read data from dataPin
-                    Keyboard.press(tolower(init_N64_btns[17])); // press left
+                    n64KeyPress(true, 17); // press left
                     holdCheckLeftRightN64Joy = 1; // we are holding left
                 }
-                if (pad.x < (-1 * n64KeyJoystickDeadZone)) { //if 7th and read data from dataPin
-                    Keyboard.press(tolower(init_N64_btns[16])); // press right
-                    holdCheckLeftRightN64Joy = 2; // we are holding right
-                }               
+              
             }
 		}
     } 
