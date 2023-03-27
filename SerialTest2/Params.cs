@@ -1,4 +1,4 @@
-﻿//Code originally from RTCV https://github.com/redscientistlabs/RTCV/blob/master/Source/Libraries/NetCore/Params.cs
+﻿// Code originally from RTCV https://github.com/redscientistlabs/RTCV/blob/master/Source/Libraries/NetCore/Params.cs
 
 using System.IO;
 

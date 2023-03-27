@@ -1,18 +1,12 @@
-#include <N64Pad.h>
 
- // https://github.com/SukkoPera/N64PadForArduino
-#include <Joystick.h>
-#include <Keyboard.h> 
+
+#include <N64Pad.h> // https://github.com/SukkoPera/N64PadForArduino
+#include <Joystick.h> // https://github.com/MHeironimus/ArduinoJoystickLibrary
+#include <Keyboard.h> // https://github.com/arduino-libraries/Keyboard
 #include <EEPROM.h>
 #include <stdio.h>
 
-
-// Globals //
-
-String serialNow = "";
-String parts[4]; // create an array to hold the three substrings
-
-//EEPROM MEMORY MAP
+#pragma region // EEPROM MEMORY MAP
 //0 NES A
 //1 NES B
 //2 NES SELECT
@@ -49,10 +43,15 @@ String parts[4]; // create an array to hold the three substrings
 //33 N64 //A DOWN
 //34 N64 //A LEFT
 //35 N64 //A RIGHT
+#pragma endregion
 
+#pragma region // Variables
 
+// Globals //
 
-int init_NES_btns[] = {
+String serialNow = ""; // Will hold the current text in the serial line
+
+int init_NES_btns[] = { // Holds the current keyboard key mappings
     'z',            //A
     'x',            //B
     KEY_RETURN,     //SELECT
@@ -62,9 +61,9 @@ int init_NES_btns[] = {
     KEY_LEFT_ARROW, //LEFT
     KEY_RIGHT_ARROW,//RIGHT
 };
-int held_NES_btns[8];
+int held_NES_btns[8]; // Holds the current held keyboard keys
 
-int init_SNES_btns[] = {
+int init_SNES_btns[] = { // Holds the current keyboard key mappings
     'z',            //B
     'x',            //Y
     KEY_RETURN,     //SELECT
@@ -78,9 +77,9 @@ int init_SNES_btns[] = {
     'q',            //L
     'w',            //R
 };
-int held_SNES_btns[12];
+int held_SNES_btns[12]; // Holds the current held keyboard keys
 
-int init_N64_btns[] = {
+int init_N64_btns[] = { // Holds the current keyboard key mappings
     'z',            //A     
     'x',            //B
     KEY_RETURN,     //Z
@@ -100,10 +99,10 @@ int init_N64_btns[] = {
     'a',            //A LEFT
     'd',            //A RIGHT
 };
-int held_N64_btns[18];
+int held_N64_btns[18]; // Holds the current held keyboard keys
 
-int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-int n64KeyJoystickDeadZone = 20;
+int controllerbutton_values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}; // Array of the controller buttons
+int n64KeyJoystickDeadZone = 20; // Deadzone for converting N64 joystick to keyboard key press
 
 // Used for making sure that the DPAD functions correctly.
 int holdCheckUpDown = 5;
@@ -116,16 +115,17 @@ int holdCheckLeftRightN64Joy = 5;
 int modeSelect = 0;
 int modeSelectLast = 4;
 
-
-
+// State of controller connections
 bool nesControllerConnected = false;
 bool nesControllerConnectedLast = false; 
 bool snesControllerConnected = false; 
 bool snesControllerConnectedLast = false; 
 bool n64ControllerConnected = false;
 
-// Controller vs kyeboard mode select keyboard = 1 controller = 0 
-bool outputMode = 1;
+// Controller/keyboard output select 
+//  0 = Controller 1 = Keyboard 
+bool outputMode = 0;
+bool outputModelast = 0;
 
 // Constants //
 
@@ -158,13 +158,11 @@ Joystick_ usbStick (
 
 #define deadify(var, thres) (abs (var) > thres ? (var) : 0)
 
-
-
 // Controller I/O Pins
 const int pulsePinNes = 0; 
 const int latchPinNes = 1; 
 const int dataPinNes = 2; 
-//const int dataPinN64 = 3; //the n64 pad thing use pin 3 , this assingment is symbolic
+// n64 data pin is 3, defined in n64pad code
 const int pulsePinSnes = 4; 
 const int latchPinSnes = 5; 
 const int dataPinSnes = 6; 
@@ -176,53 +174,52 @@ const int n64IndicateLed = 9;
 
 //Switch ins
 // SERIAL | NES | SNES | N64
-
 const int serialSwitch = 10; 
 const int nesSwitch = 11; 
 const int snesSwitch = 12; 
 const int n64Switch = 13; 
-const int outModeSwitch = PIN_A5; 
+
+const int outModeSwitch = PIN_A5; // Keyboard or Controller mode switch
+
+#pragma endregion
 
 
+// Handles the Arduinos actions in serial mode.
 void serialActions() {
-    clearAllButtons(); 
-    memset(parts, 0, sizeof(parts));  // clear the parts array
+    clearAllButtons(); // Assures no buttons are currently being sent
+    
+    String parts[4]; // Create an array to hold 4 parts
+    memset(parts, 0, sizeof(parts));  // Clear the parts array
     serialNow = Serial.readStringUntil('!');  // read the command
 
-    // ChatGPT code, document and undestand it better.<
-    int partIndex = 0; // initialize the array index
+    int partIndex = 0; // Initialize the array index
     for (int i = 0; i < serialNow.length(); i++) {
-        
-        char c = serialNow.charAt(i);
-        if (c == ',') { // if the character is a comma, move to the next substring
-            partIndex++;
-        } 
-        else if (c != '!') { // if the character is not a comma or exclamation mark, add it to the current substring
-            parts[partIndex] += c;
-        }
+        char c = serialNow.charAt(i); // Get the character at i in serialNow 
+        if (c == ',') partIndex++;  // If the character is a comma, move to the next substring in parts
+        else parts[partIndex] += c; // Else, at the character to the current substring in parts
     }
-    // >END CHAT GPT CODE
-    if (parts[0] == "PO") { // POKE
+
+    // POKE command
+    // PO, ADR, VAL, CONSOLE !
+    if (parts[0] == "PO") { 
         int adr = parts[1].toInt();
         int val = parts[2].toInt();
 
-        if(parts[3] == "NES") {
-            adr += 0;
-        }
-        else if(parts[3] == "SNES") {
-            adr += 8;
+        if(parts[3] == "SNES") {
+            adr += 8; // Add 8 to the address if SNES, makes sure we are at the SNES mapping memory address
         }
         else if(parts[3] == "N64") {
-            adr += 18;
+            adr += 18; // Add 18 to the address if N64, makes sure we are at the N64 mapping memory address
         }
-        //Serial.write("Wrote: " + val);
-        //Serial.write("to: " + adr);
-        //Serial.write("\n");
-        EEPROM.write(adr,val);
+        EEPROM.write(adr,val); // Write the value given at the address given
     }
-    if (parts[0] == "PE") { // PEEK
+
+    // PEEK command
+    // PO, ADR, VAL, CONSOLE !
+    if (parts[0] == "PE") { 
         int adr = parts[1].toInt();
         int val = EEPROM.read(adr);
+        // Write the value at the address to the serial
         Serial.write("PEEK @");
         Serial.println(adr);
         Serial.write(": ");
@@ -231,254 +228,219 @@ void serialActions() {
     
 }
 
+// Reads from EEPROM to load the stored keyboard mappings
 void loadKeyboardArrays() {
-    for (int v = 0; v < 8; v++) {
-        init_NES_btns[v] = EEPROM.read(v);
-    }
-    for (int ed = 8; ed < 20; ed++) {
-        init_SNES_btns[ed - 8] = EEPROM.read(ed);
-    }
-    for (int df = 18; df < 36; df++) {
-        init_N64_btns[df - 18] = EEPROM.read(df);
+    for (int gamer = 0; gamer < 36; gamer++) {
+        if ( gamer < 8) init_NES_btns[gamer] = EEPROM.read(gamer);
+        if ( gamer > 7 && gamer < 18) init_SNES_btns[gamer - 8] = EEPROM.read(gamer);
+        if ( gamer > 17) init_N64_btns[gamer - 18] = EEPROM.read(gamer);
     }
 }
 
+// Button press handling for NES and SNES controllers
 void checkButton(int button) {
 
     int button_index = button - 1;
       
     if (button_index > 11) return; // if we have passed all the buttons just return
 
-    if (outputMode == 1) {
-        // if in nesMode and button index < 8 then according to the inversion of the state of dataPinNes press or release a button
+    if (outputMode == 1) { // If in keyboard mode
+        // If in nesMode and button index < 8 then according to the inversion of the state of dataPinNes press or release a button
         if ((modeSelect == 1) && button_index < 8) {
             if(!digitalRead(dataPinNes)) { 
                 Keyboard.press(tolower(init_NES_btns[button_index]));
-                held_NES_btns[button_index] = init_NES_btns[button_index]; // add the button to the held array
+                held_NES_btns[button_index] = init_NES_btns[button_index]; // Add the button to the held array
             }
             else {
-                for(int op; op < 8; op++ ) { // check if the button is curretnyl in the held array
-                    if (op == button_index ){ // We do not care if the button currently being checked has the key held.
-                        continue; // so skip the check
+                for(int op; op < 8; op++ ) { // Check if the button is currently in the held array
+                    if (op == button_index ){ // Do not check for the current key being checked
+                        continue; 
                     }
-                    if (held_NES_btns[op] == init_NES_btns[button_index]) {
-                        held_NES_btns[button_index] = 0; // Do reset the hold
-                        return; // if it is, return without unpressing the key
+                    if (held_NES_btns[op] == init_NES_btns[button_index]) { // If the key is in the held array
+                        held_NES_btns[button_index] = 0; // Remove it from the held array
+                        return; // But return so the key does not get released
                     }
                 }
-                // if not, unpress the key 
-                Keyboard.release(tolower(init_NES_btns[button_index]));
-                held_NES_btns[button_index] = 0; // then remove it from the held array
+                // Finally, if the key is not on the held array.
+                Keyboard.release(tolower(init_NES_btns[button_index])); // Release it
+                held_NES_btns[button_index] = 0; // Then remove it from the held array   
             }
+            return;
         }
-        // if in snesMode then according to the inversion of the state of dataPinSnes press or release a button
+        // If in snesMode then according to the inversion of the state of dataPinSnes press or release a button
         if ((modeSelect == 2)) {
             if(!digitalRead(dataPinSnes)) { 
                 Keyboard.press(tolower(init_SNES_btns[button_index]));
-                held_SNES_btns[button_index] = init_SNES_btns[button_index]; // add the button to the held array
+                held_SNES_btns[button_index] = init_SNES_btns[button_index]; // Add the button to the held array
             }
             else {
-                for(int op; op < 12; op++ ) { // check if the button is curretnyl in the held array
-                    if (op == button_index ){ // We do not care if the button currently being checked has the key held.
-                        continue; // so skip the check
+                for(int op; op < 12; op++ ) { // Check if the button is currently in the held array
+                    if (op == button_index ){ // Do not check for the current key being checked
+                        continue;
                     }
-                    if (held_SNES_btns[op] == init_SNES_btns[button_index]) {
-                        held_SNES_btns[button_index] = 0; // Do reset the hold
-                        return; // if it is, return without unpressing the key
+                    if (held_SNES_btns[op] == init_SNES_btns[button_index]) { // If the key is in the held array
+                        held_SNES_btns[button_index] = 0; // Remove it from the held array
+                        return; // But return so the key does not get released
                     }
                 }
-                // if not, unpress the key 
-                Keyboard.release(tolower(init_SNES_btns[button_index]));
-                held_SNES_btns[button_index] = 0; // then remove it from the held array
+                // Finally, if the key is not on the held array.
+                Keyboard.release(tolower(init_SNES_btns[button_index])); // Release it
+                held_SNES_btns[button_index] = 0; // Then remove it from the held array
             }
         }
         return;
     }
     
-    if (outputMode == 0) {
-        if ((modeSelect == 1) && button_index < 8) {
+    if (outputMode == 0) { // If in controller mode
+        if ((modeSelect == 1) && button_index < 8) { // If in NES mode and not past the 8th button
             if (button_index > 3) {
                 if ((button_index == 4) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding up
-                    if (holdCheckUpDown == 1) { // check if we are holding up
-                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // release up
-                        holdCheckUpDown = 0; // Let us know it's no longer held
+                    if (holdCheckUpDown == 1) { // Check if we are holding up
+                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // Release up
+                        holdCheckUpDown = 0; // Let us know up is no longer held
                     } 
                 }
                 if ((button_index == 5) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding down
-                    if (holdCheckUpDown == 2) { // check if we are holding down
-                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // release down
-                        holdCheckUpDown = 0; // Let us know it's no longer held
+                    if (holdCheckUpDown == 2) { // Check if we are holding down
+                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // Release down
+                        holdCheckUpDown = 0; // Let us know down is no longer held
                     } 
                 }
-                if ((button_index == 4) && (digitalRead(dataPinNes) == LOW)) { //if 4th and read data from dataPin
-                    usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
-                    holdCheckUpDown = 1; // we are holding up
+                if ((button_index == 4) && (digitalRead(dataPinNes) == LOW)) { // Try to press up
+                    usbStick.setYAxis(ANALOG_MIN_VALUE); // Press up
+                    holdCheckUpDown = 1; // We are holding up
                 }
-                if ((button_index == 5) && (digitalRead(dataPinNes) == LOW)) { //if 5th and read data from dataPin
-                    usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
-                    holdCheckUpDown = 2; // we are holding down
+                if ((button_index == 5) && (digitalRead(dataPinNes) == LOW)) { // Try to press down
+                    usbStick.setYAxis(ANALOG_MAX_VALUE); // Press down
+                    holdCheckUpDown = 2; // We are holding down
                 }
 
 
                 if ((button_index == 6) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding left
-                    if (holdCheckLeftRight == 1) { // check if we are holding left
-                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // release left
-                        holdCheckLeftRight = 0; // Let us know it's no longer held
+                    if (holdCheckLeftRight == 1) { // Check if we are holding left
+                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // Release left
+                        holdCheckLeftRight = 0; // Let us know left is no longer held
                     } 
                 }
                 if ((button_index == 7) && (digitalRead(dataPinNes) == HIGH)) { // Try to stop holding right
-                    if (holdCheckLeftRight == 2) { // check if we are holding right
-                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // release
-                        holdCheckLeftRight = 0; // Let us know it's no longer held
+                    if (holdCheckLeftRight == 2) { // Check if we are holding right
+                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // Release
+                        holdCheckLeftRight = 0; // Let us know right is no longer held
                     } 
                 }
-                if ((button_index == 6) && (digitalRead(dataPinNes) == LOW)) { //if 6th and read data from dataPin
-                    usbStick.setXAxis(ANALOG_MIN_VALUE); // press left
-                    holdCheckLeftRight = 1; // we are holding left
+                if ((button_index == 6) && (digitalRead(dataPinNes) == LOW)) { // Try to press left
+                    usbStick.setXAxis(ANALOG_MIN_VALUE); // Press left
+                    holdCheckLeftRight = 1; // We are holding left
                 }
-                if ((button_index == 7) && (digitalRead(dataPinNes) == LOW)) { //if 7th and read data from dataPin
-                    usbStick.setXAxis(ANALOG_MAX_VALUE); // press right
-                    holdCheckLeftRight = 2; // we are holding right
+                if ((button_index == 7) && (digitalRead(dataPinNes) == LOW)) { // Try to press right
+                    usbStick.setXAxis(ANALOG_MAX_VALUE); // Press right
+                    holdCheckLeftRight = 2; // We are holding right
                 }
-                usbStick.sendState();
-                return;
+                usbStick.sendState(); // Send the controller state
+                return; // Return to not mess stuff up
             }
-
-            usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinNes)); // do the button at the index according to datapin read
+            // Press the button at the index according to the datapin read
+            usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinNes)); 
             usbStick.sendState();
             return;
         }
 
-        if (modeSelect == 2) {
+        if (modeSelect == 2) { // If in SNES mode
             if (button_index > 3 && button_index < 8) {
                 if ((button_index == 4) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding up
-                    if (holdCheckUpDown == 1) { // check if we are holding up
-                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // release up
-                        holdCheckUpDown = 0; // Let us know it's no longer held
+                    if (holdCheckUpDown == 1) { // Check if we are holding up
+                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // Release up
+                        holdCheckUpDown = 0; // Let us know up is no longer held
                     } 
                 }
                 if ((button_index == 5) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding down
-                    if (holdCheckUpDown == 2) { // check if we are holding down
-                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // release down
-                        holdCheckUpDown = 0; // Let us know it's no longer held
+                    if (holdCheckUpDown == 2) { // Check if we are holding down
+                        usbStick.setYAxis(ANALOG_IDLE_VALUE); // Release down
+                        holdCheckUpDown = 0; // Let us know down is no longer held
                     } 
                 }
-                if ((button_index == 4) && (digitalRead(dataPinSnes) == LOW)) { //if 4th and read data from dataPin
-                    usbStick.setYAxis(ANALOG_MIN_VALUE); // press up
-                    holdCheckUpDown = 1; // we are holding up
+                if ((button_index == 4) && (digitalRead(dataPinSnes) == LOW)) { // Try to press up
+                    usbStick.setYAxis(ANALOG_MIN_VALUE); // Press up
+                    holdCheckUpDown = 1; // We are holding up
                 }
-                if ((button_index == 5) && (digitalRead(dataPinSnes) == LOW)) { //if 5th and read data from dataPin
-                    usbStick.setYAxis(ANALOG_MAX_VALUE); // press down
-                    holdCheckUpDown = 2; // we are holding down
+                if ((button_index == 5) && (digitalRead(dataPinSnes) == LOW)) { // Try to press down
+                    usbStick.setYAxis(ANALOG_MAX_VALUE); // Press down
+                    holdCheckUpDown = 2; // We are holding down
                 }
 
                 if ((button_index == 6) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding left
-                    if (holdCheckLeftRight == 1) { // check if we are holding left
-                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // release left
-                        holdCheckLeftRight = 0; // Let us know it's no longer held
+                    if (holdCheckLeftRight == 1) { // Check if we are holding left
+                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // Release left
+                        holdCheckLeftRight = 0; // Let us know left is no longer held
                     } 
                 }
                 if ((button_index == 7) && (digitalRead(dataPinSnes) == HIGH)) { // Try to stop holding right
-                    if (holdCheckLeftRight == 2) { // check if we are holding right
-                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // release
-                        holdCheckLeftRight = 0; // Let us know it's no longer held
+                    if (holdCheckLeftRight == 2) { // Check if we are holding right
+                        usbStick.setXAxis(ANALOG_IDLE_VALUE); // Release right
+                        holdCheckLeftRight = 0; // Let us know right is no longer held
                     }  
                 }
-                if ((button_index == 6) && (digitalRead(dataPinSnes) == LOW)) { //if 6th and read data from dataPin
-                    usbStick.setXAxis(ANALOG_MIN_VALUE); // press left
-                    holdCheckLeftRight = 1; // we are holding left
+                if ((button_index == 6) && (digitalRead(dataPinSnes) == LOW)) { // Try to press left
+                    usbStick.setXAxis(ANALOG_MIN_VALUE); // Press left
+                    holdCheckLeftRight = 1; // We are holding left
                 }
-                if ((button_index == 7) && (digitalRead(dataPinSnes) == LOW)) { //if 7th and read data from dataPin
-                    usbStick.setXAxis(ANALOG_MAX_VALUE); // press right
-                    holdCheckLeftRight = 2; // we are holding right
+                if ((button_index == 7) && (digitalRead(dataPinSnes) == LOW)) { // Try to press right
+                    usbStick.setXAxis(ANALOG_MAX_VALUE); // Press right
+                    holdCheckLeftRight = 2; // We are holding right
                 }
-                usbStick.sendState();
-                return;
+                usbStick.sendState(); // Send the controller state
+                return; // Return to not mess stuff up
             }
-
-            usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinSnes)); // do the button at the index according to datapin read
-            usbStick.sendState();
-            return;
+            // Press the button at the index according to the datapin read
+            usbStick.setButton(controllerbutton_values[button_index], !digitalRead(dataPinSnes)); 
+            usbStick.sendState(); 
         }
-        return;
     }
-
 }
 
+// Releases all buttons and keyboard keys
 void clearAllButtons() {
-    for(int sdv = 0; sdv < 8; sdv++) {
-        held_NES_btns[sdv] = 0;
-    }
-    for(int sdv = 0; sdv < 12; sdv++) {
-        held_SNES_btns[sdv] = 0;
-    }
-    for(int sdv = 0; sdv < 18; sdv++) {
-        held_N64_btns[sdv] = 0;
+    for (int gamer = 0; gamer < 36; gamer++) {
+        if ( gamer < 8) held_NES_btns[gamer] = 0;
+        if ( gamer > 7 && gamer < 18) held_SNES_btns[gamer - 8] = 0;
+        if ( gamer > 17) held_N64_btns[gamer - 18] = 0;
     }
     usbStick.setYAxis(ANALOG_IDLE_VALUE); // Clear the Dpad
     usbStick.setXAxis(ANALOG_IDLE_VALUE); // Clear the Dpad
+    usbStick.setRyAxis(ANALOG_IDLE_VALUE); // Clear the joystick
+    usbStick.setRxAxis(ANALOG_IDLE_VALUE); // Clear the joystick
     for(int u = 0; u < 12; u++) usbStick.setButton(controllerbutton_values[u], 0); // Clear the buttons
     usbStick.sendState();
-    Keyboard.releaseAll(); // release all keys
+    Keyboard.releaseAll(); // Release all keys
 }
 
-void n64KeyPress(bool check, int button)
-{
-    if(check) { // Check if the button was pressed 
-        Keyboard.press(tolower(init_N64_btns[button])); // if so press it
-        held_N64_btns[button] = init_N64_btns[button]; // add the button to the held array
-    }
-    else { //or released
-        for(int op; op < 18; op++ ) { // check if the button is curretnyl in the held array
-            if (op == button ){ // We do not care if the button currently being checked has the key held.
-                continue; // so skip the check
-            }
-            if (held_N64_btns[op] == init_N64_btns[button]) {
-                held_N64_btns[button] = 0; // Do reset the hold but don't unpress
-                return; // if it is, return without unpressing the key
-            }
-        }
-        // if not, unpress the key 
-        Keyboard.release(tolower(init_N64_btns[button]));
-        held_N64_btns[button] = 0; // then remove it from the held array
-    }
-}
-
+// Contructs the timing for supplying pulse and clock to the NES controller, and to read the values at it's dataPin at the right time
 void nes() {
     nesControllerConnectedLast = nesControllerConnected; // Store the last known state of of the controllers connection
 
-    digitalWrite(latchPinNes, HIGH);
-    if (nesControllerConnected && (modeSelect == 1)) checkButton(1); // check for A here
+    digitalWrite(latchPinNes, HIGH); // Write high to the latchPin
+    if (nesControllerConnected && (modeSelect == 1)) checkButton(1); // Check for A here
+    delayMicroseconds(12); // Keep latchPin high for 12 ms
 
-    delayMicroseconds(12);
-
-    digitalWrite(latchPinNes, LOW);
-    delayMicroseconds(6);
+    digitalWrite(latchPinNes, LOW); // Write low to the latchPin
+    delayMicroseconds(6); // Wait 6 ms
     
 
-    for (int j = 2; j < 9; j++)
+    for (int j = 2; j < 9; j++) // Create 7 pulses on the pulse pin
     {
-        // pulse the pulse pin
+        digitalWrite(pulsePinNes, HIGH); // Write high to the pulsePin
+        if (nesControllerConnected && (modeSelect == 1)) checkButton(j); // Check for all other buttons
+        delayMicroseconds(6); // Keep pulsePin high for 6 ms
 
-        //6 high
-        digitalWrite(pulsePinNes, HIGH);
-        // check for the rest of the buttons
-        if (nesControllerConnected && (modeSelect == 1)) checkButton(j); 
-        delayMicroseconds(6);
-
-        //6 low
-        digitalWrite(pulsePinNes, LOW);
-        delayMicroseconds(6);
+        digitalWrite(pulsePinNes, LOW); // Write low to the pulsePin
+        delayMicroseconds(6); // Keep pulsePin low for 6 ms
     }
 
-    for (int t = 8; t < 17; t++) {
-        // pulse the pulse pin
-        //6 high
-        digitalWrite(pulsePinNes, HIGH);
+    for (int t = 8; t < 17; t++) { // Extra pulses for checking if an NES controller is connected
+        digitalWrite(pulsePinNes, HIGH); // Write high to the pulsePin
         digitalRead(dataPinNes) ? nesControllerConnected = false : nesControllerConnected = true; // If data pin is high here, a controller is connected.
-        delayMicroseconds(6);
-        //6 low
-        digitalWrite(pulsePinNes, LOW);
+        delayMicroseconds(6); // Keep pulsePin high for 6 ms
+        digitalWrite(pulsePinNes, LOW); // Write low to the pulsePin
         delayMicroseconds(6);
     }
     
@@ -488,6 +450,7 @@ void nes() {
     }
 }   
 
+// Contructs the timing for supplying pulse and clock to the SNES controller, and to read the values at it's dataPin at the right time
 void snes() {
     snesControllerConnectedLast = snesControllerConnected; // Store the last known state of of the controllers connection
     // SNES latch signal generation
@@ -531,22 +494,46 @@ void snes() {
     }
 }  
 
+void n64KeyPress(bool check, int button)
+{
+    if(check) { // Check if the button was pressed 
+        Keyboard.press(tolower(init_N64_btns[button])); // if so press it
+        held_N64_btns[button] = init_N64_btns[button]; // add the button to the held array
+    }
+    else { //or released
+        for(int op; op < 18; op++ ) { // check if the button is curretnyl in the held array
+            if (op == button ){ // We do not care if the button currently being checked has the key held.
+                continue; // so skip the check
+            }
+            if (held_N64_btns[op] == init_N64_btns[button]) {
+                held_N64_btns[button] = 0; // Do reset the hold but don't unpress
+                return; // if it is, return without unpressing the key
+            }
+        }
+        // if not, unpress the key 
+        Keyboard.release(tolower(init_N64_btns[button]));
+        held_N64_btns[button] = 0; // then remove it from the held array
+    }
+}
+
 void n64() {
     static boolean haveController = false;
 	if (!haveController) {
 		if (pad.begin ()) {
 			// Controller detected!
-				digitalWrite (LED_BUILTIN, HIGH);
+                digitalWrite (LED_BUILTIN, HIGH);
+				n64ControllerConnected = true;
 				haveController = true;
 			} else {
-				delay (333);
+				//delay (333);
 		}
 	} else {
 		if (!pad.read ()) {
 			// Controller lost :(
-			digitalWrite (LED_BUILTIN, LOW);
+            digitalWrite (LED_BUILTIN, LOW);
+			n64ControllerConnected = false;
 			haveController = false;
-		} else {
+		} else if (modeSelect == 3) {
             if (outputMode == 0) {
                 // map to controller
                 // Controller was read fine
@@ -712,6 +699,13 @@ void checkSwitches() {
     }
 }
 
+void updateLights() {
+    
+    digitalWrite(nesIndicateLed, nesControllerConnected );
+    digitalWrite(snesIndicateLed, snesControllerConnected );
+    digitalWrite(n64IndicateLed, n64ControllerConnected );
+}
+
 void setup() {
     Serial.begin(9600);
 
@@ -733,6 +727,8 @@ void setup() {
     pinMode(snesIndicateLed, OUTPUT);
     pinMode(n64IndicateLed, OUTPUT);
 
+    pinMode(LED_BUILTIN, OUTPUT);
+
     usbStick.begin (false);		// We'll call sendState() manually to minimize lag. I didn't say this, who else is here?
 	usbStick.setXAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setYAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
@@ -742,8 +738,12 @@ void setup() {
 
 void loop() {  
     loadKeyboardArrays();
-    //!outModeSwitch ? outputMode = 1 : outputMode = 0;
-    //(snesControllerConnected || nesControllerConnected) ? digitalWrite (LED_BUILTIN, HIGH): digitalWrite (LED_BUILTIN, LOW);
+    
+    outputMode = !digitalRead(outModeSwitch);
+    if(outputMode != outputModelast) {
+        clearAllButtons();
+    }
+    outputModelast = outputMode;
 
     checkSwitches();
     if( modeSelectLast != modeSelect) {
@@ -751,9 +751,11 @@ void loop() {
     }
     modeSelectLast = modeSelect;
 
+        updateLights();
+
     if (modeSelect == 0) serialActions();
-    if (modeSelect == 1) nes();
-    if (modeSelect == 2) snes();
-    if (modeSelect == 3) n64();
+    nes();
+    snes();
+    n64();
          
 }
