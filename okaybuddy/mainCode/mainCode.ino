@@ -1,6 +1,7 @@
-#include <N64Pad.h> // https://github.com/SukkoPera/N64PadForArduino
+#include <N64Pad.h>
+
+ // https://github.com/SukkoPera/N64PadForArduino
 #include <Joystick.h>
-#include <string.h>
 #include <Keyboard.h> 
 #include <EEPROM.h>
 #include <stdio.h>

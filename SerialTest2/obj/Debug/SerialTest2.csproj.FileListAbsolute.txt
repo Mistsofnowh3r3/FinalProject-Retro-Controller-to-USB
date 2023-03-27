@@ -26,3 +26,17 @@ D:\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.csproj.CoreCompileInput
 D:\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.csproj.CopyComplete
 D:\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.exe
 D:\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.pdb
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Debug\SerialTest2.exe.config
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Debug\SerialTest2.exe
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Debug\SerialTest2.pdb
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Debug\System.IO.Ports.dll
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Debug\System.IO.Ports.xml
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.csproj.AssemblyReference.cache
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.csproj.SuggestedBindingRedirects.cache
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\ccAdapterRemapper.Form1.resources
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.Properties.Resources.resources
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.csproj.GenerateResource.cache
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.csproj.CoreCompileInputs.cache
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.csproj.CopyComplete
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.exe
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Debug\SerialTest2.pdb
