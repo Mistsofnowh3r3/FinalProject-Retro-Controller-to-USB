@@ -174,10 +174,10 @@ const int n64IndicateLed = 9;
 
 //Switch ins
 // SERIAL | NES | SNES | N64
-const int serialSwitch = 10; 
-const int nesSwitch = 11; 
-const int snesSwitch = 12; 
-const int n64Switch = 13; 
+const int serialDial = 10; 
+const int nesDial = 11; 
+const int snesDial = 12; 
+const int n64Dial = 13; 
 
 const int outModeSwitch = PIN_A5; // Keyboard or Controller mode switch
 
@@ -438,15 +438,16 @@ void nes() {
 
     for (int t = 8; t < 17; t++) { // Extra pulses for checking if an NES controller is connected
         digitalWrite(pulsePinNes, HIGH); // Write high to the pulsePin
-        digitalRead(dataPinNes) ? nesControllerConnected = false : nesControllerConnected = true; // If data pin is high here, a controller is connected.
+        digitalRead(dataPinNes) ? nesControllerConnected = false : nesControllerConnected = true; // If true, a controller is connected.
         delayMicroseconds(6); // Keep pulsePin high for 6 ms
+
         digitalWrite(pulsePinNes, LOW); // Write low to the pulsePin
         delayMicroseconds(6);
     }
     
 
-    if(!nesControllerConnected && (nesControllerConnected != nesControllerConnectedLast)) { // if a NES controller is not connected, and the connection has changed 
-        clearAllButtons(); // need to only do this when the controller actually becomes disconnected
+    if(!nesControllerConnected && (nesControllerConnected != nesControllerConnectedLast)) { // If a NES controller is not connected, and the connection has changed 
+        clearAllButtons(); 
     }
 }   
 
@@ -454,43 +455,34 @@ void nes() {
 void snes() {
     snesControllerConnectedLast = snesControllerConnected; // Store the last known state of of the controllers connection
     // SNES latch signal generation
-    digitalWrite(latchPinSnes, HIGH);
-    if (snesControllerConnected && (modeSelect == 2)) checkButton(1); // first button, only read a button input if a controller is connected
+    digitalWrite(latchPinSnes, HIGH); // Write high to the latchPin
+    if (snesControllerConnected && (modeSelect == 2)) checkButton(1); // Check for B here
+    delayMicroseconds(12); // Keep latchPin high for 12 ms
 
-    delayMicroseconds(12);
-
-    digitalWrite(latchPinSnes, LOW);
-    delayMicroseconds(6);
+    digitalWrite(latchPinSnes, LOW); // Write low to the latchPin
+    delayMicroseconds(6); // Wait 6 ms
     
-    // Pulse genreation and read for rest of buttons
-    for (int j = 2; j < 13; j++)
+    for (int j = 2; j < 13; j++) // Create 11 pulses on the pulse pin
     {
-        // pulse the pulse pin
+        digitalWrite(pulsePinSnes, HIGH); // Write high to the pulsePin
+        if (snesControllerConnected && (modeSelect == 2)) checkButton(j); // Check for all other buttons
+        delayMicroseconds(6); // Keep pulsePin high for 6 ms
 
-        //6 high
-        digitalWrite(pulsePinSnes, HIGH);   
-        if (snesControllerConnected && (modeSelect == 2)) checkButton(j); // check for the rest of the buttons, only read a button input if a controller is connected
-        delayMicroseconds(6);
-
-        //6 low
-        digitalWrite(pulsePinSnes, LOW);
-        delayMicroseconds(6);
+        digitalWrite(pulsePinSnes, LOW); // Write low to the pulsePin
+        delayMicroseconds(6); // Keep pulsePin low for 6 ms
     }
 
-    // Pulse genreation and check for controller
-    for (int t = 13; t < 17; t++) {
-        // pulse the pulse pin
-        //6 high
-        digitalWrite(pulsePinSnes, HIGH);
-        digitalRead(dataPinSnes) ? snesControllerConnected = true : snesControllerConnected = false; // If data pin is high here, a controller is connected.
-        delayMicroseconds(6);
-        //6 low
-        digitalWrite(pulsePinSnes, LOW);
-        delayMicroseconds(6);
+    for (int t = 13; t < 17; t++) { // Extra pulses for checking if an SNES controller is connected
+        digitalWrite(pulsePinSnes, HIGH); // Write high to the pulsePin
+        digitalRead(dataPinSnes) ? snesControllerConnected = true : snesControllerConnected = false; // If true, a controller is connected.
+        delayMicroseconds(6); // Keep pulsePin high for 6 ms
+        
+        digitalWrite(pulsePinSnes, LOW); // Write low to the pulsePin
+        delayMicroseconds(6); // Keep pulsePin low for 6 ms
     }
 
-    if(!snesControllerConnected && (snesControllerConnected != snesControllerConnectedLast)) { // if a SNES controller is not connected, and the connection has changed 
-        clearAllButtons(); // need to only do this when the controller actually becomes disconnected
+    if(!snesControllerConnected && (snesControllerConnected != snesControllerConnectedLast)) { // If a SNES controller is not connected, and the connection has changed 
+        clearAllButtons();
     }
 }  
 
@@ -680,18 +672,19 @@ void n64() {
     } 
 }
 
-void checkSwitches() {
+// Check what postion the rotary dial is in
+void checkDial() {
   
-    if (!digitalRead(serialSwitch)) {
+    if (!digitalRead(serialDial)) {
         modeSelect = 0;
     }                                                        
-    else if (!digitalRead(nesSwitch)) {
+    else if (!digitalRead(nesDial)) {
         modeSelect = 1;
     }
-    else if (!digitalRead(snesSwitch)) {
+    else if (!digitalRead(snesDial)) {
         modeSelect = 2;
     }
-    else if (!digitalRead(n64Switch)) {
+    else if (!digitalRead(n64Dial)) {
         modeSelect = 3;
     }
     else {//error state 
@@ -699,6 +692,7 @@ void checkSwitches() {
     }
 }
 
+// Sets the controller lights on or off depeding on if the controller is connected
 void updateLights() {
     
     digitalWrite(nesIndicateLed, nesControllerConnected );
@@ -717,10 +711,10 @@ void setup() {
     pinMode(latchPinSnes, OUTPUT);
     pinMode(dataPinSnes, INPUT);
 
-    pinMode(serialSwitch, INPUT_PULLUP);
-    pinMode(nesSwitch, INPUT_PULLUP); 
-    pinMode(snesSwitch, INPUT_PULLUP);
-    pinMode(n64Switch, INPUT_PULLUP);
+    pinMode(serialDial, INPUT_PULLUP);
+    pinMode(nesDial, INPUT_PULLUP); 
+    pinMode(snesDial, INPUT_PULLUP);
+    pinMode(n64Dial, INPUT_PULLUP);
     pinMode(outModeSwitch, INPUT_PULLUP);
 
     pinMode(nesIndicateLed, OUTPUT);
@@ -729,7 +723,7 @@ void setup() {
 
     pinMode(LED_BUILTIN, OUTPUT);
 
-    usbStick.begin (false);		// We'll call sendState() manually to minimize lag. I didn't say this, who else is here?
+    usbStick.begin (false);		// Apparently minimizes lag
 	usbStick.setXAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setYAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
 	usbStick.setRxAxisRange (ANALOG_MIN_VALUE, ANALOG_MAX_VALUE);
@@ -737,25 +731,28 @@ void setup() {
 }
 
 void loop() {  
+
     loadKeyboardArrays();
     
+    // Check the output mode switch
     outputMode = !digitalRead(outModeSwitch);
     if(outputMode != outputModelast) {
-        clearAllButtons();
+        clearAllButtons(); // If the output mode switch changed state, clear all buttons
     }
     outputModelast = outputMode;
 
-    checkSwitches();
+    checkDial();
     if( modeSelectLast != modeSelect) {
-        clearAllButtons();
+        clearAllButtons(); // If the mode dial changed state, clear all buttons
     }
     modeSelectLast = modeSelect;
 
-        updateLights();
+    updateLights();
 
-    if (modeSelect == 0) serialActions();
-    nes();
-    snes();
-    n64();
-         
+    if (modeSelect == 0) serialActions(); // Only call serial actions if in serial mode
+    else {
+        nes();
+        snes();
+        n64();
+    }         
 }
