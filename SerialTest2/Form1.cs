@@ -20,36 +20,34 @@ namespace ccAdapterRemapper
         #region variables
 
         // Theme Color variables
-        private readonly string baseHexColor = "#007FFF";
-        private Color baseColor;
-        private Color baseColorStore;
-        private Color buttonDarkColor;
-        private Color buttonLightColor;
-        private Color backDarkColor;
-        private Color backLightColor;
-        private Color textColor;
-        private readonly string focusColor = "#0078d7"; // Color of selected box
-        private string needsSaving = "#ff6347"; //send remap active color
+        readonly string baseHexColor = "#007FFF"; // The base color at the start.
+        Color baseColor;
+        Color baseColorStore;
+        Color buttonDarkColor;
+        Color buttonLightColor;
+        Color backDarkColor;
+        Color backLightColor;
+        Color textColor;
+        readonly string focusColor = "#0078d7"; // Color of selected box
+        string needsSaving = "#ff6347"; //send remap active color
 
-        // string variable to store the key name
-        private string key;
+        // string variable to store a keyboard key name
+        string key;
 
         // Arrays for storing the current and previous mappings
-        private int[] onload_NES_btns = new int[8];
-        private int[] onload_SNES_btns = new int[12];
-        private int[] onload_N64_btns = new int[18];
-        private int[] working_NES_btns = new int[8];
-        private int[] working_SNES_btns = new int[12];
-        private int[] working_N64_btns = new int[18];
-
+        int[] onload_NES_btns = new int[8];
+        int[] onload_SNES_btns = new int[12];
+        int[] onload_N64_btns = new int[18];
+        int[] working_NES_btns = new int[8];
+        int[] working_SNES_btns = new int[12];
+        int[] working_N64_btns = new int[18];
 
         // Serial port stuff
-        private readonly SerialPort _serialPort = new SerialPort("COM0", 9600);
+        SerialPort _serialPort = new SerialPort("COM0", 9600);
 
-
-        // Funny variables
         // Funny AI motto
-        private readonly string[] mottoArray = new string[] {
+        readonly string[] mottoArray = new string[] 
+        {
             "Redefine to your heart's desire",
             "Revise to your liking",
             "Reinvent as you please",
@@ -89,27 +87,20 @@ namespace ccAdapterRemapper
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Only add the debug page if a DEBUG PARAM is set
-            tabControl.TabPages.Remove(tabPageDebug);
-            if (ccAdapterRemapper.Params.IsParamSet("DEBUG"))
-            {
-                tabControl.TabPages.Add(tabPageDebug);
-            }
-
             LoadArrays(); // Check for previously saved controller mappings. Load them if they exist.
 
             // Randomly select one of the funny mottos
             Random random = new Random();
             lb_motto.Text = mottoArray[random.Next(0, mottoArray.Length)];
 
-            LoadTexboxes(); //Poulate the textboxes with the data from the working arrays
+            LoadTexboxes(); // Poulate the textboxes with the data from the working arrays
 
             // Set the text of the ComboBox
             _ = cb_portlist.Items.Add("Select a port");
             cb_portlist.Text = "Select a port";
 
             // Iterate through every textbox contained in the tabcontrol and disable it 
-            // and hide the caret and selction of the textboxes for aesthetic
+            // Also, assign HideCaretAndSelection to it's gotfocus event to hide the caret and selction of the textboxes for aesthetic
             foreach (Control c in tabControl.Controls)
             {
                 foreach (Control x in c.Controls)
@@ -121,6 +112,7 @@ namespace ccAdapterRemapper
                     }
                 }
             }
+            tb_console.GotFocus += HideCaretAndSelectionConsole; // Also give the console one
 
 
             // Check if the Pastel Theme button was set
@@ -130,13 +122,14 @@ namespace ccAdapterRemapper
             baseColor = ccAdapterRemapper.Params.IsParamSet("COLOR")
                 ? ColorTranslator.FromHtml(ccAdapterRemapper.Params.ReadParam("COLOR"))
                 : ColorTranslator.FromHtml(baseHexColor);
-            baseColorStore = baseColor; // create a backup of the baseColor
+            baseColorStore = baseColor; // Create a backup of the baseColor
 
             ColorShifter(baseColor);// Create the colors 
-            UpdateColors();// Set the app colors
+            UpdateColors();// Set the colors
         }
 
         // Load all textboxes with text
+        // This code looks super ugly but, I really don't know how to do this better
         private void LoadTexboxes()
         {
             tb_NES_A.Text = RevKeyToKey(working_NES_btns[0]);
@@ -200,8 +193,8 @@ namespace ccAdapterRemapper
             Array.Copy(working_N64_btns, onload_N64_btns, working_N64_btns.Length);
         }
 
-        // Part of a hacky solution. Controls the tabstop of all textboxes.
-        // Used to allow the TAB key to be input in the textboxes, yet for the textboxes to be able to be cycled through
+        // Part of a hacky solution. Controls the tabstop of all textboxes in the tabcontrol
+        // Used to allow the TAB key to be input in the textboxes, but to still allow the textboxes to be able to be cycled through
         private void TabStopHack(bool setEnable)
         {
             foreach (Control c in tabControl.Controls)
@@ -257,7 +250,7 @@ namespace ccAdapterRemapper
                         : hi == 3 ? Color.FromArgb(255, p, q, v) : hi == 4 ? Color.FromArgb(255, t, p, v) : Color.FromArgb(255, v, p, q);
         }
 
-        // Updates the current base color or pastel color
+        // Updates the current base color or makes the colors pastel.
         private void UpdateColors()
         {
             textColor = Color.White;
@@ -287,31 +280,11 @@ namespace ccAdapterRemapper
         private void ColorControls(Control parent)
         {
             if (parent.Tag.ToString().Contains("dark1"))
-            {
-                if (parent.Tag.ToString().Contains("dark1"))
-                {
-                    parent.BackColor = backDarkColor;
-                }
-            }
+                parent.BackColor = backDarkColor; // Colors the form's background
 
-            foreach (Control control in parent.Controls) // for each control in the controls of the parent(form)
+            foreach (Control control in parent.Controls) // Go through every control in the form
             {
-                if (control is TabControl control1) // if the control is a tab
-                {
-                    foreach (TabPage tabPage in control1.TabPages) // then for each tabpage in the tabcontrol
-                    {
-                        if (tabPage.Tag.ToString().Contains("dark1"))
-                        {
-                            tabPage.BackColor = backDarkColor;
-                        }
-                        if (tabPage.Tag.ToString().Contains("dark2"))
-                        {
-                            tabPage.BackColor = backLightColor;
-                        }
-                        //ColorControls(tabPage);
-                    }
-                }
-                else if (control.Tag != null)
+                if (control.Tag != null)
                 {
                     if (control.Tag.ToString().Contains("dark1"))
                     {
@@ -336,7 +309,7 @@ namespace ccAdapterRemapper
                         control.ForeColor = textColor;
                     }
                 }
-                if (control.HasChildren) // Recursively color all the controls 
+                if (control.HasChildren) // This method on the children of every control encountered 
                 {
                     ColorControls(control);
                 }
@@ -348,7 +321,7 @@ namespace ccAdapterRemapper
 
         }
 
-        // Converts KeysConverter().ConvertToString(e.KeyCode) output to int values that the Arduino Keyboard.h can use
+        // Converts KeysConverter().ConvertToString(e.KeyCode) output to int values that the Arduino Keyboard.h library can use
         private int KeyToKey(string key)
         {
             switch (key)
@@ -406,26 +379,18 @@ namespace ccAdapterRemapper
                 case "OemPeriod": return 46;
                 case "OemQuestion": return 47;
                 case "ControlKey": return 128;
-                //case "LWin": return
                 case "Menu": return 130;
                 case "Space": return 32;
-                //case "Apps": return
-                //case "Ins": return
-                //case "Del": return
-                //case "Home": return
-                //case "End": return
-                //case "PgUp": return
-                //case "PgDn": return
                 case "Up": return 218;
                 case "Left": return 216;
                 case "Down": return 217;
                 case "Right": return 215;
-                default: return 0;
+                default: return 0; // All other keys give zero (Unsupported)
             }
 
         }
-
-        // Converts Arduino Keyboard.h key ints to C# key values
+       
+        // Converts Arduino Keyboard.h library key ints to C# key values
         // Notably does not convert them back into KeysConverter().ConvertToString(e.KeyCode) names,
         // instead gives them more standard and understandable names ( , instead of OEMCOMMA, ] instead of Oem6, etc. )
         private string RevKeyToKey(int key)
@@ -485,21 +450,13 @@ namespace ccAdapterRemapper
                 case 46: return ".";
                 case 47: return "/";
                 case 128: return "ControlKey";
-                //case : return "LWin";
                 case 130: return "Alt";
                 case 32: return "Space";
-                //case : return "Apps";
-                //case : return "Ins";
-                //case : return "Del";
-                //case : return "Home";
-                //case : return "End";
-                //case : return "PgUp";
-                //case : return "PgDn";
                 case 218: return "Up";
                 case 216: return "Left";
                 case 217: return "Down";
                 case 215: return "Right";
-                default: return "Not set!";
+                default: return "Not set!"; // All other keys are unsupported
             }
 
         }
@@ -509,7 +466,7 @@ namespace ccAdapterRemapper
         {
             switch (severity)
             {
-                case 1:  //low severity (Unsupported key)
+                case 1:  // Low severity (Unsupported key)
                     // Play sound and show error in the console 
                     SystemSounds.Exclamation.Play();
                     tb_console.Text = message;
@@ -518,7 +475,7 @@ namespace ccAdapterRemapper
                 case 2: //IO Error
                     // Play sound and show error in a pop up message, also panic restart.
                     SystemSounds.Exclamation.Play();
-                    _ = MessageBox.Show(new Form { TopMost = true }, $"Error! Program will restart.\nException message:  | {message} |");
+                    MessageBox.Show(new Form { TopMost = true }, $"Grievous error! Program will restart.\nException message: | {message} |");
                     System.Windows.Forms.Application.Restart(); // Panic restart
                     break;
 
@@ -545,14 +502,14 @@ namespace ccAdapterRemapper
                 {
                     ClosePort();
                 }
-                else // Else close it
+                else // Else open it
                 {
                     OpenPort();
                 }
             }
             catch (Exception ex) // If an exception
             {
-                ThrowError(ex.Message, 2); //Throw the exception as an error instead
+                ThrowError(ex.Message, 2); // Throw the exception as an error instead
             }
 
         }
@@ -924,7 +881,14 @@ namespace ccAdapterRemapper
         private void HideCaretAndSelection(object sender, EventArgs e)
         {
             TextBox textBox = sender as TextBox; // The sender is a textbox
-            textBox.BackColor = ColorTranslator.FromHtml(focusColor);
+            textBox.BackColor = ColorTranslator.FromHtml(focusColor); // Don't color the console on click
+            _ = HideCaret(textBox.Handle); // Hide the caret
+        }
+
+        // Happens when a textbox get's focus
+        private void HideCaretAndSelectionConsole(object sender, EventArgs e)
+        {
+            TextBox textBox = sender as TextBox; // The sender is a textbox
             _ = HideCaret(textBox.Handle); // Hide the caret
         }
 

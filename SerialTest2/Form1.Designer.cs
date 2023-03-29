@@ -80,8 +80,6 @@
             this.tb_N64_CPADUP = new System.Windows.Forms.TextBox();
             this.label39 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.tb_N64_JOYSTICKRIGHT = new System.Windows.Forms.TextBox();
             this.tb_N64_JOYSTICKLEFT = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
@@ -132,15 +130,17 @@
             this.lb_motto = new System.Windows.Forms.Label();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.tab = new System.Windows.Forms.TabPage();
+            this.label38 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.tabPageNES.SuspendLayout();
             this.tabPageSNES.SuspendLayout();
             this.tabPageN64.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabPageDebug.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nup_value)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nup_address)).BeginInit();
             this.tabControl.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // tb_serialread
@@ -1053,29 +1053,6 @@
             this.label40.Tag = "label";
             this.label40.Text = "CUP";
             // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
-            this.label38.ForeColor = System.Drawing.Color.Black;
-            this.label38.Location = new System.Drawing.Point(475, 95);
-            this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(88, 20);
-            this.label38.TabIndex = 120;
-            this.label38.Tag = "label";
-            this.label38.Text = "DEADZONE";
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(571, 94);
-            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(4);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(137, 25);
-            this.numericUpDown1.TabIndex = 119;
-            this.numericUpDown1.TabStop = false;
-            this.numericUpDown1.Tag = "N64DEADZONElight2";
-            // 
             // tb_N64_JOYSTICKRIGHT
             // 
             this.tb_N64_JOYSTICKRIGHT.AcceptsReturn = true;
@@ -1768,7 +1745,7 @@
             this.tabControl.Controls.Add(this.tabPageDebug);
             this.tabControl.Font = new System.Drawing.Font("Segoe UI Symbol", 8F);
             this.tabControl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.tabControl.Location = new System.Drawing.Point(16, 167);
+            this.tabControl.Location = new System.Drawing.Point(13, 164);
             this.tabControl.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl.Name = "tabControl";
             this.tabControl.Padding = new System.Drawing.Point(0, 0);
@@ -1787,10 +1764,10 @@
             this.lb_debug.Location = new System.Drawing.Point(329, 111);
             this.lb_debug.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lb_debug.Name = "lb_debug";
-            this.lb_debug.Size = new System.Drawing.Size(111, 20);
+            this.lb_debug.Size = new System.Drawing.Size(62, 20);
             this.lb_debug.TabIndex = 7;
             this.lb_debug.Tag = "label";
-            this.lb_debug.Text = "Debug Console";
+            this.lb_debug.Text = "Console";
             // 
             // tb_console
             // 
@@ -1834,7 +1811,7 @@
             this.panel1.Controls.Add(this.lb_debug);
             this.panel1.Controls.Add(this.btn_stopstart);
             this.panel1.Controls.Add(this.cb_portlist);
-            this.panel1.Location = new System.Drawing.Point(16, 16);
+            this.panel1.Location = new System.Drawing.Point(13, 13);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(748, 144);
@@ -1864,19 +1841,46 @@
             this.tab.Text = "tabPage1";
             this.tab.UseVisualStyleBackColor = true;
             // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Font = new System.Drawing.Font("Segoe UI Symbol", 9F);
+            this.label38.ForeColor = System.Drawing.Color.Black;
+            this.label38.Location = new System.Drawing.Point(475, 95);
+            this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(88, 20);
+            this.label38.TabIndex = 120;
+            this.label38.Tag = "label";
+            this.label38.Text = "DEADZONE";
+            this.label38.Visible = false;
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(571, 94);
+            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(4);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(137, 25);
+            this.numericUpDown1.TabIndex = 119;
+            this.numericUpDown1.TabStop = false;
+            this.numericUpDown1.Tag = "N64DEADZONElight2";
+            this.numericUpDown1.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(783, 533);
+            this.ClientSize = new System.Drawing.Size(773, 523);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MaximizeBox = false;
             this.Name = "Form1";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Tag = "dark1";
             this.Text = "Remapper";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -1886,7 +1890,6 @@
             this.tabPageSNES.PerformLayout();
             this.tabPageN64.ResumeLayout(false);
             this.tabPageN64.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabPageDebug.ResumeLayout(false);
             this.tabPageDebug.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nup_value)).EndInit();
@@ -1894,6 +1897,7 @@
             this.tabControl.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1997,12 +2001,12 @@
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.TextBox tb_N64_CPADRIGHT;
         private System.Windows.Forms.TextBox tb_N64_CPADUP;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
     }
 }
 
