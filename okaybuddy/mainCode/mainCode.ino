@@ -442,7 +442,14 @@ void nes() {
 
     for (int t = 7; t < 16; t++) { // Extra pulses for checking if an NES controller is connected
         digitalWrite(pulsePinNes, HIGH); // Write high to the pulsePin
-        digitalRead(dataPinNes) ? nesControllerConnected = false : nesControllerConnected = true; // If true, a controller is connected.
+        digitalRead(dataPinNes) ? nesControllerConnected = false : nesControllerConnected = true; // If read low here a controller is connected
+        if (nesControllerConnected) {
+            digitalWrite(nesIndicateLed, HIGH);
+        }
+        else {
+            digitalWrite(nesIndicateLed, LOW);
+        }
+
         delayMicroseconds(6); // Keep pulsePin high for 6 ms
 
         digitalWrite(pulsePinNes, LOW); // Write low to the pulsePin
@@ -478,9 +485,15 @@ void snes() {
         delayMicroseconds(6); // Keep pulsePin low for 6 ms
     }
 
-    for (int t = 12; t < 16; t++) { // Extra pulses for checking if an SNES controller is connected
+    for (int t = 11; t < 16; t++) { // Extra pulses for checking if an SNES controller is connected
         digitalWrite(pulsePinSnes, HIGH); // Write high to the pulsePin
-        digitalRead(dataPinSnes) ? snesControllerConnected = true : snesControllerConnected = false; // If true, a controller is connected.
+        digitalRead(dataPinSnes) ? snesControllerConnected = false : snesControllerConnected = true; // If read low here a controller is connected
+        if (snesControllerConnected) {
+            digitalWrite(snesIndicateLed, HIGH);
+        }
+        else {
+            digitalWrite(snesIndicateLed, LOW);
+        }
         delayMicroseconds(6); // Keep pulsePin high for 6 ms
         
         digitalWrite(pulsePinSnes, LOW); // Write low to the pulsePin
@@ -703,8 +716,8 @@ void checkDial() {
 
 // Sets the controller lights on or off depending on if the controller is connected
 void updateLights() {
-    digitalWrite(nesIndicateLed, nesControllerConnected );
-    digitalWrite(snesIndicateLed, snesControllerConnected );
+    //digitalWrite(nesIndicateLed, nesControllerConnected );
+    //digitalWrite(snesIndicateLed, snesControllerConnected );
     digitalWrite(n64IndicateLed, n64ControllerConnected );
 }
 
@@ -743,7 +756,7 @@ void setup() {
 void loop() {  
   
     // Check the output mode switch
-    outputMode = !digitalRead(outModeSwitch);
+    outputMode = digitalRead(outModeSwitch);
     if(outputMode != outputModelast) {
         clearAllButtons(); // If the output mode switch changed state, clear all buttons
     }
