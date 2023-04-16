@@ -46,7 +46,7 @@ namespace ccAdapterRemapper
         SerialPort _serialPort = new SerialPort("COM0", 9600);
 
         // Funny AI motto
-        readonly string[] mottoArray = new string[] 
+        readonly string[] mottoArray = new string[]
         {
             "Redefine to your heart's desire",
             "Revise to your liking",
@@ -118,7 +118,8 @@ namespace ccAdapterRemapper
             // Check if the Pastel Theme button was set
             cb_pastel.Checked = ccAdapterRemapper.Params.IsParamSet("PB");
 
-            if(!ccAdapterRemapper.Params.IsParamSet("DEBUG")) // Hide the debug page if the PARAM is not set.
+            // Hide the debug page if the DEBUG PARAM is not set or a debugger is not attached.
+            if (!ccAdapterRemapper.Params.IsParamSet("DEBUG") && !System.Diagnostics.Debugger.IsAttached)
             {
                 tabControl.TabPages.Remove(tabPageDebug);
             }
@@ -129,8 +130,8 @@ namespace ccAdapterRemapper
                 : ColorTranslator.FromHtml(baseHexColor);
             baseColorStore = baseColor; // Create a backup of the baseColor
 
-            ColorShifter(baseColor);// Create the colors 
-            UpdateColors();// Set the colors
+            ColorShifter(baseColor); // Create the colors 
+            UpdateColors(); // Set the colors
         }
 
         // Load all textboxes with text
@@ -281,7 +282,7 @@ namespace ccAdapterRemapper
             ColorControls(this); // this being the form itself
         }
 
-        // Colors all controls using a tag based system
+        // Colors all controls using a tag based system. Inspired by the color tag system in RTCV.
         private void ColorControls(Control parent)
         {
             if (parent.Tag.ToString().Contains("dark1"))
@@ -394,7 +395,7 @@ namespace ccAdapterRemapper
             }
 
         }
-       
+
         // Converts Arduino Keyboard.h library key ints to C# key values
         // Notably does not convert them back into KeysConverter().ConvertToString(e.KeyCode) names,
         // instead gives them more standard and understandable names ( , instead of OEMCOMMA, ] instead of Oem6, etc. )
@@ -498,7 +499,7 @@ namespace ccAdapterRemapper
             if (port == null || !port.StartsWith("COM")) // Don't do actions if the selected item is not a COM port
             {
                 ClosePort(); // Close the current open port
-                btn_stopstart.Enabled = false; // disable the stop start button
+                btn_stopstart.Enabled = false; // Disable the stop start button
                 return;
             }
             try // Try to open or close the serial port
@@ -507,7 +508,7 @@ namespace ccAdapterRemapper
                 {
                     ClosePort();
                 }
-                else // Else open it
+                else // If not, open it
                 {
                     OpenPort();
                 }
@@ -575,7 +576,7 @@ namespace ccAdapterRemapper
         {
             _ = SerialPort.GetPortNames(); // Get a list of serial port names
 
-            // Poluate the combobox with the avialable COM ports
+            // Populate the combobox with the available COM ports
             foreach (string s in SerialPort.GetPortNames())
             {
                 if (!cb_portlist.Items.Contains(s)) // Only add an item if it is not already on the list
@@ -882,7 +883,7 @@ namespace ccAdapterRemapper
             _ = SelectNextControl(ActiveControl, true, true, true, true); // Auto move to the next textbox
         }
 
-        // Happens when a textbox get's focus
+        // Happens when a textbox gets focus
         private void HideCaretAndSelection(object sender, EventArgs e)
         {
             TextBox textBox = sender as TextBox; // The sender is a textbox
@@ -890,7 +891,7 @@ namespace ccAdapterRemapper
             _ = HideCaret(textBox.Handle); // Hide the caret
         }
 
-        // Happens when a textbox get's focus
+        // Specially for if the Conole gets focus
         private void HideCaretAndSelectionConsole(object sender, EventArgs e)
         {
             TextBox textBox = sender as TextBox; // The sender is a textbox
@@ -982,7 +983,7 @@ namespace ccAdapterRemapper
         }
 
         // Switchings tabs reloads the arrays and textboxes and disables the write button
-        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadArrays(); // Reload the arrays from PARAMs
             LoadTexboxes(); // Load the reloaded arrays into the textboxes

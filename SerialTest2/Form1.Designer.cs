@@ -1779,7 +1779,7 @@
             this.tabControl.TabIndex = 5;
             this.tabControl.TabStop = false;
             this.tabControl.Tag = "TAB";
-            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
             // 
             // lb_debug
             // 
