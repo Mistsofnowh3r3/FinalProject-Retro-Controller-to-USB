@@ -130,7 +130,8 @@ bool mappingChanged = 0;
 
 // Constants //
 
-// This stuff was in the N64 pad example and was mostly undocumented
+// This stuff was in the N64 pad example and was mostly undocumented. I've left it unedited because it just works.
+// {
 const byte ANALOG_DEAD_ZONE = 20U;
 const int8_t ANALOG_MIN_VALUE = -80;
 const int8_t ANALOG_MAX_VALUE = 80;
@@ -158,11 +159,14 @@ Joystick_ usbStick (
 );
 #define deadify(var, thres) (abs (var) > thres ? (var) : 0)
 
+//}
+
+
 // Controller I/O Pins
 const int pulsePinNes = 0; 
 const int latchPinNes = 1; 
 const int dataPinNes = 2; 
-// n64 data pin is 3, defined in n64pad code
+// N64 data pin is 3, defined in n64pad code
 const int pulsePinSnes = 4; 
 const int latchPinSnes = 5; 
 const int dataPinSnes = 6; 
@@ -234,17 +238,17 @@ void serialActions() {
 void loadKeyboardArrays() {
     for (int v = 0; v < 36; v++) {
         if ( v < 8) {
-            if (EEPROM.read(v) != 0xff) { // Load a vlaue in as long as it is not 0xFF (Supposedly the default from stock value) 
+            if (EEPROM.read(v) != 0xff) { // Load a value in as long as it is not 0xFF (Supposedly the default from stock value) 
                 working_NES_btns[v] = EEPROM.read(v);
             }    
         }
         if ( v > 7 && v < 18) {
-            if (EEPROM.read(v) != 0xff) { // Load a vlaue in as long as it is not 0xFF (Supposedly the default from stock value) 
+            if (EEPROM.read(v) != 0xff) { // Load a value in as long as it is not 0xFF (Supposedly the default from stock value) 
                 working_SNES_btns[v - 8] = EEPROM.read(v);
             }   
         }
         if ( v > 17) {
-            if (EEPROM.read(v) != 0xff) { // Load a vlaue in as long as it is not 0xFF (Supposedly the default from stock value) 
+            if (EEPROM.read(v) != 0xff) { // Load a value in as long as it is not 0xFF (Supposedly the default from stock value) 
                 working_N64_btns[v - 18] = EEPROM.read(v);
             } 
         }
@@ -455,12 +459,7 @@ void nes() {
     for (int t = 7; t < 16; t++) { // Extra pulses for checking if an NES controller is connected
         digitalWrite(pulsePinNes, HIGH); // Write high to the pulsePin
         digitalRead(dataPinNes) ? nesControllerConnected = false : nesControllerConnected = true; // If read low here a controller is connected
-        if (nesControllerConnected) {
-            digitalWrite(nesIndicateLed, HIGH);
-        }
-        else {
-            digitalWrite(nesIndicateLed, LOW);
-        }
+        digitalWrite(nesIndicateLed, nesControllerConnected ? HIGH : LOW); // Turn the LED on or off
 
         delayMicroseconds(6); // Keep pulsePin high for 6 ms
 
@@ -500,12 +499,8 @@ void snes() {
     for (int t = 11; t < 16; t++) { // Extra pulses for checking if an SNES controller is connected
         digitalWrite(pulsePinSnes, HIGH); // Write high to the pulsePin
         digitalRead(dataPinSnes) ? snesControllerConnected = false : snesControllerConnected = true; // If read low here a controller is connected
-        if (snesControllerConnected) {
-            digitalWrite(snesIndicateLed, HIGH);
-        }
-        else {
-            digitalWrite(snesIndicateLed, LOW);
-        }
+        digitalWrite(snesIndicateLed, snesControllerConnected ? HIGH : LOW); // Turn the LED on or off
+
         delayMicroseconds(6); // Keep pulsePin high for 6 ms
         
         digitalWrite(pulsePinSnes, LOW); // Write low to the pulsePin
@@ -520,8 +515,7 @@ void snes() {
 
 // Handles part of the N64 controller keyboard key pressing
 void n64KeyPress(bool check, int button)
-{
-    
+{ 
     if(check) { // Check if the button was pressed 
         Keyboard.press(tolower(working_N64_btns[button])); // tolower ensures the lowercase version of the key is pressed
         held_N64_btns[button] = working_N64_btns[button]; // Add the button to the held array
@@ -542,7 +536,7 @@ void n64KeyPress(bool check, int button)
     }
 }
 
-// Built off of the example N64PadToUSB.ino in N64PadForArduino
+// Built off of the example N64PadToUSB.ino in N64PadForArduino (https://github.com/SukkoPera/N64PadForArduino)
 void n64() {
     static boolean haveController = false;
 	if (!haveController) {
