@@ -118,6 +118,11 @@ namespace ccAdapterRemapper
             // Check if the Pastel Theme button was set
             cb_pastel.Checked = ccAdapterRemapper.Params.IsParamSet("PB");
 
+            if(!ccAdapterRemapper.Params.IsParamSet("DEBUG")) // Hide the debug page if the PARAM is not set.
+            {
+                tabControl.TabPages.Remove(tabPageDebug);
+            }
+
             // Check if there is a saved color in the PARAMs
             baseColor = ccAdapterRemapper.Params.IsParamSet("COLOR")
                 ? ColorTranslator.FromHtml(ccAdapterRemapper.Params.ReadParam("COLOR"))
@@ -962,7 +967,7 @@ namespace ccAdapterRemapper
         // Debug button to wipe all PARAMs
         private void ParamWipebtn_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("This will COMPLETELY wipe the contents of the PARAMs folder and clear ALL settings, are you sure?", "", MessageBoxButtons.YesNo);
+            DialogResult dr = MessageBox.Show("This will COMPLETELY wipe the contents of the PARAMs folder and clear ALL settings (DOES NOT WIPE THE ARDUINO MEMORY, save the EEPROM writes), are you sure?", "", MessageBoxButtons.YesNo);
             switch (dr)
             {
                 case DialogResult.Yes:

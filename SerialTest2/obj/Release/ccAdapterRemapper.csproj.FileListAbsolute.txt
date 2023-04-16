@@ -1,0 +1,14 @@
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Release\ccAdapterRemapper.exe.config
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Release\ccAdapterRemapper.exe
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Release\ccAdapterRemapper.pdb
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Release\System.IO.Ports.dll
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\bin\Release\System.IO.Ports.xml
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.csproj.AssemblyReference.cache
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.csproj.SuggestedBindingRedirects.cache
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.Form1.resources
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.Properties.Resources.resources
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.csproj.GenerateResource.cache
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.csproj.CoreCompileInputs.cache
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.csproj.CopyComplete
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.exe
+C:\Users\albri\Documents\GitHub\FinalProject\SerialTest2\obj\Release\ccAdapterRemapper.pdb

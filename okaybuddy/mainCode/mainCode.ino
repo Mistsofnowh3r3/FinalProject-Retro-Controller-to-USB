@@ -233,9 +233,21 @@ void serialActions() {
 // Reads from EEPROM to load the stored keyboard mappings
 void loadKeyboardArrays() {
     for (int v = 0; v < 36; v++) {
-        if ( v < 8) working_NES_btns[v] = EEPROM.read(v);
-        if ( v > 7 && v < 18) working_SNES_btns[v - 8] = EEPROM.read(v);
-        if ( v > 17) working_N64_btns[v - 18] = EEPROM.read(v);
+        if ( v < 8) {
+            if (EEPROM.read(v) != 0xff) { // Load a vlaue in as long as it is not 0xFF (Supposedly the default from stock value) 
+                working_NES_btns[v] = EEPROM.read(v);
+            }    
+        }
+        if ( v > 7 && v < 18) {
+            if (EEPROM.read(v) != 0xff) { // Load a vlaue in as long as it is not 0xFF (Supposedly the default from stock value) 
+                working_SNES_btns[v - 8] = EEPROM.read(v);
+            }   
+        }
+        if ( v > 17) {
+            if (EEPROM.read(v) != 0xff) { // Load a vlaue in as long as it is not 0xFF (Supposedly the default from stock value) 
+                working_N64_btns[v - 18] = EEPROM.read(v);
+            } 
+        }
     }
 }
 
@@ -714,13 +726,6 @@ void checkDial() {
     }
 }
 
-// Sets the controller lights on or off depending on if the controller is connected
-void updateLights() {
-    //digitalWrite(nesIndicateLed, nesControllerConnected );
-    //digitalWrite(snesIndicateLed, snesControllerConnected );
-    digitalWrite(n64IndicateLed, n64ControllerConnected );
-}
-
 void setup() {
 
     Serial.begin(9600); // Start serial
@@ -782,7 +787,7 @@ void loop() {
         nes();
         snes();
         n64();
-        updateLights(); // Update all the lights
+        digitalWrite(n64IndicateLed, n64ControllerConnected);
     }         
     
 }
