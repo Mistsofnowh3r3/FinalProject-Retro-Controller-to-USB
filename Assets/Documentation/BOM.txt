@@ -1,0 +1,12 @@
+4 LEDs
+4 470 ohm or similar resistors for those LEDs
+1 NES controller port
+1 SNES controller port
+1 N64 controller port
+1 PBNO
+1 SPDT switch
+4 Position rotary dial
+2 15k or similar pullup Resistors
+1 Arduino Leonardo
+1 Micro USB cable
+Casing and wiring.
