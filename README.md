@@ -1,6 +1,6 @@
 # Retro  Nintendo Controller Adapter
 
-> Arduino code, and ccAdapterRemapper Solution 
+> Arduino code, ccAdapterRemapper Solution, stl's and sldprt's for a case, and design and usage documentation
 
 ## Dependencies
 - https://github.com/MHeironimus/ArduinoJoystickLibrary
